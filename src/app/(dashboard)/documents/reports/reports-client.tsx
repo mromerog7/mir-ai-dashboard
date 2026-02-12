@@ -1,19 +1,13 @@
 "use client"
 
 import { createClient } from "@/lib/supabase/client"
-import { PdfList } from "@/components/documents/pdf-list";
+import { columns, Report } from "./columns";
+import { DataTable } from "@/app/(dashboard)/projects/data-table";
+import { Button } from "@/components/ui/button";
+import { EditReportSheet } from "@/components/reports/edit-report-sheet";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-// Define a type that matches what PdfList expects / what Supabase returns
-// Based on page.tsx: select("*, proyectos(nombre)")
-interface Report {
-    id: string; // or number, depends on DB. Usually UUID or Int. Let's assume consistent with others.
-    fecha_reporte: string;
-    resumen_titulo: string;
-    // Add other fields as needed by PdfList, or use 'any' if strict typing isn't critical right now
-    [key: string]: any;
-}
 
 interface ReportsClientProps {
     initialReports: Report[];
@@ -64,6 +58,23 @@ export function ReportsClient({ initialReports }: ReportsClientProps) {
     }, [router]);
 
     return (
-        <PdfList title="Reportes de Actividad" items={reports} type="report" />
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <h1 className="text-3xl font-bold text-white tracking-tight">Reportes</h1>
+                <EditReportSheet
+                    trigger={
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Nuevo Reporte
+                        </Button>
+                    }
+                />
+            </div>
+
+            <DataTable
+                columns={columns}
+                data={reports}
+            />
+        </div>
     );
 }
