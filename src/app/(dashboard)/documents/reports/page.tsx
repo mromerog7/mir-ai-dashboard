@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { PdfList } from "@/components/documents/pdf-list";
+import { ReportsClient } from "./reports-client";
 
 export default async function ReportsPage() {
     const supabase = await createClient();
@@ -8,5 +8,5 @@ export default async function ReportsPage() {
         .select("*, proyectos(nombre)")
         .order("fecha_reporte", { ascending: false });
 
-    return <PdfList title="Reportes de Actividad" items={reports || []} type="report" />;
+    return <ReportsClient initialReports={reports || []} />;
 }

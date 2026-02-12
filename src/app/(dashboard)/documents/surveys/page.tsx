@@ -1,10 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { columns, Survey } from "./columns";
-import { DataTable } from "@/app/(dashboard)/projects/data-table";
-import { EditSurveySheet } from "@/components/surveys/edit-survey-sheet";
-import { Button } from "@/components/ui/button";
-
-import { Plus } from "lucide-react";
+import { Survey } from "./columns";
+import { SurveysClient } from "./surveys-client";
 
 export default async function SurveysPage() {
     const supabase = await createClient();
@@ -28,20 +24,6 @@ export default async function SurveysPage() {
     }
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-white tracking-tight">Levantamientos</h1>
-                <EditSurveySheet
-                    trigger={
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Nuevo Levantamiento
-                        </Button>
-                    }
-                />
-            </div>
-
-            <DataTable columns={columns} data={(surveys as unknown as Survey[]) || []} />
-        </div>
+        <SurveysClient initialSurveys={(surveys as unknown as Survey[]) || []} />
     );
 }
