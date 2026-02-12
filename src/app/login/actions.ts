@@ -32,3 +32,19 @@ export async function signInWithOtpAction(email: string) {
         return { error: err.message || "An unexpected error occurred" };
     }
 }
+
+export async function signInWithPasswordAction(email: string, password: string) {
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+    });
+
+    if (error) {
+        console.error("Login Error:", error);
+        return { error: error.message };
+    }
+
+    return { success: true };
+}
