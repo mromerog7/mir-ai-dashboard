@@ -2,18 +2,18 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import {
-    Activity,
-    Briefcase,
-    CreditCard,
-    AlertTriangle,
     CloudSun,
     Sun,
     Cloud,
     CloudRain,
     Snowflake,
     CloudLightning,
-    Wind
 } from "lucide-react";
+import { ActiveProjectsWidget } from "@/components/dashboard/active-projects-widget";
+import { MonthExpensesWidget } from "@/components/dashboard/month-expenses-widget";
+import { CriticalIncidentsWidget } from "@/components/dashboard/critical-incidents-widget";
+import { ActivityFeedWidget } from "@/components/dashboard/activity-feed-widget";
+import { PendingTasksWidget } from "@/components/dashboard/pending-tasks-widget";
 
 // Helper to map WMO weather codes
 function getWeatherIcon(code: number) {
@@ -45,7 +45,9 @@ export default async function DashboardPage() {
             .in("severidad", ["Alta", "Crítica"])
             .eq("estatus", "Abierta");
         if (!error) highRiskIncidents = count || 0;
-    } catch (e) { console.log("Incidencias table missing/empty"); }
+    } catch (e) {
+        console.log("Incidencias table missing/empty");
+    }
 
     // 3. Fetch Expenses (Safe)
     let totalExpenses = 0;
@@ -60,7 +62,9 @@ export default async function DashboardPage() {
             .gte("fecha", startOfMonth.toISOString());
 
         totalExpenses = data?.reduce((sum, expense) => sum + (Number(expense.monto) || 0), 0) || 0;
-    } catch (e) { console.log("Gastos table missing/empty"); }
+    } catch (e) {
+        console.log("Gastos table missing/empty");
+    }
 
     // FETCH LATEST ACTIVITIES FROM ALL MODULES
     const limit = 5;
@@ -125,7 +129,7 @@ export default async function DashboardPage() {
         .slice(0, 7); // Show top 7 activities
 
     // Sort Pending Tasks: Pendiente first, then En Proceso, then others
-    const sortedPendingTasks = (pendingTasks || []).sort((a, b) => {
+    const sortedPendingTasks = (pendingTasks || []).sort((a, b: any) => {
         const statusWeight: Record<string, number> = {
             'Pendiente': 1,
             'En Proceso': 2,
@@ -162,44 +166,15 @@ export default async function DashboardPage() {
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Link href="/projects">
-                    <Card className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700/50 transition-colors cursor-pointer">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-400">Proyectos Activos</CardTitle>
-                            <Briefcase className="h-4 w-4 text-violet-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{activeProjectsCount ?? 0}</div>
-                            <p className="text-xs text-slate-500">En ejecución</p>
-                        </CardContent>
-                    </Card>
+                    <ActiveProjectsWidget initialCount={activeProjectsCount ?? 0} />
                 </Link>
 
                 <Link href="/expenses">
-                    <Card className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700/50 transition-colors cursor-pointer">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-400">Gastos del Mes</CardTitle>
-                            <CreditCard className="h-4 w-4 text-emerald-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(totalExpenses)}
-                            </div>
-                            <p className="text-xs text-slate-500">Gastos registrados</p>
-                        </CardContent>
-                    </Card>
+                    <MonthExpensesWidget initialTotal={totalExpenses} />
                 </Link>
 
                 <Link href="/incidents">
-                    <Card className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700/50 transition-colors cursor-pointer">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-400">Incidencias Críticas</CardTitle>
-                            <AlertTriangle className="h-4 w-4 text-red-500" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">{highRiskIncidents ?? 0}</div>
-                            <p className="text-xs text-slate-500">Requieren atención</p>
-                        </CardContent>
-                    </Card>
+                    <CriticalIncidentsWidget initialCount={highRiskIncidents} />
                 </Link>
 
                 <Link href="/weather">
@@ -217,60 +192,11 @@ export default async function DashboardPage() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-                <Card className="bg-slate-800 border-slate-700 text-white">
-                    <CardHeader>
-                        <CardTitle>Resumen de Actividad</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {activities.length > 0 ? activities.map((activity, i) => (
-                                <div key={i} className="flex items-center">
-                                    <span className="relative flex h-2 w-2 mr-3">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-                                    </span>
-                                    <div className="ml-4 space-y-1">
-                                        <p className="text-sm font-medium leading-none text-white">{activity.description}</p>
-                                        <p className="text-sm text-slate-400">{new Date(activity.date).toLocaleDateString("es-MX", { day: 'numeric', month: 'long' })}</p>
-                                    </div>
-                                </div>
-                            )) : (
-                                <p className="text-sm text-slate-400">No hay actividad reciente.</p>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Link href="/tasks">
-                    <Card className="h-full bg-slate-800 border-slate-700 text-white hover:bg-slate-700/50 transition-colors cursor-pointer">
-                        <CardHeader>
-                            <CardTitle>Resumen de Tareas</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                {sortedPendingTasks && sortedPendingTasks.length > 0 ? sortedPendingTasks.map((task: any) => (
-                                    <div key={task.id} className="flex items-start justify-between border-b border-slate-700 pb-2 last:border-0 last:pb-0">
-                                        <div className="space-y-1">
-                                            <p className="text-sm font-medium leading-none text-white">{task.titulo}</p>
-                                            <p className="text-xs text-slate-400">
-                                                {task.descripcion || "Sin descripción"}
-                                            </p>
-                                        </div>
-                                        <div className={`px-2 py-0.5 rounded text-[10px] font-medium ${task.estatus === 'Completada' ? 'bg-green-500/20 text-green-400' :
-                                            task.estatus === 'En Proceso' ? 'bg-blue-500/20 text-blue-400' :
-                                                'bg-yellow-500/20 text-yellow-400'
-                                            }`}>
-                                            {task.estatus || "Pendiente"}
-                                        </div>
-                                    </div>
-                                )) : (
-                                    <p className="text-sm text-slate-400">No hay tareas pendientes recientes.</p>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Link>
+                <ActivityFeedWidget initialActivities={activities} />
+                <PendingTasksWidget initialTasks={sortedPendingTasks} />
             </div>
         </div>
-    )
+    );
 }
+
+
