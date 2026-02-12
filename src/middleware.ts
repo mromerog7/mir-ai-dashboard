@@ -30,12 +30,12 @@ export async function middleware(request: NextRequest) {
     )
 
     const {
-        data: { user },
-    } = await supabase.auth.getUser()
+        data: { session },
+    } = await supabase.auth.getSession()
 
-    console.log(`[Middleware] Path: ${request.nextUrl.pathname}, User: ${user ? user.email : 'None'}`);
+    console.log(`[Middleware] Path: ${request.nextUrl.pathname}, Session: ${session ? session.user.email : 'None'}`);
 
-    if (!user && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
+    if (!session && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {
         const url = request.nextUrl.clone()
         url.pathname = '/login'
         return NextResponse.redirect(url)
