@@ -59,7 +59,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
     const router = useRouter()
 
     const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
             proyecto_id: 0,
             fecha: format(new Date(), "yyyy-MM-dd"),
