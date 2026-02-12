@@ -34,7 +34,7 @@ import { Plus, Save, Loader2, ImagePlus, X, AlertTriangle, Pencil } from "lucide
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
-import { Incident } from "./incident-detail-sheet" // Reuse type
+import { Incident } from "@/types"
 
 const formSchema = z.object({
     titulo: z.string().min(1, "Título requerido"),
