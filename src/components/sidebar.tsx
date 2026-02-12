@@ -115,9 +115,8 @@ export function Sidebar({ className }: SidebarProps) {
                     </div>
                 </div>
                 <div className="px-3 py-2">
-
-                    <Link
-                        href="/logout"
+                    <div
+                        onClick={() => window.location.href = "/logout"}
                         className={cn(
                             "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-slate-700 rounded-lg transition text-slate-400"
                         )}
@@ -126,7 +125,7 @@ export function Sidebar({ className }: SidebarProps) {
                             <LogOut className="h-5 w-5 mr-3 text-red-500" />
                             Cerrar Sesión
                         </div>
-                    </Link>
+                    </div>
                 </div>
             </div>
         </div>
