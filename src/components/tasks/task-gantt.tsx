@@ -7,18 +7,20 @@ interface TaskGanttProps {
     tasks: Task[]
 }
 
-const PRIORITY_BAR_COLORS: Record<string, string> = {
-    "Baja": "bg-green-500/80",
-    "Media": "bg-yellow-500/80",
-    "Alta": "bg-orange-500/80",
-    "Urgente": "bg-red-500/80",
+const STATUS_BAR_COLORS: Record<string, string> = {
+    "Pendiente": "bg-yellow-500/80",
+    "En Proceso": "bg-blue-500/80",
+    "Revisión": "bg-purple-500/80",
+    "Completada": "bg-green-500/80",
+    "Cancelada": "bg-slate-500/80",
 }
 
-const PRIORITY_BAR_BORDERS: Record<string, string> = {
-    "Baja": "border-green-400",
-    "Media": "border-yellow-400",
-    "Alta": "border-orange-400",
-    "Urgente": "border-red-400",
+const STATUS_BAR_BORDERS: Record<string, string> = {
+    "Pendiente": "border-yellow-400",
+    "En Proceso": "border-blue-400",
+    "Revisión": "border-purple-400",
+    "Completada": "border-green-400",
+    "Cancelada": "border-slate-400",
 }
 
 const STATUS_DOT_COLORS: Record<string, string> = {
@@ -26,6 +28,7 @@ const STATUS_DOT_COLORS: Record<string, string> = {
     "En Proceso": "bg-blue-400",
     "Revisión": "bg-purple-400",
     "Completada": "bg-green-400",
+    "Cancelada": "bg-slate-400",
 }
 
 const DAY_LETTERS = ["D", "L", "M", "X", "J", "V", "S"]
@@ -211,10 +214,10 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
                     <div className="relative">
                         {datedTasks.map((task) => {
                             const barStyle = getBarStyle(task)
-                            const priority = task.prioridad || "Media"
-                            const barColor = PRIORITY_BAR_COLORS[priority] || PRIORITY_BAR_COLORS["Media"]
-                            const barBorder = PRIORITY_BAR_BORDERS[priority] || PRIORITY_BAR_BORDERS["Media"]
-                            const statusDot = STATUS_DOT_COLORS[task.estatus || "Pendiente"] || "bg-slate-400"
+                            const status = task.estatus || "Pendiente"
+                            const barColor = STATUS_BAR_COLORS[status] || STATUS_BAR_COLORS["Pendiente"]
+                            const barBorder = STATUS_BAR_BORDERS[status] || STATUS_BAR_BORDERS["Pendiente"]
+                            const statusDot = STATUS_DOT_COLORS[status] || "bg-slate-400"
 
                             return (
                                 <div key={task.id} className="flex border-b border-slate-800/50 hover:bg-slate-800/20 transition-colors group">
