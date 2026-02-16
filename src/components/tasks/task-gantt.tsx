@@ -54,6 +54,13 @@ function getMonthName(date: Date): string {
     return date.toLocaleDateString("es-MX", { month: "long", year: "numeric" })
 }
 
+// Parse a date string as local date to avoid timezone shift
+// "2026-02-16" → Feb 16 00:00 local (not UTC)
+function parseLocalDate(dateStr: string): Date {
+    const parts = dateStr.split("T")[0].split("-")
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+}
+
 export function TaskGantt({ tasks }: TaskGanttProps) {
     const today = useMemo(() => {
         const d = new Date()
@@ -92,16 +99,14 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
             }
         })
         // Sort dated tasks by fecha_inicio
-        dated.sort((a, b) => new Date(a.fecha_inicio!).getTime() - new Date(b.fecha_inicio!).getTime())
+        dated.sort((a, b) => parseLocalDate(a.fecha_inicio!).getTime() - parseLocalDate(b.fecha_inicio!).getTime())
         return { datedTasks: dated, undatedTasks: undated }
     }, [tasks])
 
     // Calculate bar position for a task
     const getBarStyle = (task: Task) => {
-        const start = new Date(task.fecha_inicio!)
-        start.setHours(0, 0, 0, 0)
-        const end = new Date(task.fecha_fin!)
-        end.setHours(0, 0, 0, 0)
+        const start = parseLocalDate(task.fecha_inicio!)
+        const end = parseLocalDate(task.fecha_fin!)
 
         const rangeStartTime = rangeStart.getTime()
         const msPerDay = 86400000
