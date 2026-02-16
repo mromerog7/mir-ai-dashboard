@@ -41,6 +41,8 @@ const formSchema = z.object({
     estatus: z.string().optional(),
     fecha_inicio: z.date().optional(),
     fecha_fin: z.date().optional(),
+    fecha_inicio_real: z.date().optional(),
+    fecha_fin_real: z.date().optional(),
 })
 
 // Parse date string as local date to avoid UTC timezone shift
@@ -74,6 +76,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             estatus: initialData?.estatus || "Pendiente",
             fecha_inicio: initialData?.fecha_inicio ? parseLocalDate(initialData.fecha_inicio) : undefined,
             fecha_fin: initialData?.fecha_fin ? parseLocalDate(initialData.fecha_fin) : undefined,
+            fecha_inicio_real: initialData?.fecha_inicio_real ? parseLocalDate(initialData.fecha_inicio_real) : undefined,
+            fecha_fin_real: initialData?.fecha_fin_real ? parseLocalDate(initialData.fecha_fin_real) : undefined,
         },
     })
 
@@ -89,6 +93,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             estatus: values.estatus || "Pendiente",
             fecha_inicio: values.fecha_inicio ? values.fecha_inicio.toISOString() : null,
             fecha_fin: values.fecha_fin ? values.fecha_fin.toISOString() : null,
+            fecha_inicio_real: values.fecha_inicio_real ? values.fecha_inicio_real.toISOString() : null,
+            fecha_fin_real: values.fecha_fin_real ? values.fecha_fin_real.toISOString() : null,
         }
 
         let error;
@@ -225,14 +231,14 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                     />
                 </div>
 
-                {/* Date range: Fecha Inicio and Fecha Fin */}
+                {/* Date range: Programado */}
                 <div className="grid grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
                         name="fecha_inicio"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Fecha de Inicio</FormLabel>
+                                <FormLabel>Fecha Inicio PROG</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
@@ -272,7 +278,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                         name="fecha_fin"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Fecha Fin</FormLabel>
+                                <FormLabel>Fecha Fin PROG</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
@@ -299,6 +305,93 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                             onSelect={field.onChange}
                                             disabled={(date) => {
                                                 const inicio = form.getValues("fecha_inicio")
+                                                if (inicio && date < inicio) return true
+                                                return date < new Date("1900-01-01")
+                                            }}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                {/* Date range: Real */}
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="fecha_inicio_real"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Fecha Inicio Real</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => date < new Date("1900-01-01")}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="fecha_fin_real"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Fecha Fin Real</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => {
+                                                const inicio = form.getValues("fecha_inicio_real")
                                                 if (inicio && date < inicio) return true
                                                 return date < new Date("1900-01-01")
                                             }}
