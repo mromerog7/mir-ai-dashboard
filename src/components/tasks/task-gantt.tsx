@@ -5,6 +5,7 @@ import { useState, useMemo, useRef } from "react"
 
 interface TaskGanttProps {
     tasks: Task[]
+    onEditTask?: (task: Task) => void
 }
 
 const STATUS_BAR_COLORS: Record<string, string> = {
@@ -61,7 +62,7 @@ function parseLocalDate(dateStr: string): Date {
     return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
 }
 
-export function TaskGantt({ tasks }: TaskGanttProps) {
+export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
     const today = useMemo(() => {
         const d = new Date()
         d.setHours(0, 0, 0, 0)
@@ -224,7 +225,11 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
                                     {/* Task name - fixed left */}
                                     <div className="min-w-[220px] w-[220px] flex-shrink-0 border-r border-slate-800 px-3 py-2 flex items-center gap-2 sticky left-0 bg-slate-900 group-hover:bg-slate-800/40 z-10">
                                         <div className={`w-2 h-2 rounded-full flex-shrink-0 ${statusDot}`} />
-                                        <span className="text-sm text-white truncate flex-1" title={task.titulo}>
+                                        <span
+                                            className="text-sm text-white truncate flex-1 cursor-pointer hover:text-blue-300 transition-colors"
+                                            title={task.titulo}
+                                            onClick={() => onEditTask?.(task)}
+                                        >
                                             {task.titulo}
                                         </span>
                                     </div>
@@ -253,9 +258,10 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
                                         {/* Bar */}
                                         {barStyle && (
                                             <div
-                                                className={`absolute top-1.5 h-7 rounded-md ${barColor} border ${barBorder} flex items-center px-2 cursor-default shadow-sm hover:brightness-110 transition-all z-[6]`}
+                                                className={`absolute top-1.5 h-7 rounded-md ${barColor} border ${barBorder} flex items-center px-2 cursor-pointer shadow-sm hover:brightness-125 hover:scale-[1.02] transition-all z-[6]`}
                                                 style={barStyle}
                                                 title={`${task.titulo}\n${task.proyectos?.nombre || "General"}\n${task.fecha_inicio} → ${task.fecha_fin}\n${task.estatus || "Pendiente"}`}
+                                                onClick={() => onEditTask?.(task)}
                                             >
                                                 <span className="text-[11px] font-medium text-white truncate drop-shadow-sm">
                                                     {task.titulo}

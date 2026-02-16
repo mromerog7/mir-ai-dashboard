@@ -5,10 +5,18 @@ import { columns } from "./columns";
 import { Task } from "@/types";
 import { DataTable } from "./data-table";
 import { CreateTaskButton } from "@/components/tasks/create-task-button";
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState, lazy, Suspense, useCallback } from "react";
 import { TaskKanban } from "@/components/tasks/task-kanban";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutGrid, List, BarChart2 } from "lucide-react";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
+import { TaskForm } from "@/components/tasks/task-form";
 
 const TaskGantt = lazy(() => import("@/components/tasks/task-gantt").then(m => ({ default: m.TaskGantt })));
 
@@ -16,6 +24,11 @@ export default function TasksPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
     const [view, setView] = useState<"table" | "kanban" | "gantt">("table");
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+    const handleEditTask = useCallback((task: Task) => {
+        setEditingTask(task);
+    }, []);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -99,10 +112,31 @@ export default function TasksPage() {
             ) : (
                 <Suspense fallback={<div className="text-white p-4">Cargando vista Gantt...</div>}>
                     <div className="flex-1 overflow-hidden min-h-[500px]">
-                        <TaskGantt tasks={tasks} />
+                        <TaskGantt tasks={tasks} onEditTask={handleEditTask} />
                     </div>
                 </Suspense>
             )}
+
+            {/* Shared Edit Task Sheet (used by Gantt view) */}
+            <Sheet open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }}>
+                <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+                    <SheetHeader>
+                        <SheetTitle className="text-white">Editar Tarea</SheetTitle>
+                        <SheetDescription className="text-slate-400">
+                            Modifica los detalles de la tarea.
+                        </SheetDescription>
+                    </SheetHeader>
+                    <div className="py-4">
+                        {editingTask && (
+                            <TaskForm
+                                onSuccess={() => setEditingTask(null)}
+                                initialData={editingTask}
+                                taskId={editingTask.id}
+                            />
+                        )}
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }
