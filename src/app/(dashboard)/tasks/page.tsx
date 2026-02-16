@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { TaskKanban } from "@/components/tasks/task-kanban";
 import { TaskGantt } from "@/components/tasks/task-gantt";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutGrid, List, GanttChart } from "lucide-react";
+import { LayoutGrid, List, BarChart3 } from "lucide-react";
 
 export default function TasksPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -78,7 +78,7 @@ export default function TasksPage() {
                                 Kanban
                             </TabsTrigger>
                             <TabsTrigger value="gantt" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
-                                <GanttChart className="h-4 w-4 mr-2" />
+                                <BarChart3 className="h-4 w-4 mr-2" />
                                 Gantt
                             </TabsTrigger>
                         </TabsList>
