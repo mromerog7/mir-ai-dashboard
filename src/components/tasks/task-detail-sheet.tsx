@@ -1,5 +1,7 @@
 "use client"
 
+import { useState, useEffect } from "react"
+
 import {
     Sheet,
     SheetContent,
@@ -9,9 +11,10 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Eye, Calendar, FolderOpen, CheckCircle } from "lucide-react"
+import { Eye, Calendar, FolderOpen, CheckCircle, AlertTriangle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Task } from "@/types"
+import { createClient } from "@/lib/supabase/client"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 
@@ -26,6 +29,25 @@ interface TaskDetailSheetProps {
 }
 
 export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
+    const [sheetOpen, setSheetOpen] = useState(false)
+    const [linkedIncidents, setLinkedIncidents] = useState<any[]>([])
+
+    useEffect(() => {
+        if (sheetOpen && task.id) {
+            const fetchIncidents = async () => {
+                const supabase = createClient()
+                const { data } = await supabase
+                    .from("incidencia_tareas")
+                    .select("incidencia_id, incidencias(id, titulo, severidad, estatus)")
+                    .eq("tarea_id", task.id)
+                if (data) {
+                    setLinkedIncidents(data.filter(d => d.incidencias).map(d => d.incidencias))
+                }
+            }
+            fetchIncidents()
+        }
+    }, [sheetOpen, task.id])
+
     const estatus = task.estatus || "Pendiente";
     const normalizedStatus = estatus.toLowerCase();
 
@@ -44,7 +66,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
     }
 
     return (
-        <Sheet>
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
                 {trigger ? trigger : (
                     <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800 text-blue-400">
@@ -115,6 +137,42 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                         <div className="text-sm text-slate-300 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md min-h-[60px]">
                             {task.observaciones || "Sin observaciones."}
                         </div>
+                    </div>
+
+                    {/* Incidencias asociadas */}
+                    <div className="space-y-2">
+                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-red-400" />
+                            Incidencias Asociadas
+                            {linkedIncidents.length > 0 && (
+                                <span className="text-xs bg-red-500/20 text-red-400 rounded-full px-2 py-0.5">{linkedIncidents.length}</span>
+                            )}
+                        </h4>
+                        {linkedIncidents.length > 0 ? (
+                            <div className="space-y-2">
+                                {linkedIncidents.map((inc: any) => {
+                                    const sevColors: Record<string, string> = {
+                                        "Baja": "bg-green-500/20 text-green-400",
+                                        "Media": "bg-yellow-500/20 text-yellow-400",
+                                        "Alta": "bg-orange-500/20 text-orange-400",
+                                        "Cr\u00edtica": "bg-red-500/20 text-red-400",
+                                    }
+                                    return (
+                                        <div key={inc.id} className="flex items-center justify-between bg-slate-950/50 p-2.5 rounded-md border border-slate-800">
+                                            <span className="text-sm text-slate-200 truncate flex-1 mr-2">{inc.titulo}</span>
+                                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                                                <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</Badge>
+                                                <Badge variant={inc.estatus === "Resuelta" ? "secondary" : "destructive"} className={`text-[10px] px-1.5 py-0 ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</Badge>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        ) : (
+                            <div className="text-sm text-slate-500 bg-slate-950/50 p-3 rounded-md">
+                                No hay incidencias asociadas a esta tarea.
+                            </div>
+                        )}
                     </div>
                 </div>
             </SheetContent>

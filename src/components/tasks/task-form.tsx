@@ -24,7 +24,7 @@ import {
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, AlertTriangle } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
@@ -57,6 +57,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [projects, setProjects] = useState<any[]>([])
+    const [linkedIncidents, setLinkedIncidents] = useState<any[]>([])
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -65,7 +66,22 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             if (data) setProjects(data)
         }
         fetchProjects()
-    }, [])
+
+        // Fetch linked incidents when editing
+        if (taskId) {
+            const fetchIncidents = async () => {
+                const supabase = createClient()
+                const { data } = await supabase
+                    .from("incidencia_tareas")
+                    .select("incidencia_id, incidencias(id, titulo, severidad, estatus)")
+                    .eq("tarea_id", taskId)
+                if (data) {
+                    setLinkedIncidents(data.filter(d => d.incidencias).map(d => d.incidencias))
+                }
+            }
+            fetchIncidents()
+        }
+    }, [taskId])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -421,6 +437,42 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                         )}
                     />
                 </div>
+
+                {/* Incidencias asociadas (solo en modo edición) */}
+                {taskId && (
+                    <div className="space-y-2 border border-slate-700 rounded-md p-4 bg-slate-900/50">
+                        <h4 className="text-sm font-medium text-slate-300 flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-red-400" />
+                            Incidencias Asociadas
+                            {linkedIncidents.length > 0 && (
+                                <span className="text-xs bg-red-500/20 text-red-400 rounded-full px-2 py-0.5">{linkedIncidents.length}</span>
+                            )}
+                        </h4>
+                        {linkedIncidents.length > 0 ? (
+                            <div className="space-y-1.5">
+                                {linkedIncidents.map((inc: any) => {
+                                    const sevColors: Record<string, string> = {
+                                        "Baja": "bg-green-500/20 text-green-400",
+                                        "Media": "bg-yellow-500/20 text-yellow-400",
+                                        "Alta": "bg-orange-500/20 text-orange-400",
+                                        "Cr\u00edtica": "bg-red-500/20 text-red-400",
+                                    }
+                                    return (
+                                        <div key={inc.id} className="flex items-center justify-between bg-slate-950/50 p-2 rounded border border-slate-800">
+                                            <span className="text-xs text-slate-200 truncate flex-1 mr-2">{inc.titulo}</span>
+                                            <div className="flex items-center gap-1 flex-shrink-0">
+                                                <span className={`text-[10px] px-1.5 py-0.5 rounded ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
+                                                <span className={`text-[10px] px-1.5 py-0.5 rounded ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</span>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        ) : (
+                            <p className="text-xs text-slate-500">No hay incidencias asociadas.</p>
+                        )}
+                    </div>
+                )}
 
                 <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
                     {loading ? "Guardando..." : (taskId ? "Actualizar Tarea" : "Crear Tarea")}
