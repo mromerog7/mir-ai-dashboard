@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
-import { Clock, Calendar, CheckCircle } from "lucide-react"
+import { Calendar, CheckCircle } from "lucide-react"
 import { EditTaskButton } from "@/components/tasks/edit-task-button"
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 
@@ -73,17 +73,22 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                                         </p>
                                     </CardContent>
                                     <CardFooter className="p-3 pt-0 flex justify-between items-center text-xs text-slate-500">
-                                        {task.fecha_vencimiento && (
-                                            <div className="flex items-center text-red-400/80">
-                                                <Clock className="w-3 h-3 mr-1" />
-                                                {format(new Date(task.fecha_vencimiento), "dd MMM HH:mm", { locale: es })}
+                                        {(task.fecha_inicio || task.fecha_fin) ? (
+                                            <div className="flex items-center text-slate-400">
+                                                <Calendar className="w-3 h-3 mr-1" />
+                                                <span>
+                                                    {task.fecha_inicio ? format(new Date(task.fecha_inicio), "dd MMM", { locale: es }) : "?"}
+                                                    {" → "}
+                                                    {task.fecha_fin ? format(new Date(task.fecha_fin), "dd MMM", { locale: es }) : "?"}
+                                                </span>
                                             </div>
+                                        ) : (
+                                            <span className="text-slate-600 italic">Sin fechas</span>
                                         )}
-                                        {!task.fecha_vencimiento && <span>-</span>}
 
                                         <div className="flex items-center" title={`Prioridad: ${task.prioridad}`}>
                                             <div className={`w-2 h-2 rounded-full mr-1 ${task.prioridad === 'Alta' || task.prioridad === 'Urgente' ? 'bg-red-500' :
-                                                    task.prioridad === 'Media' ? 'bg-yellow-500' : 'bg-green-500'
+                                                task.prioridad === 'Media' ? 'bg-yellow-500' : 'bg-green-500'
                                                 }`} />
                                         </div>
                                     </CardFooter>

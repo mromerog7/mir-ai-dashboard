@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, Calendar, Clock } from "lucide-react"
+import { ArrowUpDown, Calendar } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Task } from "@/types"
@@ -62,26 +62,31 @@ export const columns: ColumnDef<Task>[] = [
         }
     },
     {
-        accessorKey: "fecha_vencimiento",
+        id: "fecha_rango",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Vencimiento
+                    Fechas
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
+        accessorFn: (row) => row.fecha_inicio || "",
         cell: ({ row }) => {
-            const dateStr = row.getValue("fecha_vencimiento") as string
-            if (!dateStr) return <div className="text-slate-500">-</div>;
-            const date = new Date(dateStr)
+            const inicio = row.original.fecha_inicio
+            const fin = row.original.fecha_fin
+            if (!inicio && !fin) return <div className="text-slate-500">—</div>;
             return (
-                <div className="flex items-center text-slate-300">
+                <div className="flex items-center text-slate-300 text-sm">
                     <Calendar className="mr-2 h-3 w-3 text-slate-500" />
-                    <span>{format(date, "PPP p", { locale: es })}</span>
+                    <span>
+                        {inicio ? format(new Date(inicio), "dd MMM", { locale: es }) : "?"}
+                        {" → "}
+                        {fin ? format(new Date(fin), "dd MMM", { locale: es }) : "?"}
+                    </span>
                 </div>
             )
         },

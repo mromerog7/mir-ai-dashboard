@@ -36,10 +36,11 @@ const formSchema = z.object({
         message: "El título debe tener al menos 2 caracteres.",
     }),
     descripcion: z.string().optional(),
-    proyecto_id: z.string().optional(), // Using string for select value, convert to number on submit
+    proyecto_id: z.string().optional(),
     prioridad: z.string().optional(),
     estatus: z.string().optional(),
-    fecha_vencimiento: z.date().optional(),
+    fecha_inicio: z.date().optional(),
+    fecha_fin: z.date().optional(),
 })
 
 export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () => void, initialData?: any, taskId?: number }) {
@@ -47,7 +48,6 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
     const [loading, setLoading] = useState(false)
     const [projects, setProjects] = useState<any[]>([])
 
-    // Fetch projects for dropdown
     useEffect(() => {
         const fetchProjects = async () => {
             const supabase = createClient()
@@ -65,7 +65,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             proyecto_id: initialData?.proyecto_id?.toString() || "",
             prioridad: initialData?.prioridad || "Media",
             estatus: initialData?.estatus || "Pendiente",
-            fecha_vencimiento: initialData?.fecha_vencimiento ? new Date(initialData.fecha_vencimiento) : undefined,
+            fecha_inicio: initialData?.fecha_inicio ? new Date(initialData.fecha_inicio) : undefined,
+            fecha_fin: initialData?.fecha_fin ? new Date(initialData.fecha_fin) : undefined,
         },
     })
 
@@ -73,43 +74,14 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
         setLoading(true)
         const supabase = createClient()
 
-        console.log("Submitting task:", values)
-
-        const taskData = {
-            titulo: values.titulo,
-            descripcion: values.descripcion || null,
-            proyecto_id: values.proyecto_id ? parseInt(values.proyecto_id) : null,
-            prioridad: values.prioridad || "Media",
-            estatus: values.estatus || "Pendiente", // Use 'estatus' column name as per previous file view (or 'estado' in SQL?)
-            // Checking SQL: estado TEXT CHECK (estado IN ('Pendiente'...
-            // Checking types/index.ts: estatus: string | null;
-            // Need to verify column name. SQL says 'estado', Type says 'estatus'. 
-            // Let's check Supabase types or use 'estado' if SQL is source of truth.
-            // Wait, setup_modules.sql says 'estado'. types/index.ts says 'estatus'.
-            // I'll stick to 'estado' for DB column if I can, but let's check generated types.
-            // Actually, I'll bet on 'estado' based on SQL, but I should double check.
-            // For now, let's use 'estado' key for DB insert based on SQL file.
-            estado: values.estatus || "Pendiente", // Mapping form 'estatus' to DB 'estado' column? Or maybe column is 'estatus'?
-            // Let's assume column is 'estado' based on setup_modules.sql line 11.
-            fecha_vencimiento: values.fecha_vencimiento ? values.fecha_vencimiento.toISOString() : null, // 'fecha_limite' in SQL line 10?
-            // SQL: fecha_limite DATE
-            // Type: fecha_vencimiento
-            // This suggests a discrepancy. I'll use 'fecha_limite' for DB and 'fecha_vencimiento' for form/type if mapped.
-            fecha_limite: values.fecha_vencimiento ? values.fecha_vencimiento.toISOString() : null,
-        }
-
-        // Wait, I need to be sure about column names.
-        // Let's look at setup_modules.sql again or correct myself.
-        // SQL: titulo, descripcion, proyecto_id, asignado_a, fecha_limite, estado, prioridad
-        // So I should use these keys.
-
         const dbData = {
             titulo: values.titulo,
             descripcion: values.descripcion || null,
             proyecto_id: values.proyecto_id ? parseInt(values.proyecto_id) : null,
             prioridad: values.prioridad || "Media",
-            estatus: values.estatus || "Pendiente", // Use 'estatus' column
-            fecha_vencimiento: values.fecha_vencimiento ? values.fecha_vencimiento.toISOString() : null, // Use 'fecha_vencimiento' column
+            estatus: values.estatus || "Pendiente",
+            fecha_inicio: values.fecha_inicio ? values.fecha_inicio.toISOString() : null,
+            fecha_fin: values.fecha_fin ? values.fecha_fin.toISOString() : null,
         }
 
         let error;
@@ -244,68 +216,89 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                             </FormItem>
                         )}
                     />
+                </div>
+
+                {/* Date range: Fecha Inicio and Fecha Fin */}
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="fecha_inicio"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Fecha de Inicio</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => date < new Date("1900-01-01")}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
                     <FormField
                         control={form.control}
-                        name="fecha_vencimiento"
+                        name="fecha_fin"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Fecha y Hora Límite</FormLabel>
-                                <div className="flex space-x-2">
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-[240px] pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        format(field.value, "PPP", { locale: es })
-                                                    ) : (
-                                                        <span>Seleccionar fecha</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={field.value}
-                                                onSelect={(date) => {
-                                                    if (date) {
-                                                        const currentColor = field.value ? new Date(field.value) : new Date();
-                                                        date.setHours(currentColor.getHours());
-                                                        date.setMinutes(currentColor.getMinutes());
-                                                        field.onChange(date);
-                                                    }
-                                                }}
-                                                disabled={(date) =>
-                                                    date < new Date("1900-01-01")
-                                                }
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <Input
-                                        type="time"
-                                        className="w-[120px] bg-slate-800 border-slate-700 text-white"
-                                        value={field.value ? format(field.value, "HH:mm") : ""}
-                                        onChange={(e) => {
-                                            const time = e.target.value;
-                                            if (field.value && time) {
-                                                const [hours, minutes] = time.split(':').map(Number);
-                                                const newDate = new Date(field.value);
-                                                newDate.setHours(hours);
-                                                newDate.setMinutes(minutes);
-                                                field.onChange(newDate);
-                                            }
-                                        }}
-                                    />
-                                </div>
+                                <FormLabel>Fecha Fin</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => {
+                                                const inicio = form.getValues("fecha_inicio")
+                                                if (inicio && date < inicio) return true
+                                                return date < new Date("1900-01-01")
+                                            }}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                                 <FormMessage />
                             </FormItem>
                         )}
