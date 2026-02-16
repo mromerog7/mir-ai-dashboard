@@ -9,7 +9,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Eye, Calendar, User, Clock, CheckCircle } from "lucide-react"
+import { Eye, Calendar, FolderOpen, CheckCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Task } from "@/types"
 import { format } from "date-fns"
@@ -64,12 +64,10 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                         <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2">Información General</h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <span className="text-xs text-slate-500 block">Fecha Vencimiento</span>
+                                <span className="text-xs text-slate-500 block">Proyecto</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <Calendar className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-200">
-                                        {task.fecha_vencimiento ? format(new Date(task.fecha_vencimiento), "PPP", { locale: es }) : "Sin fecha"}
-                                    </span>
+                                    <FolderOpen className="h-4 w-4 text-slate-400" />
+                                    <span className="text-sm text-slate-200">{task.proyectos?.nombre || "General"}</span>
                                 </div>
                             </div>
                             <div>
@@ -80,20 +78,20 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                 </div>
                             </div>
                             <div>
-                                <span className="text-xs text-slate-500 block">Hora de Vencimiento</span>
+                                <span className="text-xs text-slate-500 block">Fecha de Inicio</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <Clock className="h-4 w-4 text-slate-400" />
+                                    <Calendar className="h-4 w-4 text-slate-400" />
                                     <span className="text-sm text-slate-200">
-                                        {task.fecha_vencimiento ? format(new Date(task.fecha_vencimiento), "p", { locale: es }) : "Sin hora"}
+                                        {task.fecha_inicio ? format(new Date(task.fecha_inicio), "PPP", { locale: es }) : "Sin fecha"}
                                     </span>
                                 </div>
                             </div>
                             <div>
-                                <span className="text-xs text-slate-500 block">Fecha Creación</span>
+                                <span className="text-xs text-slate-500 block">Fecha Fin</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <Clock className="h-4 w-4 text-slate-400" />
+                                    <Calendar className="h-4 w-4 text-slate-400" />
                                     <span className="text-sm text-slate-200">
-                                        {task.created_at ? format(new Date(task.created_at), "PPP", { locale: es }) : "-"}
+                                        {task.fecha_fin ? format(new Date(task.fecha_fin), "PPP", { locale: es }) : "Sin fecha"}
                                     </span>
                                 </div>
                             </div>
