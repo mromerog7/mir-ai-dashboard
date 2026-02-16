@@ -103,7 +103,7 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
         return { datedTasks: dated, undatedTasks: undated }
     }, [tasks])
 
-    // Calculate bar position for a task
+    // Calculate bar position using pixel-based grid alignment
     const getBarStyle = (task: Task) => {
         const start = parseLocalDate(task.fecha_inicio!)
         const end = parseLocalDate(task.fecha_fin!)
@@ -111,26 +111,30 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
         const rangeStartTime = rangeStart.getTime()
         const msPerDay = 86400000
 
-        const startDay = Math.max(0, (start.getTime() - rangeStartTime) / msPerDay)
-        const endDay = Math.min(totalDays, (end.getTime() - rangeStartTime) / msPerDay + 1)
+        const startDayIndex = Math.round((start.getTime() - rangeStartTime) / msPerDay)
+        const endDayIndex = Math.round((end.getTime() - rangeStartTime) / msPerDay)
 
-        if (endDay <= 0 || startDay >= totalDays) return null // completely outside
+        // Clamp to visible range
+        const clampedStart = Math.max(0, startDayIndex)
+        const clampedEnd = Math.min(totalDays - 1, endDayIndex)
 
-        const leftPercent = (startDay / totalDays) * 100
-        const widthPercent = ((endDay - startDay) / totalDays) * 100
+        if (clampedEnd < 0 || clampedStart >= totalDays) return null // completely outside
+
+        const leftPx = clampedStart * DAY_WIDTH
+        const widthPx = (clampedEnd - clampedStart + 1) * DAY_WIDTH // +1 to include end day fully
 
         return {
-            left: `${leftPercent}%`,
-            width: `${Math.max(widthPercent, 100 / totalDays)}%`, // at least 1 day wide
+            left: `${leftPx}px`,
+            width: `${widthPx}px`,
         }
     }
 
-    // Today marker position
-    const todayPosition = useMemo(() => {
+    // Today marker position (pixel-based, centered in today's column)
+    const todayPositionPx = useMemo(() => {
         const msPerDay = 86400000
-        const dayOffset = (today.getTime() - rangeStart.getTime()) / msPerDay
-        if (dayOffset < 0 || dayOffset > totalDays) return null
-        return (dayOffset / totalDays) * 100
+        const dayOffset = Math.round((today.getTime() - rangeStart.getTime()) / msPerDay)
+        if (dayOffset < 0 || dayOffset >= totalDays) return null
+        return dayOffset * DAY_WIDTH + DAY_WIDTH / 2 // center of today's cell
     }, [today, rangeStart, totalDays])
 
     // Month label for header
@@ -252,10 +256,10 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
                                             })}
                                         </div>
                                         {/* Today marker */}
-                                        {todayPosition !== null && (
+                                        {todayPositionPx !== null && (
                                             <div
                                                 className="absolute top-0 bottom-0 w-0.5 bg-orange-500/50 z-[5]"
-                                                style={{ left: `${todayPosition}%` }}
+                                                style={{ left: `${todayPositionPx}px` }}
                                             />
                                         )}
                                         {/* Bar */}
