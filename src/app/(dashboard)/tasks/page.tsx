@@ -7,13 +7,14 @@ import { DataTable } from "./data-table";
 import { CreateTaskButton } from "@/components/tasks/create-task-button";
 import { useEffect, useState } from "react";
 import { TaskKanban } from "@/components/tasks/task-kanban";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutGrid, List } from "lucide-react";
+import { TaskGantt } from "@/components/tasks/task-gantt";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LayoutGrid, List, GanttChart } from "lucide-react";
 
 export default function TasksPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
-    const [view, setView] = useState<"table" | "kanban">("table");
+    const [view, setView] = useState<"table" | "kanban" | "gantt">("table");
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -66,7 +67,7 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-white tracking-tight">Tareas</h1>
                 <div className="flex items-center space-x-2">
-                    <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban")} className="bg-slate-900 rounded-md border border-slate-800">
+                    <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban" | "gantt")} className="bg-slate-900 rounded-md border border-slate-800">
                         <TabsList className="bg-transparent">
                             <TabsTrigger value="table" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
                                 <List className="h-4 w-4 mr-2" />
@@ -75,6 +76,10 @@ export default function TasksPage() {
                             <TabsTrigger value="kanban" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
                                 <LayoutGrid className="h-4 w-4 mr-2" />
                                 Kanban
+                            </TabsTrigger>
+                            <TabsTrigger value="gantt" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
+                                <GanttChart className="h-4 w-4 mr-2" />
+                                Gantt
                             </TabsTrigger>
                         </TabsList>
                     </Tabs>
@@ -86,9 +91,13 @@ export default function TasksPage() {
                 <div className="text-white">Cargando tareas...</div>
             ) : view === "table" ? (
                 <DataTable columns={columns} data={tasks} />
-            ) : (
+            ) : view === "kanban" ? (
                 <div className="flex-1 overflow-hidden min-h-[500px]">
                     <TaskKanban tasks={tasks} />
+                </div>
+            ) : (
+                <div className="flex-1 overflow-hidden min-h-[500px]">
+                    <TaskGantt tasks={tasks} />
                 </div>
             )}
         </div>

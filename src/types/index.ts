@@ -20,6 +20,8 @@ export type Task = {
     proyecto_id: number | null;
     prioridad: string | null;
     asignado_a: string | null;
+    fecha_inicio?: string | null;
+    fecha_fin?: string | null;
     proyectos?: {
         nombre: string;
     } | null;
