@@ -43,6 +43,13 @@ const formSchema = z.object({
     fecha_fin: z.date().optional(),
 })
 
+// Parse date string as local date to avoid UTC timezone shift
+// "2026-02-16T00:00:00Z" → Feb 16 00:00 local (not Feb 15 18:00 CST)
+function parseLocalDate(dateStr: string): Date {
+    const parts = dateStr.split("T")[0].split("-")
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+}
+
 export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () => void, initialData?: any, taskId?: number }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
@@ -65,8 +72,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             proyecto_id: initialData?.proyecto_id?.toString() || "",
             prioridad: initialData?.prioridad || "Media",
             estatus: initialData?.estatus || "Pendiente",
-            fecha_inicio: initialData?.fecha_inicio ? new Date(initialData.fecha_inicio) : undefined,
-            fecha_fin: initialData?.fecha_fin ? new Date(initialData.fecha_fin) : undefined,
+            fecha_inicio: initialData?.fecha_inicio ? parseLocalDate(initialData.fecha_inicio) : undefined,
+            fecha_fin: initialData?.fecha_fin ? parseLocalDate(initialData.fecha_fin) : undefined,
         },
     })
 
