@@ -524,7 +524,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                                             <textarea
                                                                 placeholder="Descripción"
                                                                 {...field}
-                                                                className="flex min-h-[32px] w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-1 text-xs shadow-sm transition-all placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400 focus:h-24 resize-none"
+                                                                className="flex min-h-[32px] w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-1 text-xs shadow-sm transition-all placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400 focus:min-h-[96px] resize-y"
                                                             />
                                                         </FormControl>
                                                     </FormItem>
