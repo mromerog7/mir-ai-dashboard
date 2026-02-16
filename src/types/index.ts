@@ -24,6 +24,7 @@ export type Task = {
     fecha_fin?: string | null;
     fecha_inicio_real?: string | null;
     fecha_fin_real?: string | null;
+    observaciones?: string | null;
     proyectos?: {
         nombre: string;
     } | null;

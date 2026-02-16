@@ -36,6 +36,7 @@ const formSchema = z.object({
         message: "El título debe tener al menos 2 caracteres.",
     }),
     descripcion: z.string().optional(),
+    observaciones: z.string().optional(),
     proyecto_id: z.string().optional(),
     prioridad: z.string().optional(),
     estatus: z.string().optional(),
@@ -71,6 +72,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
         defaultValues: {
             titulo: initialData?.titulo || "",
             descripcion: initialData?.descripcion || "",
+            observaciones: initialData?.observaciones || "",
             proyecto_id: initialData?.proyecto_id?.toString() || "",
             prioridad: initialData?.prioridad || "Media",
             estatus: initialData?.estatus || "Pendiente",
@@ -88,6 +90,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
         const dbData = {
             titulo: values.titulo,
             descripcion: values.descripcion || null,
+            observaciones: values.observaciones || null,
             proyecto_id: values.proyecto_id ? parseInt(values.proyecto_id) : null,
             prioridad: values.prioridad || "Media",
             estatus: values.estatus || "Pendiente",
@@ -147,6 +150,20 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                             <FormLabel>Descripción</FormLabel>
                             <FormControl>
                                 <Textarea placeholder="Detalles de la tarea..." {...field} className="bg-slate-800 border-slate-700" />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="observaciones"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Observaciones</FormLabel>
+                            <FormControl>
+                                <Textarea placeholder="Observaciones adicionales..." {...field} className="bg-slate-800 border-slate-700" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

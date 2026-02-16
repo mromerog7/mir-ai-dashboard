@@ -109,6 +109,13 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                             {task.descripcion || "Sin descripción detallada."}
                         </div>
                     </div>
+
+                    <div className="space-y-2">
+                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2">Observaciones</h4>
+                        <div className="text-sm text-slate-300 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md min-h-[60px]">
+                            {task.observaciones || "Sin observaciones."}
+                        </div>
+                    </div>
                 </div>
             </SheetContent>
         </Sheet>
