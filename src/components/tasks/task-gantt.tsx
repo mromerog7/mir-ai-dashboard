@@ -2,10 +2,6 @@
 
 import { Task } from "@/types"
 import { useState, useMemo, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { EditTaskButton } from "@/components/tasks/edit-task-button"
-import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 
 interface TaskGanttProps {
     tasks: Task[]
@@ -33,6 +29,7 @@ const STATUS_DOT_COLORS: Record<string, string> = {
 }
 
 const DAY_LETTERS = ["D", "L", "M", "X", "J", "V", "S"]
+const DAY_WIDTH = 44
 
 function getDaysInRange(start: Date, end: Date): Date[] {
     const days: Date[] = []
@@ -145,38 +142,30 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
         return `${rangeStart.toLocaleDateString("es-MX", { month: "short" })} – ${rangeEnd.toLocaleDateString("es-MX", { month: "short", year: "numeric" })}`
     }, [rangeStart, rangeEnd])
 
-    const DAY_WIDTH = 44 // px per day column
-
     return (
         <div className="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden flex flex-col h-full">
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900/95 backdrop-blur">
                 <span className="text-white font-semibold capitalize">{monthLabel}</span>
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
+                    <button
+                        className="h-8 w-8 flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                         onClick={() => setRangeOffset(prev => prev - 1)}
                     >
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700 text-xs px-3"
+                        ‹
+                    </button>
+                    <button
+                        className="bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 text-xs px-3 py-1.5 rounded-md transition-colors"
                         onClick={() => setRangeOffset(0)}
                     >
                         Hoy
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
+                    </button>
+                    <button
+                        className="h-8 w-8 flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                         onClick={() => setRangeOffset(prev => prev + 1)}
                     >
-                        <ChevronRight className="h-4 w-4" />
-                    </Button>
+                        ›
+                    </button>
                 </div>
             </div>
 
@@ -235,10 +224,6 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
                                         <span className="text-sm text-white truncate flex-1" title={task.titulo}>
                                             {task.titulo}
                                         </span>
-                                        <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-0.5">
-                                            <EditTaskButton task={task} />
-                                            <TaskDetailSheet task={task} />
-                                        </div>
                                     </div>
                                     {/* Timeline area */}
                                     <div className="flex-1 relative h-10">
@@ -297,10 +282,6 @@ export function TaskGantt({ tasks }: TaskGanttProps) {
                                                 <span className="text-sm text-slate-400 truncate flex-1" title={task.titulo}>
                                                     {task.titulo}
                                                 </span>
-                                                <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity flex gap-0.5">
-                                                    <EditTaskButton task={task} />
-                                                    <TaskDetailSheet task={task} />
-                                                </div>
                                             </div>
                                             <div className="flex-1 relative h-10">
                                                 <div className="absolute inset-0 flex">
