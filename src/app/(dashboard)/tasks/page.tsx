@@ -8,7 +8,7 @@ import { CreateTaskButton } from "@/components/tasks/create-task-button";
 import { useEffect, useState, lazy, Suspense, useCallback, useMemo } from "react";
 import { TaskKanban } from "@/components/tasks/task-kanban";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutGrid, List, BarChart2, FolderOpen } from "lucide-react";
+import { LayoutGrid, List, BarChart2, FolderOpen, GitCompareArrows } from "lucide-react";
 import {
     Sheet,
     SheetContent,
@@ -19,6 +19,7 @@ import {
 import { TaskForm } from "@/components/tasks/task-form";
 
 const TaskGantt = lazy(() => import("@/components/tasks/task-gantt").then(m => ({ default: m.TaskGantt })));
+const TaskGanttReal = lazy(() => import("@/components/tasks/task-gantt-real").then(m => ({ default: m.TaskGanttReal })));
 
 interface Project {
     id: number;
@@ -28,7 +29,7 @@ interface Project {
 export default function TasksPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
-    const [view, setView] = useState<"table" | "kanban" | "gantt">("table");
+    const [view, setView] = useState<"table" | "kanban" | "gantt" | "gantt-real">("table");
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [selectedProjectId, setSelectedProjectId] = useState<string>("all");
@@ -127,7 +128,7 @@ export default function TasksPage() {
                         </svg>
                     </div>
 
-                    <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban" | "gantt")} className="bg-slate-900 rounded-md border border-slate-800">
+                    <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban" | "gantt" | "gantt-real")} className="bg-slate-900 rounded-md border border-slate-800">
                         <TabsList className="bg-transparent">
                             <TabsTrigger value="table" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
                                 <List className="h-4 w-4 mr-2" />
@@ -140,6 +141,10 @@ export default function TasksPage() {
                             <TabsTrigger value="gantt" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
                                 <BarChart2 className="h-4 w-4 mr-2" />
                                 Gantt
+                            </TabsTrigger>
+                            <TabsTrigger value="gantt-real" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
+                                <GitCompareArrows className="h-4 w-4 mr-2" />
+                                PROG vs REAL
                             </TabsTrigger>
                         </TabsList>
                     </Tabs>
@@ -155,10 +160,16 @@ export default function TasksPage() {
                 <div className="flex-1 overflow-hidden min-h-[500px]">
                     <TaskKanban tasks={filteredTasks} />
                 </div>
-            ) : (
+            ) : view === "gantt" ? (
                 <Suspense fallback={<div className="text-white p-4">Cargando vista Gantt...</div>}>
                     <div className="flex-1 overflow-hidden min-h-[500px]">
                         <TaskGantt tasks={filteredTasks} onEditTask={handleEditTask} />
+                    </div>
+                </Suspense>
+            ) : (
+                <Suspense fallback={<div className="text-white p-4">Cargando vista PROG vs REAL...</div>}>
+                    <div className="flex-1 overflow-hidden min-h-[500px]">
+                        <TaskGanttReal tasks={filteredTasks} onEditTask={handleEditTask} />
                     </div>
                 </Suspense>
             )}
