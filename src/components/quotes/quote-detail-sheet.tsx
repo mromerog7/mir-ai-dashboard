@@ -137,7 +137,7 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                                 {items.map((item, idx) => (
                                     <div key={idx} className="bg-slate-950/50 p-3 rounded-md border border-slate-800 flex justify-between items-start text-sm">
                                         <div className="flex-1 mr-4">
-                                            <div className="font-medium text-slate-200">{item.concepto || item.descripcion || "Ítem sin descripción"}</div>
+                                            <div className="font-medium text-slate-200 whitespace-pre-line">{item.concepto || item.descripcion || "Ítem sin descripción"}</div>
                                             <div className="flex gap-4 text-xs text-slate-500">
                                                 {item.cantidad && <span>Cant: {item.cantidad}</span>}
                                                 {(item.precio || item.precio_unitario) && (
