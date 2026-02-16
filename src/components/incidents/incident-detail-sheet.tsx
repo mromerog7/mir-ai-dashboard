@@ -9,7 +9,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Eye, MapPin, User, Calendar, FileText, Camera, AlertTriangle, Clock, CheckCircle } from "lucide-react"
+import { Eye, MapPin, User, Calendar, FileText, Camera, AlertTriangle, Clock, CheckCircle, ListChecks } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
@@ -112,6 +112,15 @@ export function IncidentDetailSheet({ incident, trigger }: IncidentDetailSheetPr
                                     <MapPin className="h-3 w-3 text-slate-500" />
                                     <span className="text-sm font-medium truncate" title={incident.proyectos?.ubicacion}>
                                         {incident.proyectos?.ubicacion || "N/A"}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-xs text-slate-500 block">Tarea Vinculada</span>
+                                <div className="flex items-center gap-1">
+                                    <ListChecks className="h-3 w-3 text-slate-500" />
+                                    <span className="text-sm font-medium truncate" title={incident.tareas?.titulo}>
+                                        {incident.tareas?.titulo || "Sin tarea"}
                                     </span>
                                 </div>
                             </div>

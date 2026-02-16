@@ -39,12 +39,13 @@ import { Incident } from "@/types"
 const formSchema = z.object({
     titulo: z.string().min(1, "Título requerido"),
     proyecto_id: z.coerce.number().min(1, "Proyecto requerido"),
+    tarea_id: z.coerce.number().optional(),
     fecha_inicio: z.string().min(1, "Fecha requerida"),
     severidad: z.string().min(1, "Severidad requerida"),
     estatus: z.string().min(1, "Estatus requerido"),
     impacto_costo: z.coerce.number().optional(),
-    impacto_tiempo: z.string().optional().or(z.literal("")), // Allow empty string
-    descripcion: z.string().optional().or(z.literal("")), // Allow empty string
+    impacto_tiempo: z.string().optional().or(z.literal("")),
+    descripcion: z.string().optional().or(z.literal("")),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -60,6 +61,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
     const [saving, setSaving] = useState(false)
     const [uploading, setUploading] = useState(false)
     const [projects, setProjects] = useState<{ id: number; nombre: string }[]>([])
+    const [projectTasks, setProjectTasks] = useState<{ id: number; titulo: string }[]>([])
 
     // Image State
     const [existingPhotos, setExistingPhotos] = useState<string[]>([])
@@ -73,6 +75,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
         defaultValues: {
             titulo: "",
             proyecto_id: 0,
+            tarea_id: 0,
             fecha_inicio: format(new Date(), "yyyy-MM-dd"),
             severidad: "Baja",
             estatus: "Abierta",
@@ -122,6 +125,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                 form.reset({
                     titulo: incident.titulo,
                     proyecto_id: incident.proyecto_id || 0,
+                    tarea_id: incident.tarea_id || 0,
                     fecha_inicio: incident.fecha_inicio ? format(new Date(incident.fecha_inicio), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
                     severidad: incident.severidad,
                     estatus: incident.estatus,
@@ -129,11 +133,15 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                     impacto_tiempo: incident.impacto_tiempo || "",
                     descripcion: incident.descripcion || "",
                 })
-                // Photos handled by separate effect or reset here too
+                // Load tasks for the incident's project
+                if (incident.proyecto_id) {
+                    fetchTasksForProject(incident.proyecto_id)
+                }
             } else {
                 form.reset({
                     titulo: "",
                     proyecto_id: 0,
+                    tarea_id: 0,
                     fecha_inicio: format(new Date(), "yyyy-MM-dd"),
                     severidad: "Baja",
                     estatus: "Abierta",
@@ -142,11 +150,38 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                     descripcion: "",
                 })
                 setExistingPhotos([])
+                setProjectTasks([])
             }
             setNewFiles([])
         }
     }, [open, form, incident])
 
+
+    // Fetch tasks for a given project
+    const fetchTasksForProject = async (projectId: number) => {
+        if (!projectId || projectId === 0) {
+            setProjectTasks([])
+            return
+        }
+        const supabase = createClient()
+        const { data } = await supabase
+            .from("tareas")
+            .select("id, titulo")
+            .eq("proyecto_id", projectId)
+            .order("titulo")
+        setProjectTasks(data || [])
+    }
+
+    // Watch project_id changes to fetch tasks
+    const watchedProjectId = form.watch("proyecto_id")
+    useEffect(() => {
+        if (open && watchedProjectId && watchedProjectId > 0) {
+            fetchTasksForProject(watchedProjectId)
+            // Reset tarea_id when project changes (except on initial load)
+        } else {
+            setProjectTasks([])
+        }
+    }, [watchedProjectId, open])
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -247,6 +282,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                 impacto_costo: data.impacto_costo && data.impacto_costo > 0 ? data.impacto_costo : null,
                 impacto_tiempo: data.impacto_tiempo || null,
                 proyecto_id: data.proyecto_id,
+                tarea_id: data.tarea_id && data.tarea_id > 0 ? data.tarea_id : null,
                 evidencia_fotos: finalPhotos.length > 0 ? finalPhotos : null,
             }
 
@@ -360,6 +396,39 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 )}
                             />
                         </div>
+
+                        {/* Tarea vinculada */}
+                        <FormField
+                            control={form.control}
+                            name="tarea_id"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Tarea Vinculada</FormLabel>
+                                    <Select
+                                        onValueChange={(value) => field.onChange(Number(value))}
+                                        value={field.value?.toString() || "0"}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectValue placeholder="Seleccionar Tarea" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectItem value="0">Sin Tarea Vinculada</SelectItem>
+                                            {projectTasks.map((task) => (
+                                                <SelectItem key={task.id} value={task.id.toString()}>
+                                                    {task.titulo}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {projectTasks.length === 0 && watchedProjectId > 0 && (
+                                        <p className="text-xs text-slate-500 mt-1">No hay tareas para este proyecto</p>
+                                    )}
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
                         {/* Row 2: Severidad | Estatus */}
                         <div className="grid grid-cols-2 gap-4">

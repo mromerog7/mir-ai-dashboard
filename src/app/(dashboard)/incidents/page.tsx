@@ -15,7 +15,7 @@ export default async function IncidentsPage() {
     const supabase = await createClient();
     const { data: incidents, error } = await supabase
         .from("incidencias")
-        .select("*, proyectos(nombre, cliente, ubicacion)")
+        .select("*, proyectos(nombre, cliente, ubicacion), tareas(titulo)")
         .order("estatus", { ascending: true }) // Open first
         .order("severidad", { ascending: false }) // Show critical first
         .order("fecha_inicio", { ascending: false });

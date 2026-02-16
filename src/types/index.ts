@@ -58,12 +58,16 @@ export type Incident = {
     impacto_tiempo: string | null;
     evidencia_fotos: string[] | string | null;
     proyecto_id: number | null;
+    tarea_id: number | null;
     solucion_final?: string | null; // Added
     fecha_cierre?: string | null; // Added
     proyectos?: {
         nombre: string;
         cliente?: string;
         ubicacion?: string;
+    } | null;
+    tareas?: {
+        titulo: string;
     } | null;
 };
 
