@@ -221,37 +221,76 @@ export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
             {/* Scrollable content */}
             <div className="flex-1 overflow-auto" ref={scrollRef}>
                 <div style={{ minWidth: `${totalDays * DAY_WIDTH}px` }}>
-                    {/* Day headers */}
-                    <div className="flex border-b border-slate-800 sticky top-0 bg-slate-900/95 backdrop-blur z-20">
-                        {/* Task name column */}
-                        <div className="min-w-[220px] w-[220px] flex-shrink-0 border-r border-slate-800 px-3 py-2 text-xs text-slate-500 font-medium sticky left-0 bg-slate-900/95 backdrop-blur z-30">
-                            Tarea
+                    {/* Month + Day headers */}
+                    <div className="sticky top-0 bg-slate-900/95 backdrop-blur z-20 border-b border-slate-800">
+                        {/* Month row */}
+                        <div className="flex">
+                            <div className="min-w-[220px] w-[220px] flex-shrink-0 border-r border-slate-800 sticky left-0 bg-slate-900/95 backdrop-blur z-30" />
+                            <div className="flex-1 relative">
+                                <div className="flex">
+                                    {(() => {
+                                        const months: { label: string; span: number }[] = []
+                                        let currentMonth = -1
+                                        let currentYear = -1
+                                        days.forEach((day) => {
+                                            const m = day.getMonth()
+                                            const y = day.getFullYear()
+                                            if (m === currentMonth && y === currentYear) {
+                                                months[months.length - 1].span++
+                                            } else {
+                                                currentMonth = m
+                                                currentYear = y
+                                                months.push({
+                                                    label: day.toLocaleDateString("es-MX", { month: "long", year: "numeric" }),
+                                                    span: 1,
+                                                })
+                                            }
+                                        })
+                                        return months.map((m, i) => (
+                                            <div
+                                                key={i}
+                                                className="text-xs font-semibold text-slate-300 capitalize border-r border-slate-700/50 flex items-center justify-center py-1"
+                                                style={{ width: `${m.span * DAY_WIDTH}px`, minWidth: `${m.span * DAY_WIDTH}px` }}
+                                            >
+                                                {m.label}
+                                            </div>
+                                        ))
+                                    })()}
+                                </div>
+                            </div>
                         </div>
-                        {/* Day columns */}
-                        <div className="flex-1 relative">
-                            <div className="flex">
-                                {days.map((day, i) => {
-                                    const isToday = isSameDay(day, today)
-                                    const isWeekend = day.getDay() === 0 || day.getDay() === 6
-                                    return (
-                                        <div
-                                            key={i}
-                                            className={`flex flex-col items-center justify-center py-1.5 border-r border-slate-800/50 ${isToday ? "bg-orange-500/10" : isWeekend ? "bg-slate-800/30" : ""
-                                                }`}
-                                            style={{ width: `${DAY_WIDTH}px`, minWidth: `${DAY_WIDTH}px` }}
-                                        >
-                                            <span className={`text-[10px] font-medium ${isToday ? "text-orange-400" : "text-slate-500"}`}>
-                                                {DAY_LETTERS[day.getDay()]}
-                                            </span>
-                                            <span className={`text-xs font-semibold ${isToday
-                                                ? "bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]"
-                                                : "text-slate-400"
-                                                }`}>
-                                                {day.getDate()}
-                                            </span>
-                                        </div>
-                                    )
-                                })}
+                        {/* Day row */}
+                        <div className="flex">
+                            {/* Task name column */}
+                            <div className="min-w-[220px] w-[220px] flex-shrink-0 border-r border-slate-800 px-3 py-2 text-xs text-slate-500 font-medium sticky left-0 bg-slate-900/95 backdrop-blur z-30">
+                                Tarea
+                            </div>
+                            {/* Day columns */}
+                            <div className="flex-1 relative">
+                                <div className="flex">
+                                    {days.map((day, i) => {
+                                        const isToday = isSameDay(day, today)
+                                        const isWeekend = day.getDay() === 0 || day.getDay() === 6
+                                        return (
+                                            <div
+                                                key={i}
+                                                className={`flex flex-col items-center justify-center py-1.5 border-r border-slate-800/50 ${isToday ? "bg-orange-500/10" : isWeekend ? "bg-slate-800/30" : ""
+                                                    }`}
+                                                style={{ width: `${DAY_WIDTH}px`, minWidth: `${DAY_WIDTH}px` }}
+                                            >
+                                                <span className={`text-[10px] font-medium ${isToday ? "text-orange-400" : "text-slate-500"}`}>
+                                                    {DAY_LETTERS[day.getDay()]}
+                                                </span>
+                                                <span className={`text-xs font-semibold ${isToday
+                                                    ? "bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px]"
+                                                    : "text-slate-400"
+                                                    }`}>
+                                                    {day.getDate()}
+                                                </span>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </div>
