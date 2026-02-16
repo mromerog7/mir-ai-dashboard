@@ -11,6 +11,11 @@ import { EditTaskButton } from "@/components/tasks/edit-task-button"
 
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 
+function parseLocalDate(dateStr: string): Date {
+    const parts = dateStr.split("T")[0].split("-")
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+}
+
 export const columns: ColumnDef<Task>[] = [
     {
         id: "proyecto",
@@ -83,9 +88,9 @@ export const columns: ColumnDef<Task>[] = [
                 <div className="flex items-center text-slate-300 text-sm">
                     <Calendar className="mr-2 h-3 w-3 text-slate-500" />
                     <span>
-                        {inicio ? format(new Date(inicio), "dd MMM", { locale: es }) : "?"}
+                        {inicio ? format(parseLocalDate(inicio), "dd MMM", { locale: es }) : "?"}
                         {" → "}
-                        {fin ? format(new Date(fin), "dd MMM", { locale: es }) : "?"}
+                        {fin ? format(parseLocalDate(fin), "dd MMM", { locale: es }) : "?"}
                     </span>
                 </div>
             )

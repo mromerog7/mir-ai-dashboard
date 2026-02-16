@@ -15,6 +15,11 @@ import { Task } from "@/types"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 
+function parseLocalDate(dateStr: string): Date {
+    const parts = dateStr.split("T")[0].split("-")
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+}
+
 interface TaskDetailSheetProps {
     task: Task
     trigger?: React.ReactNode // Allow custom trigger
@@ -82,7 +87,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-slate-400" />
                                     <span className="text-sm text-slate-200">
-                                        {task.fecha_inicio ? format(new Date(task.fecha_inicio), "PPP", { locale: es }) : "Sin fecha"}
+                                        {task.fecha_inicio ? format(parseLocalDate(task.fecha_inicio), "PPP", { locale: es }) : "Sin fecha"}
                                     </span>
                                 </div>
                             </div>
@@ -91,7 +96,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-slate-400" />
                                     <span className="text-sm text-slate-200">
-                                        {task.fecha_fin ? format(new Date(task.fecha_fin), "PPP", { locale: es }) : "Sin fecha"}
+                                        {task.fecha_fin ? format(parseLocalDate(task.fecha_fin), "PPP", { locale: es }) : "Sin fecha"}
                                     </span>
                                 </div>
                             </div>

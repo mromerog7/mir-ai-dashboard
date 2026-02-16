@@ -9,6 +9,11 @@ import { Calendar, CheckCircle } from "lucide-react"
 import { EditTaskButton } from "@/components/tasks/edit-task-button"
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 
+function parseLocalDate(dateStr: string): Date {
+    const parts = dateStr.split("T")[0].split("-")
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
+}
+
 interface TaskKanbanProps {
     tasks: Task[]
 }
@@ -77,9 +82,9 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                                             <div className="flex items-center text-slate-400">
                                                 <Calendar className="w-3 h-3 mr-1" />
                                                 <span>
-                                                    {task.fecha_inicio ? format(new Date(task.fecha_inicio), "dd MMM", { locale: es }) : "?"}
+                                                    {task.fecha_inicio ? format(parseLocalDate(task.fecha_inicio), "dd MMM", { locale: es }) : "?"}
                                                     {" → "}
-                                                    {task.fecha_fin ? format(new Date(task.fecha_fin), "dd MMM", { locale: es }) : "?"}
+                                                    {task.fecha_fin ? format(parseLocalDate(task.fecha_fin), "dd MMM", { locale: es }) : "?"}
                                                 </span>
                                             </div>
                                         ) : (
