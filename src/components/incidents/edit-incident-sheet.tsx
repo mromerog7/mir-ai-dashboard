@@ -30,7 +30,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Plus, Save, Loader2, ImagePlus, X, AlertTriangle, Pencil } from "lucide-react"
+import { Plus, Save, Loader2, ImagePlus, X, AlertTriangle, Pencil, ChevronDown, Check } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
@@ -39,7 +39,6 @@ import { Incident } from "@/types"
 const formSchema = z.object({
     titulo: z.string().min(1, "Título requerido"),
     proyecto_id: z.coerce.number().min(1, "Proyecto requerido"),
-    tarea_id: z.coerce.number().optional(),
     fecha_inicio: z.string().min(1, "Fecha requerida"),
     severidad: z.string().min(1, "Severidad requerida"),
     estatus: z.string().min(1, "Estatus requerido"),
@@ -62,6 +61,8 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
     const [uploading, setUploading] = useState(false)
     const [projects, setProjects] = useState<{ id: number; nombre: string }[]>([])
     const [projectTasks, setProjectTasks] = useState<{ id: number; titulo: string }[]>([])
+    const [selectedTaskIds, setSelectedTaskIds] = useState<number[]>([])
+    const [taskDropdownOpen, setTaskDropdownOpen] = useState(false)
 
     // Image State
     const [existingPhotos, setExistingPhotos] = useState<string[]>([])
@@ -75,7 +76,6 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
         defaultValues: {
             titulo: "",
             proyecto_id: 0,
-            tarea_id: 0,
             fecha_inicio: format(new Date(), "yyyy-MM-dd"),
             severidad: "Baja",
             estatus: "Abierta",
@@ -125,7 +125,6 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                 form.reset({
                     titulo: incident.titulo,
                     proyecto_id: incident.proyecto_id || 0,
-                    tarea_id: incident.tarea_id || 0,
                     fecha_inicio: incident.fecha_inicio ? format(new Date(incident.fecha_inicio), "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
                     severidad: incident.severidad,
                     estatus: incident.estatus,
@@ -137,11 +136,12 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                 if (incident.proyecto_id) {
                     fetchTasksForProject(incident.proyecto_id)
                 }
+                // Load linked tasks from junction table
+                loadLinkedTasks(incident.id)
             } else {
                 form.reset({
                     titulo: "",
                     proyecto_id: 0,
-                    tarea_id: 0,
                     fecha_inicio: format(new Date(), "yyyy-MM-dd"),
                     severidad: "Baja",
                     estatus: "Abierta",
@@ -151,6 +151,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                 })
                 setExistingPhotos([])
                 setProjectTasks([])
+                setSelectedTaskIds([])
             }
             setNewFiles([])
         }
@@ -172,12 +173,32 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
         setProjectTasks(data || [])
     }
 
+    // Load linked tasks from junction table
+    const loadLinkedTasks = async (incidentId: number) => {
+        const supabase = createClient()
+        const { data } = await supabase
+            .from("incidencia_tareas")
+            .select("tarea_id")
+            .eq("incidencia_id", incidentId)
+        if (data) {
+            setSelectedTaskIds(data.map(d => d.tarea_id))
+        }
+    }
+
+    // Toggle task selection
+    const toggleTaskId = (taskId: number) => {
+        setSelectedTaskIds(prev =>
+            prev.includes(taskId)
+                ? prev.filter(id => id !== taskId)
+                : [...prev, taskId]
+        )
+    }
+
     // Watch project_id changes to fetch tasks
     const watchedProjectId = form.watch("proyecto_id")
     useEffect(() => {
         if (open && watchedProjectId && watchedProjectId > 0) {
             fetchTasksForProject(watchedProjectId)
-            // Reset tarea_id when project changes (except on initial load)
         } else {
             setProjectTasks([])
         }
@@ -282,25 +303,45 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                 impacto_costo: data.impacto_costo && data.impacto_costo > 0 ? data.impacto_costo : null,
                 impacto_tiempo: data.impacto_tiempo || null,
                 proyecto_id: data.proyecto_id,
-                tarea_id: data.tarea_id && data.tarea_id > 0 ? data.tarea_id : null,
                 evidencia_fotos: finalPhotos.length > 0 ? finalPhotos : null,
             }
 
-            let error
+            let incidentId: number
             if (isEditing && incident) {
                 const { error: updateError } = await supabase
                     .from("incidencias")
                     .update(incidentData)
                     .eq("id", incident.id)
-                error = updateError
+                if (updateError) throw updateError
+                incidentId = incident.id
             } else {
-                const { error: insertError } = await supabase
+                const { data: inserted, error: insertError } = await supabase
                     .from("incidencias")
                     .insert(incidentData)
-                error = insertError
+                    .select("id")
+                    .single()
+                if (insertError) throw insertError
+                incidentId = inserted.id
             }
 
-            if (error) throw error
+            // Save linked tasks to junction table
+            // First delete existing links
+            await supabase
+                .from("incidencia_tareas")
+                .delete()
+                .eq("incidencia_id", incidentId)
+
+            // Then insert new links
+            if (selectedTaskIds.length > 0) {
+                const links = selectedTaskIds.map(tId => ({
+                    incidencia_id: incidentId,
+                    tarea_id: tId,
+                }))
+                const { error: linkError } = await supabase
+                    .from("incidencia_tareas")
+                    .insert(links)
+                if (linkError) throw linkError
+            }
 
             setOpen(false)
             router.refresh()
@@ -397,38 +438,71 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                             />
                         </div>
 
-                        {/* Tarea vinculada */}
-                        <FormField
-                            control={form.control}
-                            name="tarea_id"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Tarea Vinculada</FormLabel>
-                                    <Select
-                                        onValueChange={(value) => field.onChange(Number(value))}
-                                        value={field.value?.toString() || "0"}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger className="w-full bg-slate-800 border-slate-700">
-                                                <SelectValue placeholder="Seleccionar Tarea" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
-                                            <SelectItem value="0">Sin Tarea Vinculada</SelectItem>
-                                            {projectTasks.map((task) => (
-                                                <SelectItem key={task.id} value={task.id.toString()}>
-                                                    {task.titulo}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    {projectTasks.length === 0 && watchedProjectId > 0 && (
-                                        <p className="text-xs text-slate-500 mt-1">No hay tareas para este proyecto</p>
-                                    )}
-                                    <FormMessage />
-                                </FormItem>
+                        {/* Tareas vinculadas (multi-select) */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Tareas Vinculadas</label>
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setTaskDropdownOpen(!taskDropdownOpen)}
+                                    className="w-full flex items-center justify-between bg-slate-800 border border-slate-700 rounded-md px-3 py-2 text-sm text-left hover:bg-slate-700 transition-colors"
+                                >
+                                    <span className={selectedTaskIds.length === 0 ? "text-slate-400" : "text-white"}>
+                                        {selectedTaskIds.length === 0
+                                            ? "Sin tareas vinculadas"
+                                            : `${selectedTaskIds.length} tarea${selectedTaskIds.length > 1 ? "s" : ""} seleccionada${selectedTaskIds.length > 1 ? "s" : ""}`}
+                                    </span>
+                                    <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${taskDropdownOpen ? "rotate-180" : ""}`} />
+                                </button>
+                                {taskDropdownOpen && (
+                                    <div className="absolute z-50 mt-1 w-full bg-slate-800 border border-slate-700 rounded-md shadow-xl max-h-48 overflow-y-auto">
+                                        {projectTasks.length === 0 ? (
+                                            <div className="px-3 py-2 text-sm text-slate-500">
+                                                {watchedProjectId > 0 ? "No hay tareas para este proyecto" : "Selecciona un proyecto primero"}
+                                            </div>
+                                        ) : (
+                                            projectTasks.map((task) => {
+                                                const isSelected = selectedTaskIds.includes(task.id)
+                                                return (
+                                                    <button
+                                                        key={task.id}
+                                                        type="button"
+                                                        onClick={() => toggleTaskId(task.id)}
+                                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-slate-700 transition-colors ${isSelected ? "bg-slate-700/50" : ""
+                                                            }`}
+                                                    >
+                                                        <div className={`h-4 w-4 rounded border flex items-center justify-center flex-shrink-0 ${isSelected
+                                                                ? "bg-blue-600 border-blue-500"
+                                                                : "border-slate-600 bg-slate-900"
+                                                            }`}>
+                                                            {isSelected && <Check className="h-3 w-3 text-white" />}
+                                                        </div>
+                                                        <span className="text-slate-200 truncate">{task.titulo}</span>
+                                                    </button>
+                                                )
+                                            })
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                            {/* Selected tasks chips */}
+                            {selectedTaskIds.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 mt-2">
+                                    {selectedTaskIds.map(id => {
+                                        const task = projectTasks.find(t => t.id === id)
+                                        if (!task) return null
+                                        return (
+                                            <span key={id} className="inline-flex items-center gap-1 bg-blue-600/20 text-blue-300 border border-blue-500/30 rounded-full px-2.5 py-0.5 text-xs">
+                                                {task.titulo}
+                                                <button type="button" onClick={() => toggleTaskId(id)} className="hover:text-white">
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                            </span>
+                                        )
+                                    })}
+                                </div>
                             )}
-                        />
+                        </div>
 
                         {/* Row 2: Severidad | Estatus */}
                         <div className="grid grid-cols-2 gap-4">

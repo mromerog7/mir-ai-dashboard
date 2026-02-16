@@ -116,12 +116,20 @@ export function IncidentDetailSheet({ incident, trigger }: IncidentDetailSheetPr
                                 </div>
                             </div>
                             <div>
-                                <span className="text-xs text-slate-500 block">Tarea Vinculada</span>
-                                <div className="flex items-center gap-1">
-                                    <ListChecks className="h-3 w-3 text-slate-500" />
-                                    <span className="text-sm font-medium truncate" title={incident.tareas?.titulo}>
-                                        {incident.tareas?.titulo || "Sin tarea"}
-                                    </span>
+                                <span className="text-xs text-slate-500 block">Tareas Vinculadas</span>
+                                <div className="flex items-start gap-1 mt-1">
+                                    <ListChecks className="h-3 w-3 text-slate-500 mt-0.5 flex-shrink-0" />
+                                    <div className="flex flex-wrap gap-1">
+                                        {incident.incidencia_tareas && incident.incidencia_tareas.length > 0 ? (
+                                            incident.incidencia_tareas.map((link, idx) => (
+                                                <span key={idx} className="inline-flex items-center bg-blue-600/20 text-blue-300 border border-blue-500/30 rounded-full px-2 py-0.5 text-xs">
+                                                    {link.tareas?.titulo}
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <span className="text-sm font-medium text-slate-400">Sin tareas</span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

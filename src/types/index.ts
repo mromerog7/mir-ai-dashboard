@@ -69,6 +69,12 @@ export type Incident = {
     tareas?: {
         titulo: string;
     } | null;
+    incidencia_tareas?: {
+        tarea_id: number;
+        tareas: {
+            titulo: string;
+        };
+    }[];
 };
 
 export type Survey = {
