@@ -24,7 +24,7 @@ import {
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import { CalendarIcon, AlertTriangle } from "lucide-react"
+import { CalendarIcon, AlertTriangle, ChevronDown, DollarSign, Clock } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
@@ -58,6 +58,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
     const [loading, setLoading] = useState(false)
     const [projects, setProjects] = useState<any[]>([])
     const [linkedIncidents, setLinkedIncidents] = useState<any[]>([])
+    const [expandedIncId, setExpandedIncId] = useState<number | null>(null)
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -73,7 +74,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                 const supabase = createClient()
                 const { data } = await supabase
                     .from("incidencia_tareas")
-                    .select("incidencia_id, incidencias(id, titulo, severidad, estatus)")
+                    .select("incidencia_id, incidencias(id, titulo, descripcion, severidad, estatus, fecha_inicio, impacto_costo, impacto_tiempo, proyectos(nombre))")
                     .eq("tarea_id", taskId)
                 if (data) {
                     setLinkedIncidents(data.filter(d => d.incidencias).map(d => d.incidencias))
@@ -457,13 +458,54 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                         "Alta": "bg-orange-500/20 text-orange-400",
                                         "Cr\u00edtica": "bg-red-500/20 text-red-400",
                                     }
+                                    const isExpanded = expandedIncId === inc.id
                                     return (
-                                        <div key={inc.id} className="flex items-center justify-between bg-slate-950/50 p-2 rounded border border-slate-800">
-                                            <span className="text-xs text-slate-200 truncate flex-1 mr-2">{inc.titulo}</span>
-                                            <div className="flex items-center gap-1 flex-shrink-0">
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</span>
-                                            </div>
+                                        <div key={inc.id} className="bg-slate-950/50 rounded border border-slate-800 overflow-hidden">
+                                            <button
+                                                type="button"
+                                                onClick={() => setExpandedIncId(isExpanded ? null : inc.id)}
+                                                className="w-full flex items-center justify-between p-2 hover:bg-slate-800/50 transition-colors"
+                                            >
+                                                <span className="text-xs text-slate-200 truncate flex-1 mr-2 text-left">{inc.titulo}</span>
+                                                <div className="flex items-center gap-1 flex-shrink-0">
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</span>
+                                                    <ChevronDown className={`h-3 w-3 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                                </div>
+                                            </button>
+                                            {isExpanded && (
+                                                <div className="px-2.5 pb-2.5 pt-1 border-t border-slate-800 space-y-1.5">
+                                                    {inc.descripcion && (
+                                                        <div>
+                                                            <span className="text-[10px] text-slate-500 uppercase tracking-wider">Descripci\u00f3n</span>
+                                                            <p className="text-[11px] text-slate-300 mt-0.5">{inc.descripcion}</p>
+                                                        </div>
+                                                    )}
+                                                    <div className="grid grid-cols-2 gap-1.5">
+                                                        <div className="flex items-center gap-1">
+                                                            <CalendarIcon className="h-3 w-3 text-slate-500" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block">Fecha</span>
+                                                                <span className="text-[11px] text-slate-300">{inc.fecha_inicio ? new Date(inc.fecha_inicio).toLocaleDateString("es-MX") : "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <DollarSign className="h-3 w-3 text-slate-500" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block">Costo</span>
+                                                                <span className="text-[11px] text-slate-300">{inc.impacto_costo ? `$${inc.impacto_costo.toLocaleString()}` : "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <Clock className="h-3 w-3 text-slate-500" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block">Tiempo</span>
+                                                                <span className="text-[11px] text-slate-300">{inc.impacto_tiempo || "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     )
                                 })}

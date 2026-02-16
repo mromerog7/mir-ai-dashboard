@@ -11,7 +11,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Eye, Calendar, FolderOpen, CheckCircle, AlertTriangle } from "lucide-react"
+import { Eye, Calendar, FolderOpen, CheckCircle, AlertTriangle, ChevronDown, DollarSign, Clock } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Task } from "@/types"
 import { createClient } from "@/lib/supabase/client"
@@ -31,6 +31,7 @@ interface TaskDetailSheetProps {
 export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
     const [sheetOpen, setSheetOpen] = useState(false)
     const [linkedIncidents, setLinkedIncidents] = useState<any[]>([])
+    const [expandedIncId, setExpandedIncId] = useState<number | null>(null)
 
     useEffect(() => {
         if (sheetOpen && task.id) {
@@ -38,7 +39,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                 const supabase = createClient()
                 const { data } = await supabase
                     .from("incidencia_tareas")
-                    .select("incidencia_id, incidencias(id, titulo, severidad, estatus)")
+                    .select("incidencia_id, incidencias(id, titulo, descripcion, severidad, estatus, fecha_inicio, impacto_costo, impacto_tiempo, proyectos(nombre))")
                     .eq("tarea_id", task.id)
                 if (data) {
                     setLinkedIncidents(data.filter(d => d.incidencias).map(d => d.incidencias))
@@ -157,13 +158,61 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                         "Alta": "bg-orange-500/20 text-orange-400",
                                         "Cr\u00edtica": "bg-red-500/20 text-red-400",
                                     }
+                                    const isExpanded = expandedIncId === inc.id
                                     return (
-                                        <div key={inc.id} className="flex items-center justify-between bg-slate-950/50 p-2.5 rounded-md border border-slate-800">
-                                            <span className="text-sm text-slate-200 truncate flex-1 mr-2">{inc.titulo}</span>
-                                            <div className="flex items-center gap-1.5 flex-shrink-0">
-                                                <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</Badge>
-                                                <Badge variant={inc.estatus === "Resuelta" ? "secondary" : "destructive"} className={`text-[10px] px-1.5 py-0 ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</Badge>
-                                            </div>
+                                        <div key={inc.id} className="bg-slate-950/50 rounded-md border border-slate-800 overflow-hidden">
+                                            <button
+                                                type="button"
+                                                onClick={() => setExpandedIncId(isExpanded ? null : inc.id)}
+                                                className="w-full flex items-center justify-between p-2.5 hover:bg-slate-800/50 transition-colors"
+                                            >
+                                                <span className="text-sm text-slate-200 truncate flex-1 mr-2 text-left">{inc.titulo}</span>
+                                                <div className="flex items-center gap-1.5 flex-shrink-0">
+                                                    <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</Badge>
+                                                    <Badge variant={inc.estatus === "Resuelta" ? "secondary" : "destructive"} className={`text-[10px] px-1.5 py-0 ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</Badge>
+                                                    <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                                </div>
+                                            </button>
+                                            {isExpanded && (
+                                                <div className="px-3 pb-3 pt-1 border-t border-slate-800 space-y-2 animate-in slide-in-from-top-1 duration-200">
+                                                    {inc.descripcion && (
+                                                        <div>
+                                                            <span className="text-[10px] text-slate-500 uppercase tracking-wider">Descripci\u00f3n</span>
+                                                            <p className="text-xs text-slate-300 mt-0.5">{inc.descripcion}</p>
+                                                        </div>
+                                                    )}
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Calendar className="h-3 w-3 text-slate-500" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block">Fecha</span>
+                                                                <span className="text-xs text-slate-300">{inc.fecha_inicio ? format(parseLocalDate(inc.fecha_inicio), "d MMM yyyy", { locale: es }) : "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <FolderOpen className="h-3 w-3 text-slate-500" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block">Proyecto</span>
+                                                                <span className="text-xs text-slate-300">{inc.proyectos?.nombre || "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <DollarSign className="h-3 w-3 text-slate-500" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block">Impacto Costo</span>
+                                                                <span className="text-xs text-slate-300">{inc.impacto_costo ? `$${inc.impacto_costo.toLocaleString()}` : "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Clock className="h-3 w-3 text-slate-500" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block">Impacto Tiempo</span>
+                                                                <span className="text-xs text-slate-300">{inc.impacto_tiempo || "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     )
                                 })}
