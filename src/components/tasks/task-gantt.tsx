@@ -1,7 +1,7 @@
 "use client"
 
 import { Task } from "@/types"
-import { useState, useMemo, useRef } from "react"
+import { useMemo, useRef } from "react"
 
 interface TaskGanttProps {
     tasks: Task[]
@@ -69,21 +69,42 @@ export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
         return d
     }, [])
 
-    // Default: show 3-week range centered on today (1 week before + 2 weeks after)
-    const [rangeOffset, setRangeOffset] = useState(0) // in weeks
     const scrollRef = useRef<HTMLDivElement>(null)
+    const hasScrolledRef = useRef(false)
 
-    const rangeStart = useMemo(() => {
-        const d = new Date(today)
-        d.setDate(d.getDate() - 7 + rangeOffset * 14)
-        return d
-    }, [today, rangeOffset])
+    // Compute dynamic range that covers ALL tasks + padding
+    const { rangeStart, rangeEnd } = useMemo(() => {
+        let earliest = new Date(today)
+        let latest = new Date(today)
 
-    const rangeEnd = useMemo(() => {
-        const d = new Date(rangeStart)
-        d.setDate(d.getDate() + 27) // 4 weeks total = 28 days
-        return d
-    }, [rangeStart])
+        tasks.forEach(t => {
+            if (t.fecha_inicio) {
+                const s = parseLocalDate(t.fecha_inicio)
+                if (s < earliest) earliest = s
+            }
+            if (t.fecha_fin) {
+                const e = parseLocalDate(t.fecha_fin)
+                if (e > latest) latest = e
+            }
+        })
+
+        // Add 7-day padding on each side
+        const start = new Date(earliest)
+        start.setDate(start.getDate() - 7)
+        const end = new Date(latest)
+        end.setDate(end.getDate() + 7)
+
+        // Ensure minimum 60-day range
+        const msPerDay = 86400000
+        const rangeDays = Math.round((end.getTime() - start.getTime()) / msPerDay)
+        if (rangeDays < 60) {
+            const extraDays = Math.ceil((60 - rangeDays) / 2)
+            start.setDate(start.getDate() - extraDays)
+            end.setDate(end.getDate() + extraDays)
+        }
+
+        return { rangeStart: start, rangeEnd: end }
+    }, [tasks, today])
 
     const days = useMemo(() => getDaysInRange(rangeStart, rangeEnd), [rangeStart, rangeEnd])
     const totalDays = days.length
@@ -99,7 +120,6 @@ export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
                 undated.push(t)
             }
         })
-        // Sort dated tasks by fecha_inicio
         dated.sort((a, b) => parseLocalDate(a.fecha_inicio!).getTime() - parseLocalDate(b.fecha_inicio!).getTime())
         return { datedTasks: dated, undatedTasks: undated }
     }, [tasks])
@@ -115,14 +135,13 @@ export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
         const startDayIndex = Math.round((start.getTime() - rangeStartTime) / msPerDay)
         const endDayIndex = Math.round((end.getTime() - rangeStartTime) / msPerDay)
 
-        // Clamp to visible range
         const clampedStart = Math.max(0, startDayIndex)
         const clampedEnd = Math.min(totalDays - 1, endDayIndex)
 
-        if (clampedEnd < 0 || clampedStart >= totalDays) return null // completely outside
+        if (clampedEnd < 0 || clampedStart >= totalDays) return null
 
         const leftPx = clampedStart * DAY_WIDTH
-        const widthPx = (clampedEnd - clampedStart + 1) * DAY_WIDTH // +1 to include end day fully
+        const widthPx = (clampedEnd - clampedStart + 1) * DAY_WIDTH
 
         return {
             left: `${leftPx}px`,
@@ -130,13 +149,39 @@ export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
         }
     }
 
-    // Today marker position (pixel-based, centered in today's column)
+    // Today marker position
     const todayPositionPx = useMemo(() => {
         const msPerDay = 86400000
         const dayOffset = Math.round((today.getTime() - rangeStart.getTime()) / msPerDay)
         if (dayOffset < 0 || dayOffset >= totalDays) return null
-        return dayOffset * DAY_WIDTH + DAY_WIDTH / 2 // center of today's cell
+        return dayOffset * DAY_WIDTH + DAY_WIDTH / 2
     }, [today, rangeStart, totalDays])
+
+    // Auto-scroll to today on mount
+    const scrollToToday = () => {
+        if (scrollRef.current && todayPositionPx !== null) {
+            const containerWidth = scrollRef.current.clientWidth
+            const targetScroll = todayPositionPx - containerWidth / 2
+            scrollRef.current.scrollLeft = Math.max(0, targetScroll)
+        }
+    }
+
+    // Auto-scroll once on mount
+    useMemo(() => {
+        if (!hasScrolledRef.current) {
+            // Use setTimeout to ensure DOM is rendered
+            setTimeout(scrollToToday, 100)
+            hasScrolledRef.current = true
+        }
+    }, [todayPositionPx])
+
+    // Scroll left/right by 2 weeks
+    const scrollByWeeks = (weeks: number) => {
+        if (scrollRef.current) {
+            const px = weeks * 7 * DAY_WIDTH
+            scrollRef.current.scrollBy({ left: px, behavior: "smooth" })
+        }
+    }
 
     // Month label for header
     const monthLabel = useMemo(() => {
@@ -154,19 +199,19 @@ export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
                 <div className="flex items-center gap-2">
                     <button
                         className="h-8 w-8 flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-                        onClick={() => setRangeOffset(prev => prev - 1)}
+                        onClick={() => scrollByWeeks(-2)}
                     >
                         ‹
                     </button>
                     <button
                         className="bg-slate-800 border border-slate-700 text-white hover:bg-slate-700 text-xs px-3 py-1.5 rounded-md transition-colors"
-                        onClick={() => setRangeOffset(0)}
+                        onClick={scrollToToday}
                     >
                         Hoy
                     </button>
                     <button
                         className="h-8 w-8 flex items-center justify-center rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-                        onClick={() => setRangeOffset(prev => prev + 1)}
+                        onClick={() => scrollByWeeks(2)}
                     >
                         ›
                     </button>
