@@ -5,11 +5,12 @@ import { columns } from "./columns";
 import { Task } from "@/types";
 import { DataTable } from "./data-table";
 import { CreateTaskButton } from "@/components/tasks/create-task-button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { TaskKanban } from "@/components/tasks/task-kanban";
-import { TaskGantt } from "@/components/tasks/task-gantt";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutGrid, List, BarChart2 } from "lucide-react";
+
+const TaskGantt = lazy(() => import("@/components/tasks/task-gantt").then(m => ({ default: m.TaskGantt })));
 
 export default function TasksPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -96,9 +97,11 @@ export default function TasksPage() {
                     <TaskKanban tasks={tasks} />
                 </div>
             ) : (
-                <div className="flex-1 overflow-hidden min-h-[500px]">
-                    <TaskGantt tasks={tasks} />
-                </div>
+                <Suspense fallback={<div className="text-white p-4">Cargando vista Gantt...</div>}>
+                    <div className="flex-1 overflow-hidden min-h-[500px]">
+                        <TaskGantt tasks={tasks} />
+                    </div>
+                </Suspense>
             )}
         </div>
     );
