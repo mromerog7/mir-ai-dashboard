@@ -18,7 +18,8 @@ import {
     LogOut,
     MapPin,
     FileBarChart,
-    CloudSun
+    CloudSun,
+    BookOpen
 } from "lucide-react"
 import { useState } from "react"
 
@@ -77,6 +78,12 @@ export function Sidebar({ className }: SidebarProps) {
             icon: FileText,
             href: "/reports",
             color: "text-blue-500",
+        },
+        {
+            label: "Minutas",
+            icon: BookOpen,
+            href: "/documents/minutes",
+            color: "text-indigo-500",
         },
         {
             label: "Clima",

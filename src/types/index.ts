@@ -158,3 +158,19 @@ export type Profile = {
     created_at?: string;
     updated_at?: string;
 };
+
+export type Minuta = {
+    id: number;
+    proyecto_id: number | null;
+    fecha: string;
+    titulo: string;
+    participantes: string | null;
+    puntos_tratados: string | null;
+    acuerdos: string | null;
+    pendientes: string | null;
+    created_at?: string;
+    user_id?: string;
+    proyectos?: {
+        nombre: string;
+    } | null;
+};
