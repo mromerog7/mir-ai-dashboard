@@ -8,7 +8,7 @@ export async function getProjectDetails(projectId: number) {
 
     // Parallel fetching for performance
     const [tasks, incidents, surveys, quotes, reports] = await Promise.all([
-        supabase.from("tareas").select("*").eq("proyecto_id", projectId).order("created_at", { ascending: false }),
+        supabase.from("tareas").select("*, proyectos(nombre)").eq("proyecto_id", projectId).order("created_at", { ascending: false }),
         supabase.from("incidencias").select("*").eq("proyecto_id", projectId).order("fecha_inicio", { ascending: false }),
         supabase.from("levantamientos").select("*").eq("proyecto_id", projectId).order("created_at", { ascending: false }),
         supabase.from("cotizaciones").select("*").eq("proyecto_id", projectId).order("created_at", { ascending: false }),
