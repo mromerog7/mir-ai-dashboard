@@ -260,7 +260,8 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
 
             const payload = {
                 ...data,
-                proyecto_id: data.proyecto_id === 0 ? null : data.proyecto_id
+                proyecto_id: data.proyecto_id === 0 ? null : data.proyecto_id,
+                siguiente_reunion: data.siguiente_reunion === "" ? null : data.siguiente_reunion
             }
 
             if (isEditing && minuta) {
