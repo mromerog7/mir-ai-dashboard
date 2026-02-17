@@ -6,6 +6,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
     Sheet,
     SheetContent,
@@ -408,9 +409,9 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
 
                         {/* List Inputs with AI */}
                         {[
-                            { name: "puntos_tratados", label: "Puntos Tratados", placeholder: "Punto tratado..." },
-                            { name: "acuerdos", label: "Acuerdos", placeholder: "Acuerdo alcanzado..." },
-                            { name: "pendientes", label: "Pendientes Siguiente Reunión", placeholder: "Tarea pendiente..." }
+                            { name: "puntos_tratados", label: "Puntos Tratados", placeholder: "Escribe los puntos tratados..." },
+                            { name: "acuerdos", label: "Acuerdos", placeholder: "Escribe los acuerdos..." },
+                            { name: "pendientes", label: "Pendientes Siguiente Reunión", placeholder: "Escribe los pendientes..." }
                         ].map((item) => (
                             <FormField
                                 key={item.name}
@@ -418,18 +419,32 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                 name={item.name as any}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>{item.label}</FormLabel>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <FormLabel>{item.label}</FormLabel>
+                                            {!readonly && (
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleImproveText(field.value, field.onChange, item.name)}
+                                                    disabled={!field.value || aiImproving}
+                                                    className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 h-6 text-xs"
+                                                >
+                                                    {aiImproving && aiField === item.name ? (
+                                                        <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                                                    ) : (
+                                                        <Sparkles className="h-3 w-3 mr-1" />
+                                                    )}
+                                                    Mejorar con IA
+                                                </Button>
+                                            )}
+                                        </div>
                                         <FormControl>
-                                            <ListInput
-                                                value={field.value}
-                                                onChange={field.onChange}
+                                            <Textarea
                                                 placeholder={item.placeholder}
-                                                aiEnabled={true}
-                                                onAiImprove={(val: string) => handleImproveText(val, field.onChange, item.name)}
-                                                isAiImproving={aiImproving}
-                                                aiField={aiField}
-                                                name={item.name}
-                                                readonly={readonly}
+                                                className={`bg-slate-800 border-slate-700 min-h-[120px] resize-y ${readonly ? "opacity-100 bg-transparent border-none px-0 resize-none" : ""}`}
+                                                disabled={readonly}
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />
