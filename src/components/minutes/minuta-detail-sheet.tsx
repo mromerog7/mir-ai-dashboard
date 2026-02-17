@@ -38,14 +38,15 @@ import { format } from "date-fns"
 
 // Helper Component for Dynamic List Input
 function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, isAiImproving, aiField, name, readonly }: any) {
-    const [items, setItems] = useState<string[]>(value ? value.split('\n') : (readonly ? [] : [""]))
+    const separator = "\n\n"
+    const [items, setItems] = useState<string[]>(value ? value.split(separator) : (readonly ? [] : [""]))
 
     useEffect(() => {
-        setItems(value ? value.split('\n') : (readonly ? [] : [""]))
+        setItems(value ? value.split(separator) : (readonly ? [] : [""]))
     }, [value, readonly])
 
     const updateParent = (newItems: string[]) => {
-        onChange(newItems.join('\n'))
+        onChange(newItems.join(separator))
     }
 
     const handleChange = (index: number, val: string) => {
@@ -73,25 +74,27 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
     }
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-4">
             {items.map((item, index) => (
-                <div key={index} className="flex items-center gap-2 group">
-                    <span className="text-sm text-slate-500 w-6 text-right font-mono pt-1">{index + 1}.</span>
-                    <Input
-                        value={item}
-                        onChange={(e) => handleChange(index, e.target.value)}
-                        placeholder={placeholder}
-                        disabled={readonly}
-                        className={`bg-slate-800 border-slate-700 flex-1 ${readonly ? "opacity-100 bg-transparent border-none px-0" : ""}`}
-                    />
+                <div key={index} className="flex gap-2 group items-start">
+                    <span className="text-sm text-slate-500 w-6 text-right font-mono pt-3">{index + 1}.</span>
+                    <div className="flex-1 relative">
+                        <Textarea
+                            value={item}
+                            onChange={(e) => handleChange(index, e.target.value)}
+                            placeholder={placeholder}
+                            disabled={readonly}
+                            className={`bg-slate-800 border-slate-700 min-h-[80px] resize-y ${readonly ? "opacity-100 bg-transparent border-none px-0 resize-none min-h-0" : ""}`}
+                        />
+                    </div>
                     {!readonly && (
                         <Button
                             type="button"
                             variant="ghost"
                             size="icon"
                             onClick={() => handleRemove(index)}
-                            className="h-8 w-8 text-slate-500 hover:text-red-400 hover:bg-slate-800 opacity-50 group-hover:opacity-100 transition-opacity"
-                            title="Eliminar línea"
+                            className="h-8 w-8 text-slate-500 hover:text-red-400 hover:bg-slate-800 opacity-50 group-hover:opacity-100 transition-opacity mt-1"
+                            title="Eliminar punto"
                         >
                             <X className="h-4 w-4" />
                         </Button>
@@ -409,9 +412,9 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
 
                         {/* List Inputs with AI */}
                         {[
-                            { name: "puntos_tratados", label: "Puntos Tratados", placeholder: "Escribe los puntos tratados..." },
-                            { name: "acuerdos", label: "Acuerdos", placeholder: "Escribe los acuerdos..." },
-                            { name: "pendientes", label: "Pendientes Siguiente Reunión", placeholder: "Escribe los pendientes..." }
+                            { name: "puntos_tratados", label: "Puntos Tratados", placeholder: "Escribe un punto tratado..." },
+                            { name: "acuerdos", label: "Acuerdos", placeholder: "Escribe un acuerdo alcanzado..." },
+                            { name: "pendientes", label: "Pendientes Siguiente Reunión", placeholder: "Escribe una tarea pendiente..." }
                         ].map((item) => (
                             <FormField
                                 key={item.name}
@@ -419,32 +422,18 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                 name={item.name as any}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <FormLabel>{item.label}</FormLabel>
-                                            {!readonly && (
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => handleImproveText(field.value, field.onChange, item.name)}
-                                                    disabled={!field.value || aiImproving}
-                                                    className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 h-6 text-xs"
-                                                >
-                                                    {aiImproving && aiField === item.name ? (
-                                                        <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                                    ) : (
-                                                        <Sparkles className="h-3 w-3 mr-1" />
-                                                    )}
-                                                    Mejorar con IA
-                                                </Button>
-                                            )}
-                                        </div>
+                                        <FormLabel>{item.label}</FormLabel>
                                         <FormControl>
-                                            <Textarea
+                                            <ListInput
+                                                value={field.value}
+                                                onChange={field.onChange}
                                                 placeholder={item.placeholder}
-                                                className={`bg-slate-800 border-slate-700 min-h-[120px] resize-y ${readonly ? "opacity-100 bg-transparent border-none px-0 resize-none" : ""}`}
-                                                disabled={readonly}
-                                                {...field}
+                                                aiEnabled={true}
+                                                onAiImprove={(val: string) => handleImproveText(val, field.onChange, item.name)}
+                                                isAiImproving={aiImproving}
+                                                aiField={aiField}
+                                                name={item.name}
+                                                readonly={readonly}
                                             />
                                         </FormControl>
                                         <FormMessage />
