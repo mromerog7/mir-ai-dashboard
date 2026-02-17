@@ -2,7 +2,7 @@
 
 import { Task } from "@/types"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Calendar, CheckCircle } from "lucide-react"
@@ -55,32 +55,27 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                             </Badge>
                         </div>
 
-                        <div className="p-3 space-y-3 overflow-y-auto flex-1 custom-scrollbar">
+                        <div className="p-2 space-y-1.5 overflow-y-auto flex-1 custom-scrollbar">
                             {columnTasks.map((task) => (
                                 <Card key={task.id} className={`bg-slate-900 border-slate-800 hover:border-slate-700 transition-all ${PRIORITY_COLORS[task.prioridad || "Media"] || PRIORITY_COLORS["Media"]}`}>
-                                    <CardHeader className="p-3 pb-2 space-y-1">
-                                        <div className="flex justify-between items-start">
-                                            <Badge variant="outline" className="text-[10px] px-1 py-0 h-5 border-slate-700 text-slate-400">
+                                    <CardHeader className="p-2 pb-1 space-y-0.5">
+                                        <div className="flex justify-between items-center">
+                                            <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-slate-700 text-slate-400">
                                                 {task.proyectos?.nombre || "General"}
                                             </Badge>
-                                            <div className="flex space-x-1">
+                                            <div className="flex space-x-0.5">
                                                 <EditTaskButton task={task} />
                                                 <TaskDetailSheet task={task} />
                                             </div>
                                         </div>
-                                        <CardTitle className="text-sm font-medium text-white leading-tight">
+                                        <CardTitle className="text-xs font-medium text-white leading-snug">
                                             {task.titulo}
                                         </CardTitle>
                                     </CardHeader>
-                                    <CardContent className="p-3 pt-0 pb-2">
-                                        <p className="text-xs text-slate-400 line-clamp-2 mb-2">
-                                            {task.descripcion || "Sin descripción"}
-                                        </p>
-                                    </CardContent>
-                                    <CardFooter className="p-3 pt-0 flex justify-between items-center text-xs text-slate-500">
+                                    <CardFooter className="px-2 pb-1.5 pt-0 flex justify-between items-center text-[10px] text-slate-500">
                                         {(task.fecha_inicio || task.fecha_fin) ? (
                                             <div className="flex items-center text-slate-400">
-                                                <Calendar className="w-3 h-3 mr-1" />
+                                                <Calendar className="w-2.5 h-2.5 mr-0.5" />
                                                 <span>
                                                     {task.fecha_inicio ? format(parseLocalDate(task.fecha_inicio), "dd MMM", { locale: es }) : "?"}
                                                     {" → "}
@@ -90,12 +85,9 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                                         ) : (
                                             <span className="text-slate-600 italic">Sin fechas</span>
                                         )}
-
-                                        <div className="flex items-center" title={`Prioridad: ${task.prioridad}`}>
-                                            <div className={`w-2 h-2 rounded-full mr-1 ${task.prioridad === 'Alta' || task.prioridad === 'Urgente' ? 'bg-red-500' :
-                                                task.prioridad === 'Media' ? 'bg-yellow-500' : 'bg-green-500'
-                                                }`} />
-                                        </div>
+                                        <div className={`w-1.5 h-1.5 rounded-full ${task.prioridad === 'Alta' || task.prioridad === 'Urgente' ? 'bg-red-500' :
+                                            task.prioridad === 'Media' ? 'bg-yellow-500' : 'bg-green-500'
+                                            }`} title={`Prioridad: ${task.prioridad}`} />
                                     </CardFooter>
                                 </Card>
                             ))}
