@@ -119,7 +119,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-slate-400" />
                                     <span className="text-sm text-slate-200">
-                                        {new Date(project.fecha_inicio).toLocaleDateString("es-MX")}
+                                        {project.fecha_inicio ? new Date(project.fecha_inicio.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
                                     </span>
                                 </div>
                             </div>
@@ -128,7 +128,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-slate-400" />
                                     <span className="text-sm text-slate-200">
-                                        {project.fecha_fin ? new Date(project.fecha_fin).toLocaleDateString("es-MX") : "-"}
+                                        {project.fecha_fin ? new Date(project.fecha_fin.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
                                     </span>
                                 </div>
                             </div>
@@ -205,7 +205,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                     <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
                                                         <div>
                                                             <div className="text-sm text-slate-300">Folio: {item.folio}</div>
-                                                            <div className="text-xs text-slate-500">{item.fecha_visita ? new Date(item.fecha_visita).toLocaleDateString() : 'Sin fecha'}</div>
+                                                            <div className="text-xs text-slate-500">{item.fecha_visita ? new Date(item.fecha_visita.split('T')[0] + 'T00:00:00').toLocaleDateString() : 'Sin fecha'}</div>
                                                         </div>
                                                         {item.pdf_final_url && (
                                                             <Button
@@ -316,7 +316,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                     <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
                                                         <div>
                                                             <div className="text-sm text-slate-300">{minuta.titulo}</div>
-                                                            <div className="text-xs text-slate-500">{new Date(minuta.fecha).toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                                                            <div className="text-xs text-slate-500">{minuta.fecha ? new Date(minuta.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
                                                         </div>
                                                         <Badge variant="outline" className="text-xs scale-90">Minuta</Badge>
                                                     </div>
@@ -347,7 +347,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                     <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
                                                         <div>
                                                             <div className="text-sm text-slate-300">{meeting.titulo}</div>
-                                                            <div className="text-xs text-slate-500">{new Date(meeting.fecha).toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                                                            <div className="text-xs text-slate-500">{meeting.fecha ? new Date(meeting.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
                                                         </div>
                                                         <Badge variant="outline" className="text-xs scale-90">Reunión</Badge>
                                                     </div>

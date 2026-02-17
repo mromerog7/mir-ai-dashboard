@@ -85,7 +85,7 @@ export function IncidentDetailSheet({ incident, trigger }: IncidentDetailSheetPr
                                 <div className="flex items-center gap-1">
                                     <Calendar className="h-3 w-3 text-slate-500" />
                                     <span className="text-sm font-medium">
-                                        {format(new Date(incident.fecha_inicio), "PPP", { locale: es })}
+                                        {incident.fecha_inicio ? format(new Date(incident.fecha_inicio.split('T')[0] + 'T00:00:00'), "PPP", { locale: es }) : "N/A"}
                                     </span>
                                 </div>
                             </div>
