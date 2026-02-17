@@ -175,3 +175,20 @@ export type Minuta = {
         nombre: string;
     } | null;
 };
+
+export type ClientMeeting = {
+    id: number;
+    proyecto_id: number | null;
+    fecha: string;
+    titulo: string;
+    participantes: string | null;
+    puntos_tratados: string | null;
+    acuerdos: string | null;
+    pendientes: string | null;
+    siguiente_reunion?: string | null;
+    created_at?: string;
+    user_id?: string;
+    proyectos?: {
+        nombre: string;
+    } | null;
+};

@@ -86,6 +86,12 @@ export function Sidebar({ className }: SidebarProps) {
             color: "text-indigo-500",
         },
         {
+            label: "Reunión Clientes",
+            icon: Users,
+            href: "/documents/client-meetings",
+            color: "text-rose-500",
+        },
+        {
             label: "Clima",
             icon: CloudSun,
             href: "/weather",
