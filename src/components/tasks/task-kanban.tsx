@@ -19,9 +19,9 @@ interface TaskKanbanProps {
 }
 
 const STATUS_COLUMNS = [
-    { id: "Pendiente", label: "Pendiente", color: "bg-slate-500/10 border-slate-500/20 text-slate-500" },
+    { id: "Pendiente", label: "Pendiente", color: "bg-yellow-500/10 border-yellow-500/20 text-yellow-500" },
     { id: "En Proceso", label: "En Proceso", color: "bg-blue-500/10 border-blue-500/20 text-blue-500" },
-    { id: "Revisión", label: "Revisión", color: "bg-yellow-500/10 border-yellow-500/20 text-yellow-500" },
+    { id: "Revisión", label: "Revisión", color: "bg-orange-500/10 border-orange-500/20 text-orange-500" },
     { id: "Completada", label: "Completada", color: "bg-green-500/10 border-green-500/20 text-green-500" },
 ]
 
