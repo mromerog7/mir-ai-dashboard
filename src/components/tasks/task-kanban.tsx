@@ -59,18 +59,18 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                             {columnTasks.map((task) => (
                                 <Card key={task.id} className={`bg-slate-900 border-slate-800 hover:border-slate-700 transition-all ${PRIORITY_COLORS[task.prioridad || "Media"] || PRIORITY_COLORS["Media"]}`}>
                                     <CardHeader className="p-2 pb-1 space-y-0.5">
-                                        <div className="flex justify-between items-center">
-                                            <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-slate-700 text-slate-400">
-                                                {task.proyectos?.nombre || "General"}
-                                            </Badge>
-                                            <div className="flex space-x-0.5">
+                                        <div className="flex justify-between items-start">
+                                            <CardTitle className="text-xs font-medium text-white leading-snug flex-1 mr-1">
+                                                {task.titulo}
+                                            </CardTitle>
+                                            <div className="flex space-x-0.5 flex-shrink-0">
                                                 <EditTaskButton task={task} />
                                                 <TaskDetailSheet task={task} />
                                             </div>
                                         </div>
-                                        <CardTitle className="text-xs font-medium text-white leading-snug">
-                                            {task.titulo}
-                                        </CardTitle>
+                                        <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-slate-700 text-slate-400 w-fit">
+                                            {task.proyectos?.nombre || "General"}
+                                        </Badge>
                                     </CardHeader>
                                     <CardFooter className="px-2 pb-1.5 pt-0 flex justify-between items-center text-[10px] text-slate-500">
                                         {(task.fecha_inicio || task.fecha_fin) ? (
