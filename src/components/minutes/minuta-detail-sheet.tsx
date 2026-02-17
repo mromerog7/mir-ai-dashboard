@@ -6,7 +6,6 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import {
     Sheet,
     SheetContent,
@@ -30,11 +29,108 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Pencil, Save, Loader2, Sparkles, Plus, FileText } from "lucide-react"
+import { Pencil, Loader2, Sparkles, Plus, X } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Minuta } from "@/types"
 import { format } from "date-fns"
+
+// Helper Component for Dynamic List Input
+function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, isAiImproving, aiField, name }: any) {
+    // Split by newline, filter empty only if user hasn't typed anything yet? 
+    // Actually, we want to allow empty inputs while typing.
+    // If value is empty string, start with one empty item.
+    const [items, setItems] = useState<string[]>(value ? value.split('\n') : [""])
+
+    // Sync with external value changes (e.g. form reset or AI update)
+    useEffect(() => {
+        setItems(value ? value.split('\n') : [""])
+    }, [value])
+
+    const updateParent = (newItems: string[]) => {
+        // Join with newline.
+        onChange(newItems.join('\n'))
+    }
+
+    const handleChange = (index: number, val: string) => {
+        const newItems = [...items]
+        newItems[index] = val
+        setItems(newItems)
+        updateParent(newItems)
+    }
+
+    const handleAdd = () => {
+        const newItems = [...items, ""]
+        setItems(newItems)
+        updateParent(newItems)
+    }
+
+    const handleRemove = (index: number) => {
+        const newItems = items.filter((_, i) => i !== index)
+        // Ensure at least one input remains? Or allow empty?
+        // If empty, dragging form value to empty string is fine.
+        // But for UI, let's keep one empty if all removed?
+        const finalItems = newItems.length ? newItems : [""]
+        setItems(finalItems)
+        updateParent(finalItems)
+    }
+
+    return (
+        <div className="space-y-2">
+            {items.map((item, index) => (
+                <div key={index} className="flex items-center gap-2 group">
+                    <span className="text-sm text-slate-500 w-6 text-right font-mono pt-1">{index + 1}.</span>
+                    <Input
+                        value={item}
+                        onChange={(e) => handleChange(index, e.target.value)}
+                        placeholder={placeholder}
+                        className="bg-slate-800 border-slate-700 flex-1"
+                    />
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemove(index)}
+                        className="h-8 w-8 text-slate-500 hover:text-red-400 hover:bg-slate-800 opacity-50 group-hover:opacity-100 transition-opacity"
+                        title="Eliminar línea"
+                    >
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+            ))}
+            <div className="flex justify-between items-center pl-8 pt-1">
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleAdd}
+                    className="border border-dashed border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 hover:border-slate-500"
+                >
+                    <Plus className="h-3 w-3 mr-2" />
+                    Agregar
+                </Button>
+
+                {aiEnabled && (
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onAiImprove(value)}
+                        disabled={!value || isAiImproving}
+                        className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 h-7 text-xs"
+                    >
+                        {isAiImproving && aiField === name ? (
+                            <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                        ) : (
+                            <Sparkles className="h-3 w-3 mr-1" />
+                        )}
+                        Mejorar Lista con IA
+                    </Button>
+                )}
+            </div>
+        </div>
+    )
+}
 
 const formSchema = z.object({
     proyecto_id: z.coerce.number().optional(),
@@ -73,7 +169,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
         try {
             const payload = {
                 tipo: "Minuta",
-                instruccion: "mejora la redaccion, corrige ortografía y estructura los puntos clave de manera profesional usando markdown si es necesario",
+                instruccion: "mejora la redacción, corrige ortografía. Si es una lista, mantén cada punto en una línea separada. NO uses viñetas, guiones ni números al inicio de cada línea, solo el texto limpio. NO uses markdown.",
                 texto: currentText
             };
 
@@ -86,10 +182,19 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
             if (!response.ok) throw new Error("Error connecting to AI service");
 
             const data = await response.json();
+            let improvedText = "";
             if (data && data.output) {
-                onChange(data.output);
+                improvedText = data.output;
             } else if (data && data.text) {
-                onChange(data.text);
+                improvedText = data.text;
+            }
+
+            if (improvedText) {
+                // Remove potential markdown bullets if AI ignores instruction
+                const cleanText = improvedText.split('\n').map((line: string) =>
+                    line.replace(/^[-*•\d\.]+\s+/, '').trim()
+                ).join('\n');
+                onChange(cleanText);
             }
 
         } catch (error) {
@@ -108,7 +213,6 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                 const { data } = await supabase
                     .from("proyectos")
                     .select("id, nombre")
-                    // .eq("status", "En Progreso") // Fetch all for now to show history
                     .order("nombre")
                 if (data) setProjects(data)
             }
@@ -163,6 +267,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                 const { error } = await supabase
                     .from("minutas")
                     .insert(payload)
+                    .select()
                 if (error) throw error
             }
 
@@ -265,18 +370,25 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                 <FormItem>
                                     <FormLabel>Participantes</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Nombres de los asistentes..." {...field} className="bg-slate-800 border-slate-700" />
+                                        <ListInput
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            placeholder="Nombre del participante"
+                                            name="participantes"
+                                            // No AI for simple names? Or ok.
+                                            aiEnabled={false}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        {/* Text Areas with AI */}
+                        {/* List Inputs with AI */}
                         {[
-                            { name: "puntos_tratados", label: "Puntos Tratados" },
-                            { name: "acuerdos", label: "Acuerdos" },
-                            { name: "pendientes", label: "Pendientes Siguiente Reunión" }
+                            { name: "puntos_tratados", label: "Puntos Tratados", placeholder: "Punto tratado..." },
+                            { name: "acuerdos", label: "Acuerdos", placeholder: "Acuerdo alcanzado..." },
+                            { name: "pendientes", label: "Pendientes Siguiente Reunión", placeholder: "Tarea pendiente..." }
                         ].map((item) => (
                             <FormField
                                 key={item.name}
@@ -286,29 +398,17 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                     <FormItem>
                                         <FormLabel>{item.label}</FormLabel>
                                         <FormControl>
-                                            <Textarea
-                                                placeholder={`Detalle de ${item.label.toLowerCase()}...`}
-                                                {...field}
-                                                className="bg-slate-800 border-slate-700 min-h-[100px]"
+                                            <ListInput
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                placeholder={item.placeholder}
+                                                aiEnabled={true}
+                                                onAiImprove={(val: string) => handleImproveText(val, field.onChange, item.name)}
+                                                isAiImproving={aiImproving}
+                                                aiField={aiField}
+                                                name={item.name}
                                             />
                                         </FormControl>
-                                        <div className="flex justify-end">
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => handleImproveText(field.value, field.onChange, item.name)}
-                                                disabled={!field.value || aiImproving}
-                                                className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 h-6 text-xs"
-                                            >
-                                                {aiImproving && aiField === item.name ? (
-                                                    <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                                ) : (
-                                                    <Sparkles className="h-3 w-3 mr-1" />
-                                                )}
-                                                Mejorar con IA
-                                            </Button>
-                                        </div>
                                         <FormMessage />
                                     </FormItem>
                                 )}
