@@ -168,6 +168,7 @@ export type Minuta = {
     puntos_tratados: string | null;
     acuerdos: string | null;
     pendientes: string | null;
+    siguiente_reunion?: string | null;
     created_at?: string;
     user_id?: string;
     proyectos?: {

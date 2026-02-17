@@ -140,6 +140,7 @@ const formSchema = z.object({
     puntos_tratados: z.string().optional(),
     acuerdos: z.string().optional(),
     pendientes: z.string().optional(),
+    siguiente_reunion: z.string().optional(),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -230,6 +231,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
             puntos_tratados: minuta?.puntos_tratados || "",
             acuerdos: minuta?.acuerdos || "",
             pendientes: minuta?.pendientes || "",
+            siguiente_reunion: minuta?.siguiente_reunion || "",
         },
     })
 
@@ -243,6 +245,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                 puntos_tratados: minuta?.puntos_tratados || "",
                 acuerdos: minuta?.acuerdos || "",
                 pendientes: minuta?.pendientes || "",
+                siguiente_reunion: minuta?.siguiente_reunion || "",
             })
         }
     }, [open, minuta, defaultProjectId, form])
@@ -309,7 +312,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                 name="fecha"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Fecha</FormLabel>
+                                        <FormLabel>Fecha Reunión</FormLabel>
                                         <FormControl>
                                             <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
                                         </FormControl>
@@ -320,34 +323,48 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
 
                             <FormField
                                 control={form.control}
-                                name="proyecto_id"
+                                name="siguiente_reunion"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Proyecto (Opcional)</FormLabel>
-                                        <Select
-                                            onValueChange={(value) => field.onChange(Number(value))}
-                                            value={field.value?.toString() || "0"}
-                                            defaultValue={field.value?.toString()}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
-                                                    <SelectValue placeholder="Seleccionar..." />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
-                                                <SelectItem value="0">General / Sin Proyecto</SelectItem>
-                                                {projects.map((project) => (
-                                                    <SelectItem key={project.id} value={project.id.toString()}>
-                                                        {project.nombre}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <FormLabel>Siguiente Reunión</FormLabel>
+                                        <FormControl>
+                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                         </div>
+
+                        <FormField
+                            control={form.control}
+                            name="proyecto_id"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Proyecto (Opcional)</FormLabel>
+                                    <Select
+                                        onValueChange={(value) => field.onChange(Number(value))}
+                                        value={field.value?.toString() || "0"}
+                                        defaultValue={field.value?.toString()}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectValue placeholder="Seleccionar..." />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectItem value="0">General / Sin Proyecto</SelectItem>
+                                            {projects.map((project) => (
+                                                <SelectItem key={project.id} value={project.id.toString()}>
+                                                    {project.nombre}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
                         <FormField
                             control={form.control}
@@ -428,6 +445,6 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                     </form>
                 </Form>
             </SheetContent>
-        </Sheet>
+        </Sheet >
     )
 }

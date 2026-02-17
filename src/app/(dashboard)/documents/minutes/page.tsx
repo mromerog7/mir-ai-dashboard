@@ -13,5 +13,10 @@ export default async function MinutesPage() {
         .select("*, proyectos(nombre)")
         .order("fecha", { ascending: false })
 
-    return <MinutesClient initialMinutes={(minutes || []) as any} />
+    const { data: projects } = await supabase
+        .from("proyectos")
+        .select("id, nombre")
+        .order("nombre", { ascending: true })
+
+    return <MinutesClient initialMinutes={(minutes || []) as any} projects={(projects || []) as any} />
 }
