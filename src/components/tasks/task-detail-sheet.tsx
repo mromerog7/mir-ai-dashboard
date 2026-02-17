@@ -106,20 +106,38 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                 </div>
                             </div>
                             <div>
-                                <span className="text-xs text-slate-500 block">Fecha de Inicio</span>
+                                <span className="text-xs text-slate-500 block">F. Inicio Programada</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <Calendar className="h-4 w-4 text-slate-400" />
+                                    <Calendar className="h-4 w-4 text-blue-400" />
                                     <span className="text-sm text-slate-200">
                                         {task.fecha_inicio ? format(parseLocalDate(task.fecha_inicio), "PPP", { locale: es }) : "Sin fecha"}
                                     </span>
                                 </div>
                             </div>
                             <div>
-                                <span className="text-xs text-slate-500 block">Fecha Fin</span>
+                                <span className="text-xs text-slate-500 block">F. Fin Programada</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <Calendar className="h-4 w-4 text-slate-400" />
+                                    <Calendar className="h-4 w-4 text-blue-400" />
                                     <span className="text-sm text-slate-200">
                                         {task.fecha_fin ? format(parseLocalDate(task.fecha_fin), "PPP", { locale: es }) : "Sin fecha"}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-xs text-slate-500 block">F. Inicio Real</span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <Calendar className="h-4 w-4 text-emerald-400" />
+                                    <span className="text-sm text-slate-200">
+                                        {task.fecha_inicio_real ? format(parseLocalDate(task.fecha_inicio_real), "PPP", { locale: es }) : "Pendiente"}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-xs text-slate-500 block">F. Fin Real</span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <Calendar className="h-4 w-4 text-emerald-400" />
+                                    <span className="text-sm text-slate-200">
+                                        {task.fecha_fin_real ? format(parseLocalDate(task.fecha_fin_real), "PPP", { locale: es }) : "Pendiente"}
                                     </span>
                                 </div>
                             </div>
