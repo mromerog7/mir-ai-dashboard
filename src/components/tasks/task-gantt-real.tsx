@@ -11,7 +11,7 @@ interface TaskGanttRealProps {
 const STATUS_DOT_COLORS: Record<string, string> = {
     "Pendiente": "bg-yellow-400",
     "En Proceso": "bg-blue-400",
-    "Revisión": "bg-purple-400",
+    "Revisión": "bg-orange-400",
     "Completada": "bg-green-400",
     "Cancelada": "bg-slate-400",
 }
