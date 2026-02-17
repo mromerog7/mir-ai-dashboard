@@ -9,9 +9,9 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Eye, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList } from "lucide-react"
+import { Eye, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Project, Task, Incident, Survey, Quote, Report } from "@/types"
+import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting } from "@/types"
 import { useEffect, useState } from "react"
 import { getProjectDetails } from "@/app/actions/get-project-details"
 
@@ -20,6 +20,8 @@ import { IncidentDetailSheet } from "@/components/incidents/incident-detail-shee
 import { SurveyDetailSheet } from "@/components/surveys/survey-detail-sheet"
 import { QuoteDetailSheet } from "@/components/quotes/quote-detail-sheet"
 import { ReportDetailSheet } from "@/components/reports/report-detail-sheet"
+import { MinutaDetailSheet } from "@/components/minutes/minuta-detail-sheet"
+import { ClientMeetingDetailSheet } from "@/components/client-meetings/client-meeting-detail-sheet"
 
 interface ProjectDetailSheetProps {
     project: Project
@@ -35,7 +37,10 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
         surveys: Survey[];
         quotes: Quote[];
         reports: Report[];
+        minutas: Minuta[];
+        clientMeetings: ClientMeeting[];
     } | null>(null);
+
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -55,6 +60,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                         surveys: data.surveys as unknown as Survey[],
                         quotes: data.quotes as unknown as Quote[],
                         reports: data.reports as unknown as Report[],
+                        minutas: data.minutas as unknown as Minuta[],
+                        clientMeetings: data.clientMeetings as unknown as ClientMeeting[],
                     });
                 }
             } catch (error) {
@@ -288,6 +295,68 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                     ))}
                                 </div>
                             ) : <p className="text-xs text-slate-500 italic">No hay reportes.</p>
+                        )}
+                    </div>
+
+                    {/* Minutas */}
+                    <div className="space-y-3">
+                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <BookOpen className="h-4 w-4 text-indigo-500" /> Minutas
+                        </h4>
+                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                            relatedData?.minutas && relatedData.minutas.length > 0 ? (
+                                <div className="space-y-2">
+                                    {relatedData.minutas.map(minuta => (
+                                        <div key={minuta.id} className="relative group">
+                                            <MinutaDetailSheet
+                                                minuta={minuta}
+                                                defaultProjectId={Number(project.id)}
+                                                readonly={true}
+                                                trigger={
+                                                    <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
+                                                        <div>
+                                                            <div className="text-sm text-slate-300">{minuta.titulo}</div>
+                                                            <div className="text-xs text-slate-500">{new Date(minuta.fecha).toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                                                        </div>
+                                                        <Badge variant="outline" className="text-xs scale-90">Minuta</Badge>
+                                                    </div>
+                                                }
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : <p className="text-xs text-slate-500 italic">No hay minutas registradas.</p>
+                        )}
+                    </div>
+
+                    {/* Client Meetings */}
+                    <div className="space-y-3">
+                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <Users className="h-4 w-4 text-rose-500" /> Reuniones con Clientes
+                        </h4>
+                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                            relatedData?.clientMeetings && relatedData.clientMeetings.length > 0 ? (
+                                <div className="space-y-2">
+                                    {relatedData.clientMeetings.map(meeting => (
+                                        <div key={meeting.id} className="relative group">
+                                            <ClientMeetingDetailSheet
+                                                meeting={meeting}
+                                                defaultProjectId={Number(project.id)}
+                                                readonly={true}
+                                                trigger={
+                                                    <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
+                                                        <div>
+                                                            <div className="text-sm text-slate-300">{meeting.titulo}</div>
+                                                            <div className="text-xs text-slate-500">{new Date(meeting.fecha).toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                                                        </div>
+                                                        <Badge variant="outline" className="text-xs scale-90">Reunión</Badge>
+                                                    </div>
+                                                }
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : <p className="text-xs text-slate-500 italic">No hay reuniones registradas.</p>
                         )}
                     </div>
                 </div>
