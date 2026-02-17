@@ -36,19 +36,14 @@ import { Minuta } from "@/types"
 import { format } from "date-fns"
 
 // Helper Component for Dynamic List Input
-function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, isAiImproving, aiField, name }: any) {
-    // Split by newline, filter empty only if user hasn't typed anything yet? 
-    // Actually, we want to allow empty inputs while typing.
-    // If value is empty string, start with one empty item.
-    const [items, setItems] = useState<string[]>(value ? value.split('\n') : [""])
+function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, isAiImproving, aiField, name, readonly }: any) {
+    const [items, setItems] = useState<string[]>(value ? value.split('\n') : (readonly ? [] : [""]))
 
-    // Sync with external value changes (e.g. form reset or AI update)
     useEffect(() => {
-        setItems(value ? value.split('\n') : [""])
-    }, [value])
+        setItems(value ? value.split('\n') : (readonly ? [] : [""]))
+    }, [value, readonly])
 
     const updateParent = (newItems: string[]) => {
-        // Join with newline.
         onChange(newItems.join('\n'))
     }
 
@@ -67,12 +62,13 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
 
     const handleRemove = (index: number) => {
         const newItems = items.filter((_, i) => i !== index)
-        // Ensure at least one input remains? Or allow empty?
-        // If empty, dragging form value to empty string is fine.
-        // But for UI, let's keep one empty if all removed?
-        const finalItems = newItems.length ? newItems : [""]
+        const finalItems = newItems.length ? newItems : (readonly ? [] : [""])
         setItems(finalItems)
         updateParent(finalItems)
+    }
+
+    if (readonly && items.length === 0) {
+        return <div className="text-slate-500 text-sm italic">Sin información</div>
     }
 
     return (
@@ -84,50 +80,55 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
                         value={item}
                         onChange={(e) => handleChange(index, e.target.value)}
                         placeholder={placeholder}
-                        className="bg-slate-800 border-slate-700 flex-1"
+                        disabled={readonly}
+                        className={`bg-slate-800 border-slate-700 flex-1 ${readonly ? "opacity-100 bg-transparent border-none px-0" : ""}`}
                     />
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleRemove(index)}
-                        className="h-8 w-8 text-slate-500 hover:text-red-400 hover:bg-slate-800 opacity-50 group-hover:opacity-100 transition-opacity"
-                        title="Eliminar línea"
-                    >
-                        <X className="h-4 w-4" />
-                    </Button>
+                    {!readonly && (
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemove(index)}
+                            className="h-8 w-8 text-slate-500 hover:text-red-400 hover:bg-slate-800 opacity-50 group-hover:opacity-100 transition-opacity"
+                            title="Eliminar línea"
+                        >
+                            <X className="h-4 w-4" />
+                        </Button>
+                    )}
                 </div>
             ))}
-            <div className="flex justify-between items-center pl-8 pt-1">
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleAdd}
-                    className="border border-dashed border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 hover:border-slate-500"
-                >
-                    <Plus className="h-3 w-3 mr-2" />
-                    Agregar
-                </Button>
-
-                {aiEnabled && (
+            {!readonly && (
+                <div className="flex justify-between items-center pl-8 pt-1">
                     <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        onClick={() => onAiImprove(value)}
-                        disabled={!value || isAiImproving}
-                        className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 h-7 text-xs"
+                        onClick={handleAdd}
+                        className="border border-dashed border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 hover:border-slate-500"
                     >
-                        {isAiImproving && aiField === name ? (
-                            <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                        ) : (
-                            <Sparkles className="h-3 w-3 mr-1" />
-                        )}
-                        Mejorar Lista con IA
+                        <Plus className="h-3 w-3 mr-2" />
+                        Agregar
                     </Button>
-                )}
-            </div>
+
+                    {aiEnabled && (
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onAiImprove(value)}
+                            disabled={!value || isAiImproving}
+                            className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 h-7 text-xs"
+                        >
+                            {isAiImproving && aiField === name ? (
+                                <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                            ) : (
+                                <Sparkles className="h-3 w-3 mr-1" />
+                            )}
+                            Mejorar Lista con IA
+                        </Button>
+                    )}
+                </div>
+            )}
         </div>
     )
 }
@@ -149,9 +150,10 @@ interface MinutaDetailSheetProps {
     minuta?: Minuta
     trigger?: React.ReactNode
     defaultProjectId?: number
+    readonly?: boolean
 }
 
-export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaDetailSheetProps) {
+export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly = false }: MinutaDetailSheetProps) {
     const isEditing = !!minuta
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
@@ -251,6 +253,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
     }, [open, minuta, defaultProjectId, form])
 
     async function onSubmit(data: FormValues) {
+        if (readonly) return;
         setSaving(true)
         try {
             const supabase = createClient()
@@ -296,10 +299,10 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
             <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
                     <SheetTitle className="text-white">
-                        {isEditing ? "Editar Minuta" : "Nueva Minuta"}
+                        {readonly ? "Detalle de Minuta" : (isEditing ? "Editar Minuta" : "Nueva Minuta")}
                     </SheetTitle>
                     <SheetDescription className="text-slate-400">
-                        Registro de acuerdos y puntos clave de la reunión.
+                        {readonly ? "Información detallada de la reunión." : "Registro de acuerdos y puntos clave de la reunión."}
                     </SheetDescription>
                 </SheetHeader>
 
@@ -314,7 +317,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                     <FormItem>
                                         <FormLabel>Fecha Reunión</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                            <Input type="date" {...field} disabled={readonly} className={`bg-slate-800 border-slate-700 block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0" : ""}`} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -328,7 +331,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                     <FormItem>
                                         <FormLabel>Siguiente Reunión</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                            <Input type="date" {...field} disabled={readonly} className={`bg-slate-800 border-slate-700 block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0" : ""}`} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -341,14 +344,15 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                             name="proyecto_id"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Proyecto (Opcional)</FormLabel>
+                                    <FormLabel>Proyecto</FormLabel>
                                     <Select
                                         onValueChange={(value) => field.onChange(Number(value))}
                                         value={field.value?.toString() || "0"}
                                         defaultValue={field.value?.toString()}
+                                        disabled={readonly}
                                     >
                                         <FormControl>
-                                            <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                            <SelectTrigger className={`w-full bg-slate-800 border-slate-700 ${readonly ? "opacity-100 bg-transparent border-none px-0 cursor-default" : ""}`}>
                                                 <SelectValue placeholder="Seleccionar..." />
                                             </SelectTrigger>
                                         </FormControl>
@@ -373,7 +377,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                 <FormItem>
                                     <FormLabel>Título / Objetivo</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Ej. Revisión Semanal de Avances" {...field} className="bg-slate-800 border-slate-700" />
+                                        <Input placeholder="Ej. Revisión Semanal de Avances" {...field} disabled={readonly} className={`bg-slate-800 border-slate-700 ${readonly ? "opacity-100 bg-transparent border-none px-0 text-lg font-semibold" : ""}`} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -392,8 +396,8 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                             onChange={field.onChange}
                                             placeholder="Nombre del participante"
                                             name="participantes"
-                                            // No AI for simple names? Or ok.
                                             aiEnabled={false}
+                                            readonly={readonly}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -424,6 +428,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                                                 isAiImproving={aiImproving}
                                                 aiField={aiField}
                                                 name={item.name}
+                                                readonly={readonly}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -433,13 +438,15 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId }: MinutaD
                         ))}
 
                         <div className="flex justify-end gap-2 pt-4">
-                            <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="hover:bg-slate-800">
-                                Cancelar
+                            <Button type="button" variant={readonly ? "default" : "ghost"} onClick={() => setOpen(false)} className={readonly ? "bg-slate-800 hover:bg-slate-700" : "hover:bg-slate-800"}>
+                                {readonly ? "Cerrar" : "Cancelar"}
                             </Button>
-                            <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white">
-                                {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                {isEditing ? "Guardar Cambios" : "Crear Minuta"}
-                            </Button>
+                            {!readonly && (
+                                <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white">
+                                    {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    {isEditing ? "Guardar Cambios" : "Crear Minuta"}
+                                </Button>
+                            )}
                         </div>
 
                     </form>

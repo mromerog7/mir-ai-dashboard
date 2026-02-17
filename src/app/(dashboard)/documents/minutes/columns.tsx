@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, FileText } from "lucide-react"
+import { ArrowUpDown, FileText, Eye } from "lucide-react"
 import { MinutaDetailSheet } from "@/components/minutes/minuta-detail-sheet"
 import { Minuta } from "@/types"
 
@@ -59,6 +59,15 @@ export const columns: ColumnDef<Minuta>[] = [
             const minuta = row.original
             return (
                 <div className="flex items-center gap-2 justify-end">
+                    <MinutaDetailSheet
+                        minuta={minuta}
+                        readonly={true}
+                        trigger={
+                            <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-blue-400 hover:bg-slate-800">
+                                <Eye className="h-4 w-4" />
+                            </Button>
+                        }
+                    />
                     <MinutaDetailSheet minuta={minuta} />
                 </div>
             )
