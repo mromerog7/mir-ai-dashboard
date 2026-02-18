@@ -160,13 +160,13 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                     {/* Totals Breakdown */}
                     <div className="flex justify-end pt-4 border-t border-slate-200">
                         <div className="w-1/2 space-y-2">
-                            <div className="flex justify-between text-sm">
+                            <div className="flex justify-between text-base">
                                 <span className="text-slate-600 font-bold">Subtotal:</span>
                                 <span className="text-slate-900 font-bold">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.subtotal || 0)}
                                 </span>
                             </div>
-                            <div className="flex justify-between text-sm">
+                            <div className="flex justify-between text-base">
                                 <span className="text-slate-600 font-bold">IVA (16%):</span>
                                 <span className="text-slate-900 font-bold">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.iva || 0)}

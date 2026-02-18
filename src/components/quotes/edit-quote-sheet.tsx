@@ -589,7 +589,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                     <span className="text-slate-600 font-bold">IVA ({requiereFactura ? "16%" : "0%"}):</span>
                                     <span className="text-slate-900 font-bold">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.iva)}</span>
                                 </div>
-                                <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1 mt-1">
+                                <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1 mt-1 text-base">
                                     <span>Total:</span>
                                     <span className="text-blue-600">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.total)}</span>
                                 </div>
