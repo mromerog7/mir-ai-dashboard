@@ -11,7 +11,7 @@ export default function DashboardLayout({
         <div className="h-full relative">
             <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-blue-600 rounded-tr-[3rem] rounded-br-[3rem] shadow-xl overflow-hidden">
                 <div className="bg-blue-600 p-6 flex items-center justify-center h-[73px]">
-                    <div className="relative h-12 w-40 filter brightness-0 invert">
+                    <div className="relative h-12 w-40 filter invert hue-rotate-180 brightness-125 contrast-125">
                         <Image
                             src="https://pub-2b7c10c04cbb4824bc36f52820ace933.r2.dev/logo/logoMiR-AI-Finalweb.png"
                             alt="MiR-AI Logo"
