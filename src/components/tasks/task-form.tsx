@@ -152,7 +152,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                         <FormItem>
                             <FormLabel>Título</FormLabel>
                             <FormControl>
-                                <Input placeholder="Ej. Revisar contrato" {...field} className="bg-slate-800 border-slate-700" />
+                                <Input placeholder="Ej. Revisar contrato" {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -166,7 +166,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                         <FormItem>
                             <FormLabel>Descripción</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Detalles de la tarea..." {...field} className="bg-slate-800 border-slate-700" />
+                                <Textarea placeholder="Detalles de la tarea..." {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400 min-h-[100px]" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -180,7 +180,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                         <FormItem>
                             <FormLabel>Observaciones</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Observaciones adicionales..." {...field} className="bg-slate-800 border-slate-700" />
+                                <Textarea placeholder="Observaciones adicionales..." {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -196,13 +196,13 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                 <FormLabel>Proyecto</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger className="bg-slate-800 border-slate-700">
+                                        <SelectTrigger className="bg-[#E5E5E5] border-slate-200 text-slate-900">
                                             <SelectValue placeholder="Seleccionar proyecto" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                    <SelectContent className="bg-white border-slate-200 text-slate-900">
                                         {projects.map((p) => (
-                                            <SelectItem key={p.id} value={p.id.toString()}>
+                                            <SelectItem key={p.id} value={p.id.toString()} className="hover:bg-slate-100">
                                                 {p.nombre}
                                             </SelectItem>
                                         ))}
@@ -221,15 +221,15 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                 <FormLabel>Prioridad</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger className="bg-slate-800 border-slate-700">
+                                        <SelectTrigger className="bg-[#E5E5E5] border-slate-200 text-slate-900">
                                             <SelectValue placeholder="Prioridad" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent className="bg-slate-800 border-slate-700 text-white">
-                                        <SelectItem value="Baja">Baja</SelectItem>
-                                        <SelectItem value="Media">Media</SelectItem>
-                                        <SelectItem value="Alta">Alta</SelectItem>
-                                        <SelectItem value="Urgente">Urgente</SelectItem>
+                                    <SelectContent className="bg-white border-slate-200 text-slate-900">
+                                        <SelectItem value="Baja" className="hover:bg-slate-100">Baja</SelectItem>
+                                        <SelectItem value="Media" className="hover:bg-slate-100">Media</SelectItem>
+                                        <SelectItem value="Alta" className="hover:bg-slate-100">Alta</SelectItem>
+                                        <SelectItem value="Urgente" className="hover:bg-slate-100">Urgente</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -247,16 +247,16 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                 <FormLabel>Estatus</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger className="bg-slate-800 border-slate-700">
+                                        <SelectTrigger className="bg-[#E5E5E5] border-slate-200 text-slate-900">
                                             <SelectValue placeholder="Estatus" />
                                         </SelectTrigger>
                                     </FormControl>
-                                    <SelectContent className="bg-slate-800 border-slate-700 text-white">
-                                        <SelectItem value="Pendiente">Pendiente</SelectItem>
-                                        <SelectItem value="En Proceso">En Proceso</SelectItem>
-                                        <SelectItem value="Revisión">Revisión</SelectItem>
-                                        <SelectItem value="Completada">Completada</SelectItem>
-                                        <SelectItem value="Cancelada">Cancelada</SelectItem>
+                                    <SelectContent className="bg-white border-slate-200 text-slate-900">
+                                        <SelectItem value="Pendiente" className="hover:bg-slate-100">Pendiente</SelectItem>
+                                        <SelectItem value="En Proceso" className="hover:bg-slate-100">En Proceso</SelectItem>
+                                        <SelectItem value="Revisión" className="hover:bg-slate-100">Revisión</SelectItem>
+                                        <SelectItem value="Completada" className="hover:bg-slate-100">Completada</SelectItem>
+                                        <SelectItem value="Cancelada" className="hover:bg-slate-100">Cancelada</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -279,8 +279,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
-                                                    !field.value && "text-muted-foreground"
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
                                                 )}
                                             >
                                                 {field.value ? (
@@ -288,11 +288,11 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                                 ) : (
                                                     <span>Seleccionar fecha</span>
                                                 )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
                                         <Calendar
                                             mode="single"
                                             selected={field.value}
@@ -319,8 +319,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
-                                                    !field.value && "text-muted-foreground"
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
                                                 )}
                                             >
                                                 {field.value ? (
@@ -328,11 +328,11 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                                 ) : (
                                                     <span>Seleccionar fecha</span>
                                                 )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
                                         <Calendar
                                             mode="single"
                                             selected={field.value}
@@ -366,8 +366,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
-                                                    !field.value && "text-muted-foreground"
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
                                                 )}
                                             >
                                                 {field.value ? (
@@ -375,11 +375,11 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                                 ) : (
                                                     <span>Seleccionar fecha</span>
                                                 )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
                                         <Calendar
                                             mode="single"
                                             selected={field.value}
@@ -419,7 +419,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
                                         <Calendar
                                             mode="single"
                                             selected={field.value}
@@ -441,44 +441,44 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
 
                 {/* Incidencias asociadas (solo en modo edición) */}
                 {taskId && (
-                    <div className="space-y-2 border border-slate-700 rounded-md p-4 bg-slate-900/50">
-                        <h4 className="text-sm font-medium text-slate-300 flex items-center gap-2">
-                            <AlertTriangle className="h-4 w-4 text-red-400" />
+                    <div className="space-y-2 border border-slate-200 rounded-md p-4 bg-slate-50">
+                        <h4 className="text-sm font-medium text-slate-900 flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-red-600" />
                             Incidencias Asociadas
                             {linkedIncidents.length > 0 && (
-                                <span className="text-xs bg-red-500/20 text-red-400 rounded-full px-2 py-0.5">{linkedIncidents.length}</span>
+                                <span className="text-xs bg-red-100 text-red-700 rounded-full px-2 py-0.5">{linkedIncidents.length}</span>
                             )}
                         </h4>
                         {linkedIncidents.length > 0 ? (
                             <div className="space-y-1.5">
                                 {linkedIncidents.map((inc: any) => {
                                     const sevColors: Record<string, string> = {
-                                        "Baja": "bg-blue-500/20 text-blue-400",
-                                        "Media": "bg-yellow-500/20 text-yellow-400",
-                                        "Alta": "bg-orange-500/20 text-orange-400",
-                                        "Cr\u00edtica": "bg-red-500/20 text-red-400",
+                                        "Baja": "bg-blue-100 text-blue-700",
+                                        "Media": "bg-yellow-100 text-yellow-700",
+                                        "Alta": "bg-orange-100 text-orange-700",
+                                        "Cr\u00edtica": "bg-red-100 text-red-700",
                                     }
                                     const isExpanded = expandedIncId === inc.id
                                     return (
-                                        <div key={inc.id} className="bg-slate-950/50 rounded border border-slate-800 overflow-hidden">
+                                        <div key={inc.id} className="bg-white rounded border border-slate-200 overflow-hidden">
                                             <button
                                                 type="button"
                                                 onClick={() => setExpandedIncId(isExpanded ? null : inc.id)}
-                                                className="w-full flex items-center justify-between p-2 hover:bg-slate-800/50 transition-colors"
+                                                className="w-full flex items-center justify-between p-2 hover:bg-slate-50 transition-colors text-left"
                                             >
-                                                <span className="text-xs text-slate-200 truncate flex-1 mr-2 text-left">{inc.titulo}</span>
+                                                <span className="text-xs text-slate-900 font-medium truncate flex-1 mr-2">{inc.titulo}</span>
                                                 <div className="flex items-center gap-1 flex-shrink-0">
-                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
-                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${inc.estatus === "Resuelta" ? "bg-blue-500/20 text-blue-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</span>
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${inc.estatus === "Resuelta" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{inc.estatus}</span>
                                                     <ChevronDown className={`h-3 w-3 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                                 </div>
                                             </button>
                                             {isExpanded && (
-                                                <div className="px-2.5 pb-2.5 pt-1 border-t border-slate-800 space-y-1.5">
+                                                <div className="px-2.5 pb-2.5 pt-1 border-t border-slate-200 space-y-1.5 bg-slate-50/50">
                                                     {inc.descripcion && (
                                                         <div>
-                                                            <span className="text-[10px] text-slate-500 uppercase tracking-wider">Descripci\u00f3n</span>
-                                                            <p className="text-[11px] text-slate-300 mt-0.5">{inc.descripcion}</p>
+                                                            <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Descripci\u00f3n</span>
+                                                            <p className="text-[11px] text-slate-700 mt-0.5 leading-relaxed">{inc.descripcion}</p>
                                                         </div>
                                                     )}
                                                     <div className="grid grid-cols-2 gap-1.5">

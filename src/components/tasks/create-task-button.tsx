@@ -24,10 +24,10 @@ export function CreateTaskButton() {
                     Nueva Tarea
                 </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">Crear Nueva Tarea</SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetTitle className="text-[#02457A]">Crear Nueva Tarea</SheetTitle>
+                    <SheetDescription className="text-slate-500">
                         Ingresa los detalles de la nueva tarea.
                     </SheetDescription>
                 </SheetHeader>

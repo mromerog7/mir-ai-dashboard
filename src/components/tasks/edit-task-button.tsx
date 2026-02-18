@@ -20,14 +20,14 @@ export function EditTaskButton({ task }: { task: Task }) {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="hover:bg-slate-800 text-slate-400 hover:text-white">
+                <Button variant="ghost" size="icon" className="hover:bg-slate-100 text-slate-500 hover:text-blue-600">
                     <Pencil className="h-4 w-4" />
                 </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">Editar Tarea</SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetTitle className="text-[#02457A]">Editar Tarea</SheetTitle>
+                    <SheetDescription className="text-slate-500">
                         Modifica los detalles de la tarea.
                     </SheetDescription>
                 </SheetHeader>
