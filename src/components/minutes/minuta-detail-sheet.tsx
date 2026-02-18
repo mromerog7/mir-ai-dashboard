@@ -84,7 +84,7 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
                             onChange={(e) => handleChange(index, e.target.value)}
                             placeholder={placeholder}
                             disabled={readonly}
-                            className={`bg-[#E5E5E5] border-slate-200 text-black min-h-[80px] resize-y ${readonly ? "opacity-100 bg-transparent border-none px-0 resize-none min-h-0 font-medium" : ""}`}
+                            className={`bg-[#E5E5E5] border-slate-200 text-black min-h-[80px] resize-y ${readonly ? "opacity-100 resize-none font-medium" : ""}`}
                         />
                     </div>
                     {!readonly && (
@@ -322,7 +322,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                     <FormItem>
                                         <FormLabel className="text-slate-900">Fecha Reunión</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} disabled={readonly} className={`bg-[#E5E5E5] border-slate-200 text-black block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0 font-medium" : ""}`} />
+                                            <Input type="date" {...field} disabled={readonly} className={`bg-[#E5E5E5] border-slate-200 text-black block w-full ${readonly ? "opacity-100 font-medium" : ""}`} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -336,7 +336,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                     <FormItem>
                                         <FormLabel className="text-slate-900">Siguiente Reunión</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} disabled={readonly} className={`bg-[#E5E5E5] border-slate-200 text-black block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0 font-medium" : ""}`} />
+                                            <Input type="date" {...field} disabled={readonly} className={`bg-[#E5E5E5] border-slate-200 text-black block w-full ${readonly ? "opacity-100 font-medium" : ""}`} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -357,7 +357,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                         disabled={readonly}
                                     >
                                         <FormControl>
-                                            <SelectTrigger className={`w-full bg-[#E5E5E5] border-slate-200 text-black ${readonly ? "opacity-100 bg-transparent border-none px-0 cursor-default font-medium" : ""}`}>
+                                            <SelectTrigger className={`w-full bg-[#E5E5E5] border-slate-200 text-black ${readonly ? "opacity-100 cursor-default font-medium" : ""}`}>
                                                 <SelectValue placeholder="Seleccionar..." />
                                             </SelectTrigger>
                                         </FormControl>
@@ -382,7 +382,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                 <FormItem>
                                     <FormLabel className="text-slate-900">Título / Objetivo</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Ej. Revisión Semanal de Avances" {...field} disabled={readonly} className={`bg-[#E5E5E5] border-slate-200 text-black ${readonly ? "opacity-100 bg-transparent border-none px-0 text-lg font-bold" : ""}`} />
+                                        <Input placeholder="Ej. Revisión Semanal de Avances" {...field} disabled={readonly} className={`bg-[#E5E5E5] border-slate-200 text-black ${readonly ? "opacity-100 text-lg font-bold" : ""}`} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
