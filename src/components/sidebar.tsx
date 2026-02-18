@@ -94,7 +94,7 @@ export function Sidebar({ className }: SidebarProps) {
     ]
 
     return (
-        <div className={cn("pb-12 h-full bg-blue-600", className)}>
+        <div className={cn("pb-12 h-full bg-[#D6E8EE]", className)}>
             <div className="space-y-4 py-4 h-full flex flex-col">
                 <div className="px-3 py-2 flex-1">
                     <div className="space-y-2">
@@ -108,11 +108,11 @@ export function Sidebar({ className }: SidebarProps) {
                                         "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                         isActive
                                             ? "text-white bg-slate-900 shadow-lg translate-x-2"
-                                            : "text-blue-100 hover:text-white hover:bg-white/10"
+                                            : "text-[#02457A] hover:bg-[#02457A]/10"
                                     )}
                                 >
                                     <div className="flex items-center flex-1">
-                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-white" : "text-blue-100 group-hover:text-white")} />
+                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-white" : "text-[#02457A]")} />
                                         {route.label}
                                     </div>
                                 </Link>
@@ -124,11 +124,11 @@ export function Sidebar({ className }: SidebarProps) {
                     <div
                         onClick={() => window.location.href = "/logout"}
                         className={cn(
-                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-xl transition duration-200 text-blue-100"
+                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-[#02457A]/10 rounded-xl transition duration-200 text-[#02457A]"
                         )}
                     >
                         <div className="flex items-center flex-1">
-                            <LogOut className="h-5 w-5 mr-3 text-blue-100 group-hover:text-white" />
+                            <LogOut className="h-5 w-5 mr-3 text-[#02457A]" />
                             Cerrar Sesión
                         </div>
                     </div>
@@ -146,8 +146,8 @@ export function MobileSidebar() {
                     <Menu />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 bg-blue-600 border-none">
-                <Sidebar className="text-white" />
+            <SheetContent side="left" className="p-0 bg-[#D6E8EE] border-none">
+                <Sidebar className="text-[#02457A]" />
             </SheetContent>
         </Sheet>
     )
