@@ -84,6 +84,11 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
         return expenses.filter(e => e.proyecto_id?.toString() === selectedProjectId);
     }, [expenses, selectedProjectId]);
 
+    // Calculate total amount based on filtered list
+    const totalAmount = useMemo(() => {
+        return filteredExpenses.reduce((sum, expense) => sum + (expense.monto || 0), 0);
+    }, [filteredExpenses]);
+
     // Top 3 recent expenses for cards
     const recentExpenses = filteredExpenses.slice(0, 3)
 
@@ -91,7 +96,15 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-white tracking-tight">Control de Gastos</h1>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
+                    {/* Total Amount Display */}
+                    <div className="flex flex-col items-end">
+                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Total</span>
+                        <span className="text-lg font-bold text-emerald-400 leading-none">
+                            {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(totalAmount)}
+                        </span>
+                    </div>
+
                     {/* Project Filter */}
                     <div className="relative flex items-center">
                         <FolderOpen className="absolute left-2.5 h-4 w-4 text-slate-400 pointer-events-none" />
