@@ -406,8 +406,8 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
-                                                    !field.value && "text-muted-foreground"
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
                                                 )}
                                             >
                                                 {field.value ? (
@@ -415,7 +415,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                                 ) : (
                                                     <span>Seleccionar fecha</span>
                                                 )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
                                             </Button>
                                         </FormControl>
                                     </PopoverTrigger>
