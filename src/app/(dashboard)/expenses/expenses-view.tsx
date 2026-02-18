@@ -93,7 +93,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
     const recentExpenses = filteredExpenses.slice(0, 3)
 
     return (
-        <div className="space-y-6">
+        <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Control de Gastos</h1>
                 <div className="flex items-center space-x-4">

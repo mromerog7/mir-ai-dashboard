@@ -213,10 +213,10 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">Nuevo Gasto</SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetTitle className="text-[#02457A]">Nuevo Gasto</SheetTitle>
+                    <SheetDescription className="text-slate-500">
                         Registra un nuevo gasto y adjunta la evidencia (ticket/factura).
                     </SheetDescription>
                 </SheetHeader>
@@ -237,11 +237,11 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                                             defaultValue={field.value?.toString()}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-slate-900">
                                                     <SelectValue placeholder="Seleccionar Proyecto" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 {projects.map((project) => (
                                                     <SelectItem key={project.id} value={project.id.toString()}>
                                                         {project.nombre}
@@ -260,7 +260,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                                     <FormItem>
                                         <FormLabel>Fecha</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                            <Input type="date" {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 block w-full" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -282,7 +282,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                                                 step="0.01"
                                                 placeholder="0.00"
                                                 {...field}
-                                                className="bg-slate-800 border-slate-700"
+                                                className="bg-[#E5E5E5] border-slate-200 text-slate-900"
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -297,11 +297,11 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                                         <FormLabel>Categoría</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-slate-900">
                                                     <SelectValue placeholder="Seleccionar" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 <SelectItem value="Combustible">Combustible</SelectItem>
                                                 <SelectItem value="Materiales">Materiales</SelectItem>
                                                 <SelectItem value="Mano de Obra">Mano de Obra</SelectItem>
@@ -327,7 +327,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                                         <Textarea
                                             placeholder="Descripción del gasto"
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 resize-none h-24"
+                                            className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400 resize-none h-24"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -344,7 +344,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                                     variant="outline"
                                     size="sm"
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="h-8 border-slate-600 bg-slate-800 hover:bg-slate-700 text-slate-300"
+                                    className="h-8 border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
                                 >
                                     <ImagePlus className="h-4 w-4 mr-2" />
                                     Agregar Fotos

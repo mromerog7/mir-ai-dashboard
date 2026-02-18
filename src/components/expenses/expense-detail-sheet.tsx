@@ -135,7 +135,7 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
                         {photos.length > 0 ? (
                             <div className="grid grid-cols-2 gap-2">
                                 {photos.map((url, idx) => (
-                                    <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="block relative aspect-[3/4] bg-slate-50 rounded border border-slate-200 overflow-hidden hover:opacity-80 transition-opacity">
+                                    <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="block relative aspect-[3/4] bg-[#E5E5E5] rounded border border-slate-200 overflow-hidden hover:opacity-80 transition-opacity">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={url} alt={`Ticket ${idx + 1}`} className="w-full h-full object-contain" />
                                     </a>
