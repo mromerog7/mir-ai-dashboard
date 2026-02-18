@@ -192,3 +192,22 @@ export type ClientMeeting = {
         nombre: string;
     } | null;
 };
+
+export type Nota = {
+    id: string;
+    proyecto_id: number | null;
+    tarea_id: number | null;
+    fecha: string;
+    titulo: string;
+    contenido: string | null;
+    autor: string | null;
+    url_imagenes: string[] | null; // JSONB array of strings
+    ultima_actualizacion: string;
+    autor_ultima_actualizacion: string | null;
+    proyectos?: {
+        nombre: string;
+    } | null;
+    tareas?: {
+        titulo: string;
+    } | null;
+};

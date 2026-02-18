@@ -19,7 +19,9 @@ import {
     MapPin,
     FileBarChart,
     CloudSun,
-    BookOpen
+    BookOpen,
+    DollarSign,
+    Notebook
 } from "lucide-react"
 import { useState } from "react"
 
@@ -35,31 +37,43 @@ export function Sidebar({ className }: SidebarProps) {
             label: "Dashboard",
             icon: LayoutDashboard,
             href: "/dashboard",
+            color: "text-sky-500",
         },
         {
             label: "Proyectos",
             icon: Briefcase,
             href: "/projects",
+            color: "text-violet-500",
         },
         {
             label: "Tareas",
             icon: CheckSquare,
             href: "/tasks",
+            color: "text-pink-700",
         },
         {
             label: "Gastos",
-            icon: Receipt,
+            icon: DollarSign,
             href: "/expenses",
+            color: "text-orange-700",
         },
         {
             label: "Incidencias",
             icon: AlertTriangle,
             href: "/incidents",
+            color: "text-red-700",
+        },
+        {
+            label: "Notas",
+            icon: Notebook,
+            href: "/notes",
+            color: "text-emerald-500",
         },
         {
             label: "Levantamientos",
-            icon: MapPin,
+            icon: FileText,
             href: "/documents/surveys",
+            color: "text-emerald-500",
         },
         {
             label: "Cotizaciones",
