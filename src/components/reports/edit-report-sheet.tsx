@@ -435,21 +435,21 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 {trigger ? trigger : (
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 text-slate-500 hover:text-slate-900">
                         <Pencil className="h-4 w-4" />
                         <span className="sr-only">Editar Reporte</span>
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">
+                    <SheetTitle className="text-[#02457A]">
                         {isDuplicate ? "Duplicar Reporte" : (isEditing
                             ? `Editar Reporte${report?.folio ? ` - ${report.folio}` : ''}`
                             : "Nuevo Reporte")
                         }
                     </SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetDescription className="text-slate-500">
                         Modifica los detalles e imágenes del reporte.
                     </SheetDescription>
                 </SheetHeader>
@@ -467,7 +467,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                     <FormItem>
                                         <FormLabel>Título / Resumen</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Título del reporte" {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input placeholder="Título del reporte" {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -481,7 +481,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                     <FormItem>
                                         <FormLabel>Fecha del Reporte</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                            <Input type="date" {...field} className="bg-[#E5E5E5] border-slate-200 text-black block w-full" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -502,11 +502,11 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                             defaultValue={field.value?.toString()}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar Proyecto" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 {projects.map((project) => (
                                                     <SelectItem key={project.id} value={project.id.toString()}>
                                                         {project.nombre}
@@ -525,7 +525,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                     <FormItem>
                                         <FormLabel>Solicitante</FormLabel>
                                         <FormControl>
-                                            <Input {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -542,7 +542,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                     <FormItem>
                                         <FormLabel>Duración</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Ej. 2 horas, 1 día" {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input placeholder="Ej. 2 horas, 1 día" {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -555,7 +555,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                     <FormItem>
                                         <FormLabel>Ubicación</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Ej. Planta Baja, Sala de Juntas" {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input placeholder="Ej. Planta Baja, Sala de Juntas" {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -574,7 +574,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                         <Textarea
                                             placeholder="Descripción detallada de las actividades..."
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 min-h-[100px]"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black min-h-[100px]"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -585,7 +585,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                             value={aiInstruction}
                                             onChange={(e) => setAiInstruction(e.target.value)}
                                             disabled={!field.value || aiImproving}
-                                            className="bg-slate-800 border-slate-700 text-xs h-8"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black text-xs h-8"
                                         />
                                         <Button
                                             type="button"
@@ -618,7 +618,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                         <Textarea
                                             placeholder="Listado de materiales y equipos utilizados separados por ','"
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 min-h-[80px]"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black min-h-[80px]"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -637,7 +637,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                         <Textarea
                                             placeholder="Observaciones adicionales..."
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 min-h-[80px]"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black min-h-[80px]"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -646,7 +646,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                         />
 
                         {/* Image Gallery & Upload */}
-                        <div className="space-y-4 pt-2 border-t border-slate-800">
+                        <div className="space-y-4 pt-2 border-t border-slate-200">
                             <div className="flex items-center justify-between">
                                 <h4 className="text-sm font-medium">Evidencia Fotográfica</h4>
                                 <Button
@@ -655,7 +655,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                     size="sm"
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={existingPhotos.length + newFiles.length >= 10 || uploading}
-                                    className="border-dashed border-slate-600 hover:border-blue-500 hover:text-blue-400"
+                                    className="border-dashed border-slate-300 text-slate-500 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50"
                                 >
                                     <ImagePlus className="mr-2 h-4 w-4" />
                                     Subir imágenes ({existingPhotos.length + newFiles.length}/10)
@@ -674,7 +674,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                 {/* Existing Photos */}
                                 {existingPhotos.map((url, idx) => (
-                                    <div key={`existing-${idx}`} className="relative group aspect-square rounded-md overflow-hidden bg-black border border-slate-800">
+                                    <div key={`existing-${idx}`} className="relative group aspect-square rounded-md overflow-hidden bg-slate-100 border border-slate-200">
                                         <img
                                             src={url}
                                             alt={`Evidencia ${idx}`}
@@ -722,7 +722,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                 ))}
                             </div>
                             {(existingPhotos.length === 0 && newFiles.length === 0) && (
-                                <div className="text-center py-8 text-slate-500 text-sm border border-dashed border-slate-800 rounded-md">
+                                <div className="text-center py-8 text-slate-400 text-sm border border-dashed border-slate-200 rounded-md">
                                     No hay imágenes seleccionadas.
                                 </div>
                             )}
@@ -736,7 +736,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                             type="button"
                                             variant="ghost"
                                             onClick={() => window.open(pdfUrl, '_blank')}
-                                            className="hover:bg-slate-800 text-blue-400"
+                                            className="hover:bg-slate-100 text-blue-600"
                                         >
                                             <FileText className="mr-2 h-4 w-4" />
                                             Ver PDF
@@ -750,7 +750,7 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                                         variant="outline"
                                         onClick={form.handleSubmit(handleGeneratePDF)}
                                         disabled={saving || uploading || generatingPdf}
-                                        className="border-blue-500 text-blue-400 hover:bg-blue-950 hover:text-blue-300"
+                                        className="border-blue-600 text-blue-600 hover:bg-blue-50"
                                     >
                                         {generatingPdf ? (
                                             <>
@@ -768,12 +768,12 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
                             )}
 
                             {!isEditing && (
-                                <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="hover:bg-slate-800">
+                                <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="hover:bg-slate-100 text-slate-500 hover:text-slate-900">
                                     Cancelar
                                 </Button>
                             )}
 
-                            <Button type="submit" disabled={saving || uploading || generatingPdf} className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Button type="submit" disabled={saving || uploading || generatingPdf} className="bg-[#02457A] hover:bg-[#02335a] text-white">
                                 {saving || uploading ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

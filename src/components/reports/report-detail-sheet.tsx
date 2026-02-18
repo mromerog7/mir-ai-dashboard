@@ -43,24 +43,24 @@ export function ReportDetailSheet({ report, project, trigger }: ReportDetailShee
         <Sheet>
             <SheetTrigger asChild>
                 {trigger ? trigger : (
-                    <Button variant="ghost" size="icon" className="h-8 w-8 p-0 hover:bg-slate-800">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 p-0 hover:bg-slate-100">
                         <span className="sr-only">Ver detalles</span>
-                        <Eye className="h-4 w-4 text-slate-400 hover:text-white" />
+                        <Eye className="h-4 w-4 text-slate-500 hover:text-slate-900" />
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
                     <div className="flex items-center justify-between">
-                        <SheetTitle className="text-white text-xl">{report.folio || "Reporte sin folio"}</SheetTitle>
+                        <SheetTitle className="text-[#02457A] text-xl">{report.folio || "Reporte sin folio"}</SheetTitle>
                         {report.pdf_final_url && (
-                            <Button variant="outline" size="sm" onClick={() => window.open(report.pdf_final_url!, '_blank')} className="gap-2 border-blue-500/50 text-blue-400 hover:bg-blue-950/30 hover:text-blue-300">
+                            <Button variant="outline" size="sm" onClick={() => window.open(report.pdf_final_url!, '_blank')} className="gap-2 border-blue-600 text-blue-600 hover:bg-blue-50">
                                 <FileText className="h-4 w-4" />
                                 Ver PDF
                             </Button>
                         )}
                     </div>
-                    <SheetDescription className="text-slate-400">
+                    <SheetDescription className="text-slate-500">
                         {report.resumen_titulo}
                     </SheetDescription>
                 </SheetHeader>
@@ -68,7 +68,7 @@ export function ReportDetailSheet({ report, project, trigger }: ReportDetailShee
                 <div className="mt-6 space-y-6">
                     {/* Project Info */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2">Información del Proyecto</h4>
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2">Información del Proyecto</h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <span className="text-xs text-slate-500 block">Proyecto</span>
@@ -118,44 +118,44 @@ export function ReportDetailSheet({ report, project, trigger }: ReportDetailShee
 
                     {/* Activities */}
                     <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-800 pb-2 flex items-center gap-2">
                             <FileText className="h-4 w-4" /> Actividades Realizadas
                         </h4>
-                        <div className="text-sm text-slate-300 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md min-h-[80px]">
+                        <div className="text-sm text-slate-900 whitespace-pre-wrap bg-[#E5E5E5] p-3 rounded-md min-h-[80px]">
                             {report.actividades || "Sin descripción de actividades."}
                         </div>
                     </div>
 
                     {/* Materials */}
                     <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-800 pb-2 flex items-center gap-2">
                             <Wrench className="h-4 w-4" /> Materiales y Herramientas
                         </h4>
-                        <div className="text-sm text-slate-300 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md min-h-[60px]">
+                        <div className="text-sm text-slate-900 whitespace-pre-wrap bg-[#E5E5E5] p-3 rounded-md min-h-[60px]">
                             {report.materiales || "Sin materiales registrados."}
                         </div>
                     </div>
 
                     {/* Observations */}
                     <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-800 pb-2 flex items-center gap-2">
                             <Eye className="h-4 w-4" /> Observaciones
                         </h4>
-                        <div className="text-sm text-slate-300 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md min-h-[60px]">
+                        <div className="text-sm text-slate-900 whitespace-pre-wrap bg-[#E5E5E5] p-3 rounded-md min-h-[60px]">
                             {report.observaciones || "Sin observaciones."}
                         </div>
                     </div>
 
                     {/* Photos Gallery */}
                     <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-800 pb-2 flex items-center gap-2">
                             <Camera className="h-4 w-4" /> Evidencia Fotográfica ({photos.length})
                         </h4>
 
                         {photos.length > 0 ? (
                             <div className="grid grid-cols-2 gap-2">
                                 {photos.map((url, idx) => (
-                                    <div key={idx} className="relative aspect-video rounded-md overflow-hidden bg-slate-950 border border-slate-800 group">
+                                    <div key={idx} className="relative aspect-video rounded-md overflow-hidden bg-slate-100 border border-slate-200 group">
                                         {/* Using img tag with unoptimized for external R2 URLs */}
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img
