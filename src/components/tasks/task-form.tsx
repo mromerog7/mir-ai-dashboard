@@ -453,7 +453,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                             <div className="space-y-1.5">
                                 {linkedIncidents.map((inc: any) => {
                                     const sevColors: Record<string, string> = {
-                                        "Baja": "bg-green-500/20 text-green-400",
+                                        "Baja": "bg-blue-500/20 text-blue-400",
                                         "Media": "bg-yellow-500/20 text-yellow-400",
                                         "Alta": "bg-orange-500/20 text-orange-400",
                                         "Cr\u00edtica": "bg-red-500/20 text-red-400",
@@ -469,7 +469,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                                 <span className="text-xs text-slate-200 truncate flex-1 mr-2 text-left">{inc.titulo}</span>
                                                 <div className="flex items-center gap-1 flex-shrink-0">
                                                     <span className={`text-[10px] px-1.5 py-0.5 rounded ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
-                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</span>
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded ${inc.estatus === "Resuelta" ? "bg-blue-500/20 text-blue-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</span>
                                                     <ChevronDown className={`h-3 w-3 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                                 </div>
                                             </button>

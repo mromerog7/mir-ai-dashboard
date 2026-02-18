@@ -57,7 +57,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
 
     if (normalizedStatus.includes("completada") || normalizedStatus.includes("terminada")) {
         variant = "secondary";
-        badgeClass = "bg-green-500/20 text-green-400 border-none";
+        badgeClass = "bg-blue-500/20 text-blue-400 border-none";
     } else if (normalizedStatus.includes("pendiente")) {
         variant = "secondary";
         badgeClass = "bg-yellow-500/20 text-yellow-400 border-none";
@@ -126,7 +126,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                             <div>
                                 <span className="text-xs text-slate-500 block">F. Inicio Real</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <Calendar className="h-4 w-4 text-emerald-400" />
+                                    <Calendar className="h-4 w-4 text-blue-400" />
                                     <span className="text-sm text-slate-200">
                                         {task.fecha_inicio_real ? format(parseLocalDate(task.fecha_inicio_real), "PPP", { locale: es }) : "Pendiente"}
                                     </span>
@@ -135,7 +135,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                             <div>
                                 <span className="text-xs text-slate-500 block">F. Fin Real</span>
                                 <div className="flex items-center gap-2 mt-1">
-                                    <Calendar className="h-4 w-4 text-emerald-400" />
+                                    <Calendar className="h-4 w-4 text-blue-400" />
                                     <span className="text-sm text-slate-200">
                                         {task.fecha_fin_real ? format(parseLocalDate(task.fecha_fin_real), "PPP", { locale: es }) : "Pendiente"}
                                     </span>
@@ -171,7 +171,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                             <div className="space-y-2">
                                 {linkedIncidents.map((inc: any) => {
                                     const sevColors: Record<string, string> = {
-                                        "Baja": "bg-green-500/20 text-green-400",
+                                        "Baja": "bg-blue-500/20 text-blue-400",
                                         "Media": "bg-yellow-500/20 text-yellow-400",
                                         "Alta": "bg-orange-500/20 text-orange-400",
                                         "Cr\u00edtica": "bg-red-500/20 text-red-400",
@@ -187,7 +187,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                                 <span className="text-sm text-slate-200 truncate flex-1 mr-2 text-left">{inc.titulo}</span>
                                                 <div className="flex items-center gap-1.5 flex-shrink-0">
                                                     <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</Badge>
-                                                    <Badge variant={inc.estatus === "Resuelta" ? "secondary" : "destructive"} className={`text-[10px] px-1.5 py-0 ${inc.estatus === "Resuelta" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</Badge>
+                                                    <Badge variant={inc.estatus === "Resuelta" ? "secondary" : "destructive"} className={`text-[10px] px-1.5 py-0 ${inc.estatus === "Resuelta" ? "bg-blue-500/20 text-blue-400" : "bg-red-500/20 text-red-400"}`}>{inc.estatus}</Badge>
                                                     <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                                 </div>
                                             </button>

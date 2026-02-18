@@ -100,7 +100,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
                     {/* Total Amount Display */}
                     <div className="flex flex-col items-end">
                         <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Total</span>
-                        <span className="text-lg font-bold text-emerald-400 leading-none">
+                        <span className="text-lg font-bold text-blue-400 leading-none">
                             {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(totalAmount)}
                         </span>
                     </div>
@@ -147,7 +147,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
                             <div>
                                 <div className="flex justify-between items-start mb-2">
                                     <Badge variant="outline" className="text-slate-300 border-slate-600">{expense.categoria || "Gasto"}</Badge>
-                                    <span className="font-bold text-emerald-400">
+                                    <span className="font-bold text-blue-400">
                                         {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(expense.monto)}
                                     </span>
                                 </div>

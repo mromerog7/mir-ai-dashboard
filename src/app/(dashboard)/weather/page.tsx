@@ -74,11 +74,11 @@ export default async function WeatherPage() {
                                 </div>
                             </div>
                             <div className="text-right space-y-2">
-                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.wind > 20 || current.code >= 95 ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
+                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.wind > 20 || current.code >= 95 ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'
                                     }`}>
                                     {current.wind > 20 || current.code >= 95 ? 'Precaución: Viento/Tormenta' : 'Condiciones Seguras para Alturas'}
                                 </div>
-                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.temp > 30 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'
+                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.temp > 30 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-blue-500/20 text-blue-400'
                                     }`}>
                                     {current.temp > 30 ? 'Precaución: Calor Extremo' : 'Condiciones Seguras para Soldar'}
                                 </div>

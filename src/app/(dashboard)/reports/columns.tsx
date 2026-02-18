@@ -35,7 +35,7 @@ export const columns: ColumnDef<Report>[] = [
         id: "proyecto",
         accessorFn: (row) => row.proyectos?.nombre || "General",
         header: "Proyecto",
-        cell: ({ row }) => <span className="font-medium text-emerald-400">{row.getValue("proyecto")}</span>
+        cell: ({ row }) => <span className="font-medium text-blue-400">{row.getValue("proyecto")}</span>
     },
     {
         accessorKey: "cliente", // accessorKey might not work for nested unless we use accessorFn or it's flattened
@@ -106,7 +106,7 @@ export const columns: ColumnDef<Report>[] = [
                     {report.pdf_final_url ? (
                         <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800" onClick={() => window.open(report.pdf_final_url!, '_blank')}>
                             <span className="sr-only">Descargar PDF</span>
-                            <Download className="h-4 w-4 text-emerald-400" />
+                            <Download className="h-4 w-4 text-blue-400" />
                         </Button>
                     ) : (
                         <span className="text-xs text-slate-500">Sin archivo</span>

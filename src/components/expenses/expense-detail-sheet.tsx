@@ -66,7 +66,7 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
                 <SheetHeader>
                     <SheetTitle className="text-white text-xl flex flex-col gap-2 items-start">
                         <span className="break-words w-full text-left">{expense.concepto}</span>
-                        <Badge variant="outline" className="border-emerald-500/50 text-emerald-400">
+                        <Badge variant="outline" className="border-blue-500/50 text-blue-400">
                             {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(expense.monto)}
                         </Badge>
                     </SheetTitle>

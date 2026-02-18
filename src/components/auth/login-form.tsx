@@ -88,7 +88,7 @@ export function LoginForm() {
                 </Button>
 
                 {message && (
-                    <p className={`mt-4 p-4 rounded-md text-center text-sm ${message.type === 'error' ? 'bg-red-900/50 text-red-200' : 'bg-green-900/50 text-green-200'}`}>
+                    <p className={`mt-4 p-4 rounded-md text-center text-sm ${message.type === 'error' ? 'bg-red-900/50 text-red-200' : 'bg-blue-900/50 text-blue-200'}`}>
                         {message.text}
                     </p>
                 )}

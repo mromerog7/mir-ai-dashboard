@@ -138,7 +138,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                     {/* Tasks */}
                     <div className="space-y-3">
                         <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-emerald-500" /> Tareas Vinculadas
+                            <CheckCircle className="h-4 w-4 text-blue-500" /> Tareas Vinculadas
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.tasks && relatedData.tasks.length > 0 ? (
@@ -247,7 +247,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
                                                     <div>
                                                         <div className="text-sm text-slate-300">{quote.folio}</div>
-                                                        <div className="text-xs text-emerald-400 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
+                                                        <div className="text-xs text-blue-400 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
                                                     </div>
                                                     <Badge variant="outline">{quote.estatus}</Badge>
                                                 </div>

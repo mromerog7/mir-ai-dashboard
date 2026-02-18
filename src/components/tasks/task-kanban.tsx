@@ -22,7 +22,7 @@ const STATUS_COLUMNS = [
     { id: "Pendiente", label: "Pendiente", color: "bg-yellow-500/10 border-yellow-500/20 text-yellow-500" },
     { id: "En Proceso", label: "En Proceso", color: "bg-blue-500/10 border-blue-500/20 text-blue-500" },
     { id: "Revisión", label: "Revisión", color: "bg-orange-500/10 border-orange-500/20 text-orange-500" },
-    { id: "Completada", label: "Completada", color: "bg-green-500/10 border-green-500/20 text-green-500" },
+    { id: "Completada", label: "Completada", color: "bg-blue-500/10 border-blue-500/20 text-blue-500" },
 ]
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -86,7 +86,7 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                                             <span className="text-slate-600 italic">Sin fechas</span>
                                         )}
                                         <div className={`w-1.5 h-1.5 rounded-full ${task.prioridad === 'Alta' || task.prioridad === 'Urgente' ? 'bg-red-500' :
-                                            task.prioridad === 'Media' ? 'bg-yellow-500' : 'bg-green-500'
+                                            task.prioridad === 'Media' ? 'bg-yellow-500' : 'bg-blue-500'
                                             }`} title={`Prioridad: ${task.prioridad}`} />
                                     </CardFooter>
                                 </Card>

@@ -613,7 +613,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                     type="button"
                                     variant="ghost"
                                     onClick={() => window.open(survey.pdf_final_url!, '_blank')}
-                                    className="hover:bg-slate-800 text-emerald-400"
+                                    className="hover:bg-slate-800 text-blue-400"
                                 >
                                     <FileText className="mr-2 h-4 w-4" />
                                     Ver PDF

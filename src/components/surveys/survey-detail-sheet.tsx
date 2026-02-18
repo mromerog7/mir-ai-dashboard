@@ -64,7 +64,7 @@ export function SurveyDetailSheet({ survey, project, trigger }: SurveyDetailShee
                             </SheetDescription>
                         </div>
                         {survey.pdf_final_url && (
-                            <Button variant="outline" size="sm" className="border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300" onClick={() => window.open(survey.pdf_final_url!, '_blank')}>
+                            <Button variant="outline" size="sm" className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300" onClick={() => window.open(survey.pdf_final_url!, '_blank')}>
                                 <FileText className="mr-2 h-4 w-4" /> Ver PDF
                             </Button>
                         )}

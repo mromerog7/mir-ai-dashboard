@@ -35,7 +35,7 @@ export const columns: ColumnDef<Survey>[] = [
         id: "proyecto",
         accessorFn: (row) => row.proyectos?.nombre || "General",
         header: "Proyecto",
-        cell: ({ row }) => <span className="font-medium text-emerald-400">{row.getValue("proyecto")}</span>
+        cell: ({ row }) => <span className="font-medium text-blue-400">{row.getValue("proyecto")}</span>
     },
     {
         accessorKey: "cliente_prospecto",
@@ -82,7 +82,7 @@ export const columns: ColumnDef<Survey>[] = [
             if (status === "Completado" || status === "Terminado") variant = "secondary"
             else if (status === "Pendiente") variant = "outline"
 
-            const colorClass = (status === "Completado" || status === "Terminado") ? "bg-green-600 hover:bg-green-700" :
+            const colorClass = (status === "Completado" || status === "Terminado") ? "bg-blue-600 hover:bg-blue-700" :
                 (status === "En Proceso") ? "bg-blue-600 hover:bg-blue-700" : undefined;
 
             return <div className="flex justify-center"><Badge variant={variant} className={colorClass}>{status}</Badge></div>
@@ -109,7 +109,7 @@ export const columns: ColumnDef<Survey>[] = [
                     {survey.pdf_final_url ? (
                         <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800" onClick={() => window.open(survey.pdf_final_url!, '_blank')}>
                             <span className="sr-only">Descargar PDF</span>
-                            <Download className="h-4 w-4 text-emerald-400" />
+                            <Download className="h-4 w-4 text-blue-400" />
                         </Button>
                     ) : (
                         <span className="text-xs text-slate-500">Sin archivo</span>

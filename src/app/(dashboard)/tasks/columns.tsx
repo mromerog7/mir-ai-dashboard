@@ -21,7 +21,7 @@ export const columns: ColumnDef<Task>[] = [
         id: "proyecto",
         accessorFn: (row) => row.proyectos?.nombre || "General",
         header: "Proyecto",
-        cell: ({ row }) => <span className="font-medium text-emerald-400">{row.getValue("proyecto")}</span>
+        cell: ({ row }) => <span className="font-medium text-blue-400">{row.getValue("proyecto")}</span>
     },
     {
         accessorKey: "titulo",
@@ -46,7 +46,7 @@ export const columns: ColumnDef<Task>[] = [
 
             if (normalizedStatus.includes("completada") || normalizedStatus.includes("terminada")) {
                 variant = "secondary";
-                className = "bg-green-500/20 text-green-400 hover:bg-green-500/30 border-none";
+                className = "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border-none";
             } else if (normalizedStatus.includes("pendiente")) {
                 variant = "secondary";
                 className = "bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 border-none";

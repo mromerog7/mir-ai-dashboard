@@ -82,14 +82,14 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
     }, [incidents, selectedProjectId]);
 
     const severityColors: Record<string, string> = {
-        "Baja": "border-green-500/50 hover:border-green-500",
+        "Baja": "border-blue-500/50 hover:border-blue-500",
         "Media": "border-yellow-500/50 hover:border-yellow-500",
         "Alta": "border-orange-500/50 hover:border-orange-500",
         "Crítica": "border-red-500/50 hover:border-red-500",
     }
 
     const severityTextColors: Record<string, string> = {
-        "Baja": "text-green-500",
+        "Baja": "text-blue-500",
         "Media": "text-yellow-500",
         "Alta": "text-orange-500",
         "Crítica": "text-red-500",
@@ -134,7 +134,7 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
                                 <div className="flex flex-col items-end gap-2">
                                     <div className="flex items-center gap-2">
                                         {incident.estatus === "Resuelta" ? (
-                                            <Badge variant="secondary" className="bg-green-500/20 text-green-400 hover:bg-green-500/30">Resuelta</Badge>
+                                            <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30">Resuelta</Badge>
                                         ) : (
                                             <Badge variant="secondary" className="bg-red-500/20 text-red-400 hover:bg-red-500/30">Abierta</Badge>
                                         )}
@@ -170,18 +170,18 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
                             </div>
 
                             {incident.estatus === "Resuelta" && incident.solucion_final && (
-                                <div className="mt-4 mb-4 p-3 bg-green-900/20 border border-green-900/50 rounded-md">
-                                    <h4 className="text-xs font-medium text-green-400 mb-1 flex items-center gap-1">
+                                <div className="mt-4 mb-4 p-3 bg-blue-900/20 border border-blue-900/50 rounded-md">
+                                    <h4 className="text-xs font-medium text-blue-400 mb-1 flex items-center gap-1">
                                         <CheckCircle className="w-3 h-3" /> Solución
                                     </h4>
-                                    <p className="text-sm text-green-100/80 italic">{incident.solucion_final}</p>
+                                    <p className="text-sm text-blue-100/80 italic">{incident.solucion_final}</p>
                                 </div>
                             )}
 
                             <div className="text-xs text-slate-500 mb-4 flex justify-between items-center">
                                 <span>Registrado: {format(new Date(incident.fecha_inicio.split('T')[0] + 'T00:00:00'), "PPP", { locale: es })}</span>
                                 {incident.fecha_cierre && (
-                                    <span className="text-green-500">
+                                    <span className="text-blue-500">
                                         Cierre: {format(
                                             (() => {
                                                 const datePart = incident.fecha_cierre!.split('T')[0];

@@ -93,7 +93,7 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 {trigger || (
-                    <Button variant="outline" size="sm" className="w-full mt-2 border-green-500/50 text-green-500 hover:bg-green-500/10 hover:text-green-400">
+                    <Button variant="outline" size="sm" className="w-full mt-2 border-blue-500/50 text-blue-500 hover:bg-blue-500/10 hover:text-blue-400">
                         <CheckCircle className="mr-2 h-4 w-4" />
                         Cerrar Incidencia
                     </Button>
@@ -171,7 +171,7 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
                         />
 
                         <SheetFooter>
-                            <Button type="submit" disabled={isSaving} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
+                            <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
                                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Confirmar Cierre
                             </Button>

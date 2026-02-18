@@ -35,107 +35,100 @@ export function Sidebar({ className }: SidebarProps) {
             label: "Dashboard",
             icon: LayoutDashboard,
             href: "/dashboard",
-            color: "text-sky-500",
         },
         {
             label: "Proyectos",
             icon: Briefcase,
             href: "/projects",
-            color: "text-violet-500",
         },
         {
             label: "Tareas",
             icon: CheckSquare,
-            href: "/tasks", // Changed from /projects to distinct route
-            color: "text-pink-700",
+            href: "/tasks",
         },
         {
             label: "Gastos",
             icon: Receipt,
             href: "/expenses",
-            color: "text-orange-700",
         },
         {
             label: "Incidencias",
             icon: AlertTriangle,
             href: "/incidents",
-            color: "text-red-700",
         },
         {
             label: "Levantamientos",
             icon: MapPin,
             href: "/documents/surveys",
-            color: "text-emerald-500",
         },
         {
             label: "Cotizaciones",
             icon: FileBarChart,
             href: "/documents/quotes",
-            color: "text-green-700",
         },
         {
             label: "Reportes",
             icon: FileText,
             href: "/reports",
-            color: "text-blue-500",
         },
         {
             label: "Minutas",
             icon: BookOpen,
             href: "/documents/minutes",
-            color: "text-indigo-500",
         },
         {
             label: "Reunión Clientes",
             icon: Users,
             href: "/documents/client-meetings",
-            color: "text-rose-500",
         },
         {
             label: "Clima",
             icon: CloudSun,
             href: "/weather",
-            color: "text-yellow-500",
         },
         {
             label: "Usuarios",
             icon: Users,
             href: "/users",
-            color: "text-blue-700",
         },
     ]
 
     return (
-        <div className={cn("pb-12 h-full", className)}>
+        <div className={cn("pb-12 h-full bg-slate-950", className)}>
             <div className="space-y-4 py-4 h-full flex flex-col">
                 <div className="px-3 py-2 flex-1">
                     <div className="space-y-1">
-                        {routes.map((route) => (
-                            <Link
-                                key={route.label}
-                                href={route.href}
-                                className={cn(
-                                    "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-slate-700 rounded-lg transition",
-                                    pathname === route.href || pathname.startsWith(route.href + "/") ? "text-white bg-slate-700 font-bold" : "text-slate-400"
-                                )}
-                            >
-                                <div className="flex items-center flex-1">
-                                    <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
-                                    {route.label}
-                                </div>
-                            </Link>
-                        ))}
+                        {routes.map((route) => {
+                            const isActive = pathname === route.href || pathname.startsWith(route.href + "/");
+                            return (
+                                <Link
+                                    key={route.label}
+                                    href={route.href}
+                                    className={cn(
+                                        "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition duration-200",
+                                        isActive
+                                            ? "text-blue-500 bg-blue-600/10 font-semibold"
+                                            : "text-slate-400 hover:text-blue-400 hover:bg-slate-900"
+                                    )}
+                                >
+                                    <div className="flex items-center flex-1">
+                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-blue-500" : "text-slate-500 group-hover:text-blue-400")} />
+                                        {route.label}
+                                    </div>
+                                </Link>
+                            )
+                        })}
                     </div>
                 </div>
                 <div className="px-3 py-2">
                     <div
                         onClick={() => window.location.href = "/logout"}
                         className={cn(
-                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-slate-700 rounded-lg transition text-slate-400"
+                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-red-400 hover:bg-red-500/10 rounded-xl transition duration-200 text-slate-400"
                         )}
                     >
                         <div className="flex items-center flex-1">
-                            <LogOut className="h-5 w-5 mr-3 text-red-500" />
+                            <LogOut className="h-5 w-5 mr-3 text-slate-500 group-hover:text-red-400" />
                             Cerrar Sesión
                         </div>
                     </div>

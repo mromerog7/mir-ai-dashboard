@@ -40,7 +40,7 @@ export const columns: ColumnDef<ClientMeeting>[] = [
         header: "Título / Objetivo",
         cell: ({ row }) => (
             <div className="flex items-center">
-                <FileText className="mr-2 h-4 w-4 text-emerald-500" />
+                <FileText className="mr-2 h-4 w-4 text-blue-500" />
                 <span className="text-white font-medium">{row.getValue("titulo")}</span>
             </div>
         )

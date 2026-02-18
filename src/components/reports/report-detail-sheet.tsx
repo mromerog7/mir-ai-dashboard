@@ -54,7 +54,7 @@ export function ReportDetailSheet({ report, project, trigger }: ReportDetailShee
                     <div className="flex items-center justify-between">
                         <SheetTitle className="text-white text-xl">{report.folio || "Reporte sin folio"}</SheetTitle>
                         {report.pdf_final_url && (
-                            <Button variant="outline" size="sm" onClick={() => window.open(report.pdf_final_url!, '_blank')} className="gap-2 border-emerald-500/50 text-emerald-400 hover:bg-emerald-950/30 hover:text-emerald-300">
+                            <Button variant="outline" size="sm" onClick={() => window.open(report.pdf_final_url!, '_blank')} className="gap-2 border-blue-500/50 text-blue-400 hover:bg-blue-950/30 hover:text-blue-300">
                                 <FileText className="h-4 w-4" />
                                 Ver PDF
                             </Button>

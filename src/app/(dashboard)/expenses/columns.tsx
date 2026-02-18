@@ -38,7 +38,7 @@ export const columns: ColumnDef<Expense>[] = [
             )
         },
         cell: ({ row }) => (
-            <div className="font-bold text-emerald-400">
+            <div className="font-bold text-blue-400">
                 {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(row.getValue("monto"))}
             </div>
         )

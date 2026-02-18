@@ -591,7 +591,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                 </div>
                                 <div className="flex justify-between font-bold text-white border-t border-slate-700 pt-1 mt-1">
                                     <span>Total:</span>
-                                    <span className="text-emerald-400">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.total)}</span>
+                                    <span className="text-blue-400">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.total)}</span>
                                 </div>
                             </div>
                         </div>

@@ -72,9 +72,9 @@ export default async function UsersPage() {
                                                 {getRoleIcon(profile.role || 'user')}
                                                 <span className="text-sm capitalize text-slate-300">{profile.role || 'user'}</span>
                                             </div>
-                                            <div className={`text-xs px-2 py-1 rounded-full border ${profile.status === 'active' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                                    profile.status === 'invited' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-                                                        'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                                            <div className={`text-xs px-2 py-1 rounded-full border ${profile.status === 'active' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                                                profile.status === 'invited' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
+                                                    'bg-slate-500/10 text-slate-400 border-slate-500/20'
                                                 }`}>
                                                 <span className="capitalize">{profile.status || 'inactive'}</span>
                                             </div>

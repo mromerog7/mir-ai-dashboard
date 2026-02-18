@@ -31,7 +31,7 @@ export const columns: ColumnDef<Project>[] = [
                 </Button>
             )
         },
-        cell: ({ row }: { row: Row<Project> }) => <span className="font-medium text-emerald-400">{row.getValue("nombre")}</span>
+        cell: ({ row }: { row: Row<Project> }) => <span className="font-medium text-blue-400">{row.getValue("nombre")}</span>
     },
     {
         accessorKey: "cliente",

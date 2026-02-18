@@ -82,7 +82,7 @@ export function PendingTasksWidget({ initialTasks }: PendingTasksWidgetProps) {
                                         {task.descripcion || "Sin descripción"}
                                     </p>
                                 </div>
-                                <div className={`px-2 py-0.5 rounded text-[10px] font-medium ${task.estatus === 'Completada' ? 'bg-green-500/20 text-green-400' :
+                                <div className={`px-2 py-0.5 rounded text-[10px] font-medium ${task.estatus === 'Completada' ? 'bg-blue-500/20 text-blue-400' :
                                     task.estatus === 'En Proceso' ? 'bg-blue-500/20 text-blue-400' :
                                         'bg-yellow-500/20 text-yellow-400'
                                     }`}>

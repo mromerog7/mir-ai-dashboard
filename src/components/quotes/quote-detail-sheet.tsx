@@ -118,8 +118,8 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                             <div>
                                 <span className="text-xs text-slate-500 block">Total</span>
                                 <div className="flex items-center gap-1">
-                                    <DollarSign className="h-3 w-3 text-emerald-400" />
-                                    <span className="text-sm font-bold text-emerald-400">
+                                    <DollarSign className="h-3 w-3 text-blue-400" />
+                                    <span className="text-sm font-bold text-blue-400">
                                         {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.total || 0)}
                                     </span>
                                 </div>
@@ -174,7 +174,7 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                             </div>
                             <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-800">
                                 <span className="text-white">Total:</span>
-                                <span className="text-emerald-400">
+                                <span className="text-blue-400">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.total || 0)}
                                 </span>
                             </div>
