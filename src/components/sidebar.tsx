@@ -108,11 +108,11 @@ export function Sidebar({ className }: SidebarProps) {
                                         "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                         isActive
                                             ? "text-white bg-slate-900 shadow-lg translate-x-2"
-                                            : "text-white hover:bg-white/10"
+                                            : "text-[#868787] hover:bg-white/10 hover:text-white"
                                     )}
                                 >
                                     <div className="flex items-center flex-1">
-                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-white" : "text-white")} />
+                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-white" : "text-[#868787] group-hover:text-white")} />
                                         {route.label}
                                     </div>
                                 </Link>
@@ -124,11 +124,11 @@ export function Sidebar({ className }: SidebarProps) {
                     <div
                         onClick={() => window.location.href = "/logout"}
                         className={cn(
-                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-white/10 rounded-xl transition duration-200 text-white"
+                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-white/10 rounded-xl transition duration-200 text-[#868787] hover:text-white"
                         )}
                     >
                         <div className="flex items-center flex-1">
-                            <LogOut className="h-5 w-5 mr-3 text-white" />
+                            <LogOut className="h-5 w-5 mr-3 text-[#868787] group-hover:text-white" />
                             Cerrar Sesión
                         </div>
                     </div>
