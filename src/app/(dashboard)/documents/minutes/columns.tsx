@@ -1,7 +1,6 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, FileText, Eye } from "lucide-react"
 import { MinutaDetailSheet } from "@/components/minutes/minuta-detail-sheet"
@@ -13,9 +12,9 @@ export const columns: ColumnDef<Minuta>[] = [
         accessorFn: (row) => row.proyectos?.nombre || "General",
         header: "Proyecto",
         cell: ({ row }) => (
-            <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-200 font-normal">
+            <div className="font-medium text-slate-900">
                 {row.getValue("proyecto")}
-            </Badge>
+            </div>
         )
     },
     {
