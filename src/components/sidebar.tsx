@@ -146,7 +146,7 @@ export function MobileSidebar() {
                     <Menu />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 bg-slate-800 border-slate-700">
+            <SheetContent side="left" className="p-0 bg-slate-950 border-slate-800">
                 <Sidebar className="text-white" />
             </SheetContent>
         </Sheet>

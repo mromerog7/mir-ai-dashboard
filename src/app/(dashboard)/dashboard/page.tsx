@@ -18,13 +18,13 @@ import { PendingTasksWidget } from "@/components/dashboard/pending-tasks-widget"
 // Helper to map WMO weather codes
 function getWeatherIcon(code: number) {
     if (code === 0) return { icon: Sun, label: "Despejado", color: "text-yellow-500" };
-    if (code >= 1 && code <= 3) return { icon: CloudSun, label: "Parcialmente nublado", color: "text-yellow-400" };
-    if (code >= 45 && code <= 48) return { icon: Cloud, label: "Niebla", color: "text-slate-400" };
-    if (code >= 51 && code <= 67) return { icon: CloudRain, label: "Lluvia ligera", color: "text-blue-400" };
-    if (code >= 71 && code <= 77) return { icon: Snowflake, label: "Nieve", color: "text-white" };
-    if (code >= 80 && code <= 82) return { icon: CloudRain, label: "Lluvia", color: "text-blue-500" };
-    if (code >= 95 && code <= 99) return { icon: CloudLightning, label: "Tormenta", color: "text-purple-500" };
-    return { icon: CloudSun, label: "Variable", color: "text-slate-400" };
+    if (code >= 1 && code <= 3) return { icon: CloudSun, label: "Parcialmente nublado", color: "text-yellow-500" };
+    if (code >= 45 && code <= 48) return { icon: Cloud, label: "Niebla", color: "text-slate-500" };
+    if (code >= 51 && code <= 67) return { icon: CloudRain, label: "Lluvia ligera", color: "text-blue-500" };
+    if (code >= 71 && code <= 77) return { icon: Snowflake, label: "Nieve", color: "text-sky-400" };
+    if (code >= 80 && code <= 82) return { icon: CloudRain, label: "Lluvia", color: "text-blue-600" };
+    if (code >= 95 && code <= 99) return { icon: CloudLightning, label: "Tormenta", color: "text-purple-600" };
+    return { icon: CloudSun, label: "Variable", color: "text-slate-500" };
 }
 
 export default async function DashboardPage() {
@@ -178,9 +178,9 @@ export default async function DashboardPage() {
                 </Link>
 
                 <Link href="/weather">
-                    <Card className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700/50 transition-colors cursor-pointer">
+                    <Card className="bg-white border-slate-200 text-slate-900 shadow-sm hover:shadow-md transition-all cursor-pointer">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-400">Clima (Comalcalco)</CardTitle>
+                            <CardTitle className="text-sm font-medium text-slate-500">Clima (Comalcalco)</CardTitle>
                             <WeatherIcon className={`h-4 w-4 ${weatherInfo.color}`} />
                         </CardHeader>
                         <CardContent>

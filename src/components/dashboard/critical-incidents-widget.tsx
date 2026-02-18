@@ -44,9 +44,9 @@ export function CriticalIncidentsWidget({ initialCount }: CriticalIncidentsWidge
     }, [supabase]);
 
     return (
-        <Card className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700/50 transition-colors cursor-pointer">
+        <Card className="bg-white border-slate-200 text-slate-900 shadow-sm hover:shadow-md transition-all cursor-pointer">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-400">Incidencias Críticas</CardTitle>
+                <CardTitle className="text-sm font-medium text-slate-500">Incidencias Críticas</CardTitle>
                 <AlertTriangle className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>

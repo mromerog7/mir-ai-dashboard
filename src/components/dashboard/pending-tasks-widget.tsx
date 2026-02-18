@@ -68,29 +68,29 @@ export function PendingTasksWidget({ initialTasks }: PendingTasksWidgetProps) {
 
     return (
         <Link href="/tasks">
-            <Card className="h-full bg-slate-800 border-slate-700 text-white hover:bg-slate-700/50 transition-colors cursor-pointer">
+            <Card className="h-full bg-white border-slate-200 text-slate-900 shadow-sm hover:shadow-md transition-all cursor-pointer">
                 <CardHeader>
                     <CardTitle>Resumen de Tareas</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
                         {tasks && tasks.length > 0 ? tasks.map((task) => (
-                            <div key={task.id} className="flex items-start justify-between border-b border-slate-700 pb-2 last:border-0 last:pb-0">
+                            <div key={task.id} className="flex items-start justify-between border-b border-slate-100 pb-2 last:border-0 last:pb-0">
                                 <div className="space-y-1">
-                                    <p className="text-sm font-medium leading-none text-white">{task.titulo}</p>
-                                    <p className="text-xs text-slate-400">
+                                    <p className="text-sm font-medium leading-none text-slate-900">{task.titulo}</p>
+                                    <p className="text-xs text-slate-500">
                                         {task.descripcion || "Sin descripción"}
                                     </p>
                                 </div>
-                                <div className={`px-2 py-0.5 rounded text-[10px] font-medium ${task.estatus === 'Completada' ? 'bg-blue-500/20 text-blue-400' :
-                                    task.estatus === 'En Proceso' ? 'bg-blue-500/20 text-blue-400' :
-                                        'bg-yellow-500/20 text-yellow-400'
+                                <div className={`px-2 py-0.5 rounded text-[10px] font-medium ${task.estatus === 'Completada' ? 'bg-blue-100 text-blue-700' :
+                                    task.estatus === 'En Proceso' ? 'bg-blue-100 text-blue-700' :
+                                        'bg-yellow-100 text-yellow-700'
                                     }`}>
                                     {task.estatus || "Pendiente"}
                                 </div>
                             </div>
                         )) : (
-                            <p className="text-sm text-slate-400">No hay tareas pendientes recientes.</p>
+                            <p className="text-sm text-slate-500">No hay tareas pendientes recientes.</p>
                         )}
                     </div>
                 </CardContent>

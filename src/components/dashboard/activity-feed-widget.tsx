@@ -32,7 +32,7 @@ export function ActivityFeedWidget({ initialActivities }: ActivityFeedWidgetProp
     }, []);
 
     return (
-        <Card className="bg-slate-800 border-slate-700 text-white">
+        <Card className="bg-white border-slate-200 text-slate-900 shadow-sm">
             <CardHeader>
                 <CardTitle>Resumen de Actividad</CardTitle>
             </CardHeader>
@@ -45,12 +45,12 @@ export function ActivityFeedWidget({ initialActivities }: ActivityFeedWidgetProp
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
                             </span>
                             <div className="ml-4 space-y-1">
-                                <p className="text-sm font-medium leading-none text-white">{activity.description}</p>
-                                <p className="text-sm text-slate-400">{new Date(activity.date).toLocaleDateString("es-MX", { day: 'numeric', month: 'long' })}</p>
+                                <p className="text-sm font-medium leading-none text-slate-900">{activity.description}</p>
+                                <p className="text-sm text-slate-500">{new Date(activity.date).toLocaleDateString("es-MX", { day: 'numeric', month: 'long' })}</p>
                             </div>
                         </div>
                     )) : (
-                        <p className="text-sm text-slate-400">No hay actividad reciente.</p>
+                        <p className="text-sm text-slate-500">No hay actividad reciente.</p>
                     )}
                 </div>
             </CardContent>
