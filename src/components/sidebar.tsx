@@ -94,10 +94,10 @@ export function Sidebar({ className }: SidebarProps) {
     ]
 
     return (
-        <div className={cn("pb-12 h-full bg-slate-950", className)}>
+        <div className={cn("pb-12 h-full bg-blue-600", className)}>
             <div className="space-y-4 py-4 h-full flex flex-col">
                 <div className="px-3 py-2 flex-1">
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                         {routes.map((route) => {
                             const isActive = pathname === route.href || pathname.startsWith(route.href + "/");
                             return (
@@ -105,14 +105,14 @@ export function Sidebar({ className }: SidebarProps) {
                                     key={route.label}
                                     href={route.href}
                                     className={cn(
-                                        "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition duration-200",
+                                        "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                         isActive
-                                            ? "text-blue-500 bg-blue-600/10 font-semibold"
-                                            : "text-slate-400 hover:text-blue-400 hover:bg-slate-900"
+                                            ? "text-blue-600 bg-white shadow-lg translate-x-2"
+                                            : "text-blue-100 hover:text-white hover:bg-white/10"
                                     )}
                                 >
                                     <div className="flex items-center flex-1">
-                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-blue-500" : "text-slate-500 group-hover:text-blue-400")} />
+                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-blue-600" : "text-blue-100 group-hover:text-white")} />
                                         {route.label}
                                     </div>
                                 </Link>
@@ -124,11 +124,11 @@ export function Sidebar({ className }: SidebarProps) {
                     <div
                         onClick={() => window.location.href = "/logout"}
                         className={cn(
-                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-red-400 hover:bg-red-500/10 rounded-xl transition duration-200 text-slate-400"
+                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-xl transition duration-200 text-blue-100"
                         )}
                     >
                         <div className="flex items-center flex-1">
-                            <LogOut className="h-5 w-5 mr-3 text-slate-500 group-hover:text-red-400" />
+                            <LogOut className="h-5 w-5 mr-3 text-blue-100 group-hover:text-white" />
                             Cerrar Sesión
                         </div>
                     </div>
@@ -146,7 +146,7 @@ export function MobileSidebar() {
                     <Menu />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 bg-slate-950 border-slate-800">
+            <SheetContent side="left" className="p-0 bg-blue-600 border-none">
                 <Sidebar className="text-white" />
             </SheetContent>
         </Sheet>
