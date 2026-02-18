@@ -66,10 +66,10 @@ export function NotesClient() {
             if (projectsData) setProjects(projectsData as any)
             await fetchNotas()
         }
-        loadInitialData()
+        loadInitialData();
 
-            // Expose functions to window for dropdown actions
-            (window as any).refreshNotas = fetchNotas;
+        // Expose functions to window for dropdown actions
+        (window as any).refreshNotas = fetchNotas;
         (window as any).openNoteSheet = (nota: Nota, editing: boolean) => {
             setSelectedNota(nota)
             setIsEditing(editing)
