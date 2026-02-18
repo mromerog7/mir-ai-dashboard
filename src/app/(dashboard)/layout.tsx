@@ -9,8 +9,8 @@ export default function DashboardLayout({
 }) {
     return (
         <div className="h-full relative">
-            <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-blue-600 rounded-tr-[3rem] rounded-br-[3rem] shadow-xl overflow-hidden">
-                <div className="bg-blue-600 p-6 flex items-center justify-center h-[73px]">
+            <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-[#D6E8EE] rounded-tr-[3rem] rounded-br-[3rem] shadow-xl overflow-hidden">
+                <div className="bg-[#D6E8EE] p-6 flex items-center justify-center h-[73px]">
                     <div className="relative h-12 w-40 filter invert hue-rotate-180 brightness-125 contrast-125">
                         <Image
                             src="https://pub-2b7c10c04cbb4824bc36f52820ace933.r2.dev/logo/logoMiR-AI-Finalweb.png"
@@ -21,7 +21,7 @@ export default function DashboardLayout({
                         />
                     </div>
                 </div>
-                <Sidebar className="text-white bg-blue-600" />
+                <Sidebar />
             </div>
             <main className="md:pl-72 h-full bg-slate-50">
                 <Header />
