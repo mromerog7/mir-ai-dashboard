@@ -84,7 +84,7 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
                             onChange={(e) => handleChange(index, e.target.value)}
                             placeholder={placeholder}
                             disabled={readonly}
-                            className={`bg-slate-800 border-slate-700 min-h-[80px] resize-y ${readonly ? "opacity-100 bg-transparent border-none px-0 resize-none min-h-0" : ""}`}
+                            className={`bg-white border-slate-200 text-black min-h-[80px] resize-y ${readonly ? "opacity-100 bg-transparent border-none px-0 resize-none min-h-0 font-medium" : ""}`}
                         />
                     </div>
                     {!readonly && (
@@ -93,7 +93,7 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
                             variant="ghost"
                             size="icon"
                             onClick={() => handleRemove(index)}
-                            className="h-8 w-8 text-slate-500 hover:text-red-400 hover:bg-slate-800 opacity-50 group-hover:opacity-100 transition-opacity mt-1"
+                            className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-slate-100 opacity-50 group-hover:opacity-100 transition-opacity mt-1"
                             title="Eliminar punto"
                         >
                             <X className="h-4 w-4" />
@@ -108,7 +108,7 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
                         variant="ghost"
                         size="sm"
                         onClick={handleAdd}
-                        className="border border-dashed border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 hover:border-slate-500"
+                        className="border border-dashed border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300"
                     >
                         <Plus className="h-3 w-3 mr-2" />
                         Agregar
@@ -121,7 +121,7 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
                             size="sm"
                             onClick={() => onAiImprove(value)}
                             disabled={!value || isAiImproving}
-                            className="text-indigo-400 hover:text-indigo-300 hover:bg-indigo-950/30 h-7 text-xs"
+                            className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 h-7 text-xs"
                         >
                             {isAiImproving && aiField === name ? (
                                 <Loader2 className="h-3 w-3 animate-spin mr-1" />
@@ -296,17 +296,17 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 {trigger ? trigger : (
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 text-slate-500 hover:text-slate-900">
                         {isEditing ? <Pencil className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">
+                    <SheetTitle className="text-[#02457A]">
                         {readonly ? "Detalle de Minuta" : (isEditing ? "Editar Minuta" : "Nueva Minuta")}
                     </SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetDescription className="text-slate-500">
                         {readonly ? "Información detallada de la reunión." : "Registro de acuerdos y puntos clave de la reunión."}
                     </SheetDescription>
                 </SheetHeader>
@@ -320,9 +320,9 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                 name="fecha"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Fecha Reunión</FormLabel>
+                                        <FormLabel className="text-slate-900">Fecha Reunión</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} disabled={readonly} className={`bg-slate-800 border-slate-700 block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0" : ""}`} />
+                                            <Input type="date" {...field} disabled={readonly} className={`bg-white border-slate-200 text-black block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0 font-medium" : ""}`} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -334,9 +334,9 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                 name="siguiente_reunion"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Siguiente Reunión</FormLabel>
+                                        <FormLabel className="text-slate-900">Siguiente Reunión</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} disabled={readonly} className={`bg-slate-800 border-slate-700 block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0" : ""}`} />
+                                            <Input type="date" {...field} disabled={readonly} className={`bg-white border-slate-200 text-black block w-full ${readonly ? "opacity-100 bg-transparent border-none px-0 font-medium" : ""}`} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -349,7 +349,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                             name="proyecto_id"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Proyecto</FormLabel>
+                                    <FormLabel className="text-slate-900">Proyecto</FormLabel>
                                     <Select
                                         onValueChange={(value) => field.onChange(Number(value))}
                                         value={field.value?.toString() || "0"}
@@ -357,11 +357,11 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                         disabled={readonly}
                                     >
                                         <FormControl>
-                                            <SelectTrigger className={`w-full bg-slate-800 border-slate-700 ${readonly ? "opacity-100 bg-transparent border-none px-0 cursor-default" : ""}`}>
+                                            <SelectTrigger className={`w-full bg-white border-slate-200 text-black ${readonly ? "opacity-100 bg-transparent border-none px-0 cursor-default font-medium" : ""}`}>
                                                 <SelectValue placeholder="Seleccionar..." />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                        <SelectContent className="bg-white border-slate-200 text-slate-900">
                                             <SelectItem value="0">General / Sin Proyecto</SelectItem>
                                             {projects.map((project) => (
                                                 <SelectItem key={project.id} value={project.id.toString()}>
@@ -380,9 +380,9 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                             name="titulo"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Título / Objetivo</FormLabel>
+                                    <FormLabel className="text-slate-900">Título / Objetivo</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Ej. Revisión Semanal de Avances" {...field} disabled={readonly} className={`bg-slate-800 border-slate-700 ${readonly ? "opacity-100 bg-transparent border-none px-0 text-lg font-semibold" : ""}`} />
+                                        <Input placeholder="Ej. Revisión Semanal de Avances" {...field} disabled={readonly} className={`bg-white border-slate-200 text-black ${readonly ? "opacity-100 bg-transparent border-none px-0 text-lg font-bold" : ""}`} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -394,7 +394,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                             name="participantes"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Participantes</FormLabel>
+                                    <FormLabel className="text-slate-900">Participantes</FormLabel>
                                     <FormControl>
                                         <ListInput
                                             value={field.value}
@@ -422,7 +422,7 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                 name={item.name as any}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>{item.label}</FormLabel>
+                                        <FormLabel className="text-slate-900">{item.label}</FormLabel>
                                         <FormControl>
                                             <ListInput
                                                 value={field.value}
@@ -443,11 +443,11 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                         ))}
 
                         <div className="flex justify-end gap-2 pt-4">
-                            <Button type="button" variant={readonly ? "default" : "ghost"} onClick={() => setOpen(false)} className={readonly ? "bg-slate-800 hover:bg-slate-700" : "hover:bg-slate-800"}>
+                            <Button type="button" variant={readonly ? "default" : "ghost"} onClick={() => setOpen(false)} className={readonly ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "hover:bg-slate-100 text-slate-500 hover:text-slate-900"}>
                                 {readonly ? "Cerrar" : "Cancelar"}
                             </Button>
                             {!readonly && (
-                                <Button type="submit" disabled={saving} className="bg-blue-600 hover:bg-blue-700 text-white">
+                                <Button type="submit" disabled={saving} className="bg-[#02457A] hover:bg-[#02335a] text-white">
                                     {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     {isEditing ? "Guardar Cambios" : "Crear Minuta"}
                                 </Button>
