@@ -79,15 +79,15 @@ export function InviteUserSheet() {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button>
+                <Button className="bg-[#02457A] hover:bg-[#02335a] text-white">
                     <Mail className="mr-2 h-4 w-4" />
                     Invitar Usuario
                 </Button>
             </SheetTrigger>
-            <SheetContent className="bg-slate-900 border-slate-800 text-white sm:max-w-md">
+            <SheetContent className="bg-white border-slate-200 text-slate-900 sm:max-w-md">
                 <SheetHeader>
-                    <SheetTitle className="text-white">Invitar Usuario</SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetTitle className="text-[#02457A]">Invitar Usuario</SheetTitle>
+                    <SheetDescription className="text-slate-500">
                         Envía un correo de invitación para que el usuario configure su contraseña.
                     </SheetDescription>
                 </SheetHeader>
@@ -98,9 +98,9 @@ export function InviteUserSheet() {
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Correo Electrónico</FormLabel>
+                                    <FormLabel className="text-slate-900">Correo Electrónico</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="usuario@ejemplo.com" {...field} className="bg-slate-800 border-slate-700" />
+                                        <Input placeholder="usuario@ejemplo.com" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -111,9 +111,9 @@ export function InviteUserSheet() {
                             name="fullName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nombre Completo</FormLabel>
+                                    <FormLabel className="text-slate-900">Nombre Completo</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Juan Pérez" {...field} className="bg-slate-800 border-slate-700" />
+                                        <Input placeholder="Juan Pérez" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -124,14 +124,14 @@ export function InviteUserSheet() {
                             name="role"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Rol</FormLabel>
+                                    <FormLabel className="text-slate-900">Rol</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="bg-slate-800 border-slate-700">
+                                            <SelectTrigger className="bg-white border-slate-200 text-slate-900">
                                                 <SelectValue placeholder="Selecciona un rol" />
                                             </SelectTrigger>
                                         </FormControl>
-                                        <SelectContent>
+                                        <SelectContent className="bg-white border-slate-200 text-slate-900">
                                             <SelectItem value="admin">Administrador</SelectItem>
                                             <SelectItem value="engineer">Ingeniero</SelectItem>
                                             <SelectItem value="user">Usuario</SelectItem>
@@ -143,7 +143,7 @@ export function InviteUserSheet() {
                             )}
                         />
                         <SheetFooter>
-                            <Button type="submit" disabled={loading} className="w-full">
+                            <Button type="submit" disabled={loading} className="w-full bg-[#02457A] hover:bg-[#02335a] text-white">
                                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Enviar Invitación
                             </Button>

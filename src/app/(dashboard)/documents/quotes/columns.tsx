@@ -37,42 +37,42 @@ export const columns: ColumnDef<Quote>[] = [
         id: "proyecto",
         accessorFn: (row) => row.proyectos?.nombre || "General",
         header: "Proyecto",
-        cell: ({ row }) => <span className="font-medium text-blue-400">{row.getValue("proyecto")}</span>
+        cell: ({ row }) => <span className="font-medium text-blue-600">{row.getValue("proyecto")}</span>
     },
     {
         accessorKey: "cliente",
         header: "Cliente",
-        cell: ({ row }) => <div className="text-left text-slate-400">{row.getValue("cliente")}</div>
+        cell: ({ row }) => <div className="text-left text-slate-700">{row.getValue("cliente")}</div>
     },
     {
         accessorKey: "folio",
         header: ({ column }) => {
             return (
                 <div className="flex justify-center w-full">
-                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} className="text-slate-500 hover:text-slate-900 hover:bg-slate-100">
                         Folio
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
             )
         },
-        cell: ({ row }) => <div className="text-center font-medium text-slate-300">{row.getValue("folio")}</div>
+        cell: ({ row }) => <div className="text-center font-medium text-slate-900">{row.getValue("folio")}</div>
     },
     {
         accessorKey: "total",
-        header: () => <div className="text-center">Monto</div>,
+        header: () => <div className="text-center text-slate-500">Monto</div>,
         cell: ({ row }) => {
             const amount = parseFloat(row.getValue("total") || "0")
             const formatted = new Intl.NumberFormat("es-MX", {
                 style: "currency",
                 currency: "MXN",
             }).format(amount)
-            return <div className="text-center font-medium text-slate-200">{formatted}</div>
+            return <div className="text-center font-medium text-slate-900">{formatted}</div>
         },
     },
     {
         accessorKey: "estatus",
-        header: () => <div className="text-center">Estado</div>,
+        header: () => <div className="text-center text-slate-500">Estado</div>,
         cell: ({ row }) => {
             const status = row.getValue("estatus") as string
             let variant: "default" | "secondary" | "destructive" | "outline" = "default"
@@ -81,22 +81,24 @@ export const columns: ColumnDef<Quote>[] = [
             else if (status === "Rechazada") variant = "destructive"
             else if (status === "Borrador") variant = "outline"
 
-            const colorClass = (status === "Aprobada" || status === "Aceptada") ? "bg-blue-600 hover:bg-blue-700" :
-                (status === "Enviada") ? "bg-blue-600 hover:bg-blue-700" : undefined;
+            const colorClass = (status === "Aprobada" || status === "Aceptada") ? "bg-green-100 text-green-700 hover:bg-green-200" :
+                (status === "Enviada") ? "bg-blue-100 text-blue-700 hover:bg-blue-200" :
+                    (status === "Rechazada") ? "bg-red-100 text-red-700 hover:bg-red-200" :
+                        undefined;
 
             return <div className="flex justify-center"><Badge variant={variant} className={colorClass}>{status}</Badge></div>
         }
     },
     {
         accessorKey: "fecha_emision",
-        header: () => <div className="text-center">Fecha</div>,
+        header: () => <div className="text-center text-slate-500">Fecha</div>,
         cell: ({ row }) => {
             const dateStr = row.getValue("fecha_emision") as string
             if (!dateStr) return <div className="text-center font-medium text-slate-500">-</div>;
             // Handle date string (e.g. 2026-02-09)
             // We append T12:00:00 to ensure local time is not shifted by timezone if it's just a date string
             const date = new Date(dateStr.includes('T') ? dateStr : `${dateStr}T12:00:00`)
-            return <div className="text-center font-medium text-slate-300">{date.toLocaleDateString("es-MX")}</div>
+            return <div className="text-center font-medium text-slate-700">{date.toLocaleDateString("es-MX")}</div>
         },
     },
     {
@@ -109,7 +111,7 @@ export const columns: ColumnDef<Quote>[] = [
                     <EditQuoteSheet
                         defaultValues={quote}
                         trigger={
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800 text-purple-400" title="Duplicar">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 text-purple-600 hover:text-purple-800" title="Duplicar">
                                 <span className="sr-only">Duplicar Cotización</span>
                                 <Copy className="h-4 w-4" />
                             </Button>
@@ -117,12 +119,12 @@ export const columns: ColumnDef<Quote>[] = [
                     />
                     <QuoteDetailSheet quote={quote} />
                     {quote.pdf_url ? (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800" onClick={() => window.open(quote.pdf_url!, '_blank')} title="Descargar PDF">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100" onClick={() => window.open(quote.pdf_url!, '_blank')} title="Descargar PDF">
                             <span className="sr-only">Descargar PDF</span>
-                            <Download className="h-4 w-4 text-blue-400" />
+                            <Download className="h-4 w-4 text-blue-600" />
                         </Button>
                     ) : (
-                        <span className="text-xs text-slate-500">Sin archivo</span>
+                        <span className="text-xs text-slate-400">Sin archivo</span>
                     )}
                 </div>
             )

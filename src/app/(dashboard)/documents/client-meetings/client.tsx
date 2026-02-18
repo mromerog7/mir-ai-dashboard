@@ -77,8 +77,8 @@ export function ClientMeetingsClient({ initialMeetings, projects }: ClientMeetin
         <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between space-y-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-white">Reunión con Clientes</h2>
-                    <p className="text-muted-foreground text-slate-400">
+                    <h2 className="text-2xl font-bold tracking-tight text-[#02457A]">Reunión con Clientes</h2>
+                    <p className="text-muted-foreground text-slate-500">
                         Registro de reuniones con clientes, acuerdos y seguimiento.
                     </p>
                 </div>
@@ -89,7 +89,7 @@ export function ClientMeetingsClient({ initialMeetings, projects }: ClientMeetin
                         <select
                             value={selectedProjectId}
                             onChange={(e) => setSelectedProjectId(e.target.value)}
-                            className="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-md pl-8 pr-8 py-2 appearance-none cursor-pointer hover:border-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
+                            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-2 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="all">Todas las reuniones</option>
                             {projects.map((p) => (

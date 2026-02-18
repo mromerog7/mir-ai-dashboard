@@ -46,14 +46,14 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className="space-y-4">
-            <div className="rounded-md border border-slate-700 bg-slate-900">
+            <div className="rounded-md border border-slate-200 bg-white">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id} className="border-slate-700 hover:bg-slate-800">
+                            <TableRow key={headerGroup.id} className="border-slate-200 hover:bg-slate-50">
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} className="text-slate-400">
+                                        <TableHead key={header.id} className="text-slate-500">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    className="border-slate-700 hover:bg-slate-800 text-slate-200"
+                                    className="border-slate-200 hover:bg-slate-50 text-slate-900"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
@@ -97,7 +97,7 @@ export function DataTable<TData, TValue>({
                     size="sm"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
-                    className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700"
+                    className="bg-white border-slate-200 text-slate-900 hover:bg-slate-100"
                 >
                     Previous
                 </Button>
@@ -106,7 +106,7 @@ export function DataTable<TData, TValue>({
                     size="sm"
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
-                    className="bg-slate-800 border-slate-700 text-white hover:bg-slate-700"
+                    className="bg-white border-slate-200 text-slate-900 hover:bg-slate-100"
                 >
                     Next
                 </Button>

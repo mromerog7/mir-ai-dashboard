@@ -95,7 +95,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-white tracking-tight">Control de Gastos</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Control de Gastos</h1>
                 <div className="flex items-center space-x-4">
                     {/* Total Amount Display */}
                     <div className="flex flex-col items-end">
@@ -111,7 +111,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
                         <select
                             value={selectedProjectId}
                             onChange={(e) => setSelectedProjectId(e.target.value)}
-                            className="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
+                            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="all">Todos los proyectos</option>
                             {projects.map((p) => (
@@ -130,9 +130,9 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
             {/* Top 3 Recent Expenses Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recentExpenses.map((expense) => (
-                    <Card key={expense.id} className="bg-slate-800 border-slate-700 text-white overflow-hidden hover:border-slate-600 transition-colors flex flex-col sm:flex-row h-full">
+                    <Card key={expense.id} className="bg-white border-slate-200 text-slate-900 overflow-hidden hover:border-slate-300 transition-colors flex flex-col sm:flex-row h-full shadow-sm">
                         {typeof expense.ticket_url === 'string' && expense.ticket_url.trim() !== "" && (
-                            <div className="w-full sm:w-24 h-48 sm:h-auto relative shrink-0 bg-slate-900 flex items-center justify-center">
+                            <div className="w-full sm:w-24 h-48 sm:h-auto relative shrink-0 bg-slate-100 flex items-center justify-center">
                                 <div className="w-full h-full relative group">
                                     <Image
                                         src={expense.ticket_url}
@@ -146,7 +146,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
                         <CardContent className="p-4 flex-1 flex flex-col justify-between">
                             <div>
                                 <div className="flex justify-between items-start mb-2">
-                                    <Badge variant="outline" className="text-slate-300 border-slate-600">{expense.categoria || "Gasto"}</Badge>
+                                    <Badge variant="outline" className="text-slate-500 border-slate-200">{expense.categoria || "Gasto"}</Badge>
                                     <span className="font-bold text-blue-400">
                                         {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(expense.monto)}
                                     </span>
@@ -173,7 +173,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
 
             {/* All Expenses Table */}
             <div className="mt-8">
-                <h2 className="text-xl font-semibold text-white mb-4">Historial de Gastos</h2>
+                <h2 className="text-xl font-semibold text-[#02457A] mb-4">Historial de Gastos</h2>
                 <DataTable columns={columns} data={filteredExpenses} />
             </div>
         </div>

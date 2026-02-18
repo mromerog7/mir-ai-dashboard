@@ -85,7 +85,7 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
         "Baja": "border-blue-500/50 hover:border-blue-500",
         "Media": "border-yellow-500/50 hover:border-yellow-500",
         "Alta": "border-orange-500/50 hover:border-orange-500",
-        "Crítica": "border-red-500/50 hover:border-red-500",
+        "Crítica": "border-red-500/50 hover:border-red-500 bg-red-50/50",
     }
 
     const severityTextColors: Record<string, string> = {
@@ -98,7 +98,7 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-white tracking-tight">Centro de Riesgos (Incidencias)</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Centro de Riesgos (Incidencias)</h1>
                 <div className="flex items-center space-x-3">
                     {/* Project Filter */}
                     <div className="relative flex items-center">
@@ -106,7 +106,7 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
                         <select
                             value={selectedProjectId}
                             onChange={(e) => setSelectedProjectId(e.target.value)}
-                            className="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
+                            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="all">Todos los proyectos</option>
                             {projects.map((p) => (
@@ -125,10 +125,10 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredIncidents.map((incident) => (
-                    <Card key={incident.id} className={`bg-slate-800 text-white transition-all duration-300 border-l-4 ${incident.estatus === "Resuelta" ? "border-slate-500" : (severityColors[incident.severidad] || "border-slate-700")} flex flex-col`}>
+                    <Card key={incident.id} className={`bg-white text-slate-900 transition-all duration-300 border-l-4 shadow-sm ${incident.estatus === "Resuelta" ? "border-slate-300" : (severityColors[incident.severidad] || "border-slate-200")} flex flex-col`}>
                         <CardHeader className="pb-2">
                             <div className="flex justify-between items-start">
-                                <Badge variant="outline" className={`${incident.estatus === "Resuelta" ? "text-slate-500 border-slate-500" : (severityTextColors[incident.severidad] || "text-white")} border-current`}>
+                                <Badge variant="outline" className={`${incident.estatus === "Resuelta" ? "text-slate-500 border-slate-300" : (severityTextColors[incident.severidad] || "text-slate-700")} border-current`}>
                                     {incident.severidad}
                                 </Badge>
                                 <div className="flex flex-col items-end gap-2">
@@ -141,7 +141,7 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
                                         <EditIncidentSheet
                                             incident={incident as unknown as Incident}
                                             trigger={
-                                                <button className="text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700">
+                                                <button className="text-slate-400 hover:text-slate-700 transition-colors p-1 rounded-full hover:bg-slate-100">
                                                     <Pencil className="h-3 w-3" />
                                                 </button>
                                             }
@@ -153,12 +153,12 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
                                 </div>
                             </div>
                             <CardTitle className="text-lg font-semibold mt-2">{incident.titulo}</CardTitle>
-                            <p className="text-sm text-slate-400">{incident.proyectos?.nombre}</p>
+                            <p className="text-sm text-slate-500">{incident.proyectos?.nombre}</p>
                         </CardHeader>
                         <CardContent className="flex-1 flex flex-col">
-                            <p className="text-sm text-slate-300 line-clamp-3 mb-4 flex-1">{incident.descripcion}</p>
+                            <p className="text-sm text-slate-600 line-clamp-3 mb-4 flex-1">{incident.descripcion}</p>
 
-                            <div className="grid grid-cols-2 gap-2 text-xs text-slate-400 mb-4">
+                            <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 mb-4">
                                 <div className="flex items-center">
                                     <AlertTriangle className="mr-1 h-3 w-3" />
                                     Costo: {incident.impacto_costo ? `$${incident.impacto_costo}` : "N/A"}
@@ -170,11 +170,11 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
                             </div>
 
                             {incident.estatus === "Resuelta" && incident.solucion_final && (
-                                <div className="mt-4 mb-4 p-3 bg-blue-900/20 border border-blue-900/50 rounded-md">
+                                <div className="mt-4 mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
                                     <h4 className="text-xs font-medium text-blue-400 mb-1 flex items-center gap-1">
                                         <CheckCircle className="w-3 h-3" /> Solución
                                     </h4>
-                                    <p className="text-sm text-blue-100/80 italic">{incident.solucion_final}</p>
+                                    <p className="text-sm text-blue-800 italic">{incident.solucion_final}</p>
                                 </div>
                             )}
 

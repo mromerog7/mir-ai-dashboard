@@ -47,20 +47,20 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                 const columnTasks = getTasksByStatus(column.id)
 
                 return (
-                    <div key={column.id} className="min-w-[300px] flex-1 flex flex-col bg-slate-900/50 rounded-lg border border-slate-800 h-full">
-                        <div className={`p-3 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-slate-900/95 backdrop-blur z-10 rounded-t-lg`}>
+                    <div key={column.id} className="min-w-[300px] flex-1 flex flex-col bg-slate-50 rounded-lg border border-slate-200 h-full">
+                        <div className={`p-3 border-b border-slate-200 flex items-center justify-between sticky top-0 bg-slate-50/95 backdrop-blur z-10 rounded-t-lg`}>
                             <h3 className={`font-semibold ${column.color.split(" ").pop()}`}>{column.label}</h3>
-                            <Badge variant="secondary" className="bg-slate-800 text-slate-400 border-none">
+                            <Badge variant="secondary" className="bg-white text-slate-500 border-slate-200 shadow-sm">
                                 {columnTasks.length}
                             </Badge>
                         </div>
 
                         <div className="p-2 space-y-1.5 overflow-y-auto flex-1 custom-scrollbar">
                             {columnTasks.map((task) => (
-                                <Card key={task.id} className={`bg-slate-900 border-slate-800 hover:border-slate-700 transition-all ${PRIORITY_COLORS[task.prioridad || "Media"] || PRIORITY_COLORS["Media"]}`}>
+                                <Card key={task.id} className={`bg-white border-slate-200 hover:border-slate-300 shadow-sm transition-all ${PRIORITY_COLORS[task.prioridad || "Media"] || PRIORITY_COLORS["Media"]}`}>
                                     <CardHeader className="p-2 pb-1 space-y-0.5">
                                         <div className="flex justify-between items-start">
-                                            <CardTitle className="text-xs font-medium text-white leading-snug flex-1 mr-1">
+                                            <CardTitle className="text-xs font-medium text-slate-900 leading-snug flex-1 mr-1">
                                                 {task.titulo}
                                             </CardTitle>
                                             <div className="flex space-x-0.5 flex-shrink-0">
@@ -68,7 +68,7 @@ export function TaskKanban({ tasks }: TaskKanbanProps) {
                                                 <TaskDetailSheet task={task} />
                                             </div>
                                         </div>
-                                        <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-slate-700 text-slate-400 w-fit">
+                                        <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-slate-200 text-slate-500 w-fit">
                                             {task.proyectos?.nombre || "General"}
                                         </Badge>
                                     </CardHeader>

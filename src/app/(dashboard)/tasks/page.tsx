@@ -106,7 +106,7 @@ export default function TasksPage() {
     return (
         <div className="space-y-4 h-full flex flex-col">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-white tracking-tight">Tareas</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Tareas</h1>
                 <div className="flex items-center space-x-3">
                     {/* Project Filter */}
                     <div className="relative flex items-center">
@@ -114,7 +114,7 @@ export default function TasksPage() {
                         <select
                             value={selectedProjectId}
                             onChange={(e) => setSelectedProjectId(e.target.value)}
-                            className="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
+                            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="all">Todos los proyectos</option>
                             {projects.map((p) => (
@@ -128,21 +128,21 @@ export default function TasksPage() {
                         </svg>
                     </div>
 
-                    <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban" | "gantt" | "gantt-real")} className="bg-slate-900 rounded-md border border-slate-800">
+                    <Tabs value={view} onValueChange={(v) => setView(v as "table" | "kanban" | "gantt" | "gantt-real")} className="bg-white rounded-md border border-slate-200">
                         <TabsList className="bg-transparent">
-                            <TabsTrigger value="table" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
+                            <TabsTrigger value="table" className="data-[state=active]:bg-slate-100 data-[state=active]:text-slate-900 text-slate-500">
                                 <List className="h-4 w-4 mr-2" />
                                 Tabla
                             </TabsTrigger>
-                            <TabsTrigger value="kanban" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
+                            <TabsTrigger value="kanban" className="data-[state=active]:bg-slate-100 data-[state=active]:text-slate-900 text-slate-500">
                                 <LayoutGrid className="h-4 w-4 mr-2" />
                                 Kanban
                             </TabsTrigger>
-                            <TabsTrigger value="gantt" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
+                            <TabsTrigger value="gantt" className="data-[state=active]:bg-slate-100 data-[state=active]:text-slate-900 text-slate-500">
                                 <BarChart2 className="h-4 w-4 mr-2" />
                                 Gantt
                             </TabsTrigger>
-                            <TabsTrigger value="gantt-real" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
+                            <TabsTrigger value="gantt-real" className="data-[state=active]:bg-slate-100 data-[state=active]:text-slate-900 text-slate-500">
                                 <GitCompareArrows className="h-4 w-4 mr-2" />
                                 PROG vs REAL
                             </TabsTrigger>
@@ -176,9 +176,9 @@ export default function TasksPage() {
 
             {/* Shared Edit Task Sheet (used by Gantt view) */}
             <Sheet open={!!editingTask} onOpenChange={(open) => { if (!open) setEditingTask(null); }}>
-                <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+                <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                     <SheetHeader>
-                        <SheetTitle className="text-white">Editar Tarea</SheetTitle>
+                        <SheetTitle className="text-slate-900">Editar Tarea</SheetTitle>
                         <SheetDescription className="text-slate-400">
                             Modifica los detalles de la tarea.
                         </SheetDescription>

@@ -52,11 +52,11 @@ export default async function WeatherPage() {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-white tracking-tight">Seguridad Ambiental (Clima)</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Seguridad Ambiental (Clima)</h1>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* Current Weather Card */}
-                <Card className="bg-slate-800 border-slate-700 text-white col-span-2">
+                <Card className="bg-white border-slate-200 text-slate-900 col-span-2 shadow-sm">
                     <CardHeader>
                         <CardTitle className="flex items-center">
                             <CurrentIcon className={`mr-2 h-6 w-6 ${currentInfo.color}`} />
@@ -67,18 +67,18 @@ export default async function WeatherPage() {
                         <div className="flex flex-col md:flex-row items-center justify-between">
                             <div className="mb-4 md:mb-0">
                                 <div className="text-5xl font-bold">{current.temp}°C</div>
-                                <p className="text-slate-400 mt-2">{currentInfo.label}</p>
+                                <p className="text-slate-500 mt-2">{currentInfo.label}</p>
                                 <div className="flex items-center mt-4 space-x-6 text-sm text-slate-300">
-                                    <span className="flex items-center" title="Viento"><Wind className="mr-2 h-4 w-4 text-slate-400" /> {current.wind} km/h</span>
+                                    <span className="flex items-center" title="Viento"><Wind className="mr-2 h-4 w-4 text-slate-500" /> {current.wind} km/h</span>
                                     <span className="flex items-center" title="Humedad"><Droplets className="mr-2 h-4 w-4 text-blue-400" /> {current.humidity}%</span>
                                 </div>
                             </div>
                             <div className="text-right space-y-2">
-                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.wind > 20 || current.code >= 95 ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'
+                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.wind > 20 || current.code >= 95 ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-blue-50 text-blue-600 border border-blue-200'
                                     }`}>
                                     {current.wind > 20 || current.code >= 95 ? 'Precaución: Viento/Tormenta' : 'Condiciones Seguras para Alturas'}
                                 </div>
-                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.temp > 30 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-blue-500/20 text-blue-400'
+                                <div className={`badge px-3 py-1 rounded-full text-sm font-medium ${current.temp > 30 ? 'bg-yellow-50 text-yellow-600 border border-yellow-200' : 'bg-blue-50 text-blue-600 border border-blue-200'
                                     }`}>
                                     {current.temp > 30 ? 'Precaución: Calor Extremo' : 'Condiciones Seguras para Soldar'}
                                 </div>
@@ -88,22 +88,22 @@ export default async function WeatherPage() {
                 </Card>
 
                 {/* Recommendations Card */}
-                <Card className="bg-slate-800 border-slate-700 text-white">
+                <Card className="bg-white border-slate-200 text-slate-900 shadow-sm">
                     <CardHeader>
                         <CardTitle>Recomendaciones</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ul className="list-disc list-inside space-y-2 text-sm text-slate-300">
+                        <ul className="list-disc list-inside space-y-2 text-sm text-slate-600">
                             <li>Hidratación constante para el personal.</li>
                             <li>Uso obligatorio de bloqueador solar.</li>
                             <li>Monitorear ráfagas de viento después de las 16:00.</li>
-                            {current.code >= 51 && <li className="text-yellow-400">Protección contra lluvia requerida.</li>}
+                            {current.code >= 51 && <li className="text-yellow-600 font-medium">Protección contra lluvia requerida.</li>}
                         </ul>
                     </CardContent>
                 </Card>
 
                 {/* 5-Day Forecast Card */}
-                <Card className="col-span-3 bg-slate-800 border-slate-700 text-white">
+                <Card className="col-span-3 bg-white border-slate-200 text-slate-900 shadow-sm">
                     <CardHeader>
                         <CardTitle className="flex items-center">
                             <CalendarDays className="mr-2 h-5 w-5 text-blue-400" />
@@ -121,15 +121,15 @@ export default async function WeatherPage() {
                                 const formattedDate = date.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
 
                                 return (
-                                    <div key={i} className="flex flex-col items-center p-3 rounded-lg bg-slate-700/30 border border-slate-700">
-                                        <span className="capitalize text-sm font-medium text-slate-300 mb-1">{dayName}</span>
+                                    <div key={i} className="flex flex-col items-center p-3 rounded-lg bg-slate-50 border border-slate-200">
+                                        <span className="capitalize text-sm font-medium text-slate-700 mb-1">{dayName}</span>
                                         <span className="text-xs text-slate-500 mb-2">{formattedDate}</span>
                                         <Icon className={`h-8 w-8 ${info.color} my-2`} />
                                         <div className="flex items-center space-x-2 text-sm font-bold">
-                                            <span className="text-red-400">{day.max}°</span>
-                                            <span className="text-blue-400">{day.min}°</span>
+                                            <span className="text-red-500">{day.max}°</span>
+                                            <span className="text-blue-500">{day.min}°</span>
                                         </div>
-                                        <div className="flex items-center mt-2 text-xs text-slate-400">
+                                        <div className="flex items-center mt-2 text-xs text-slate-500">
                                             <CloudRain className="h-3 w-3 mr-1" />
                                             {day.precip}%
                                         </div>

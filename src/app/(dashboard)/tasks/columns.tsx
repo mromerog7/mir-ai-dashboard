@@ -21,17 +21,17 @@ export const columns: ColumnDef<Task>[] = [
         id: "proyecto",
         accessorFn: (row) => row.proyectos?.nombre || "General",
         header: "Proyecto",
-        cell: ({ row }) => <span className="font-medium text-blue-400">{row.getValue("proyecto")}</span>
+        cell: ({ row }) => <span className="font-medium text-blue-600">{row.getValue("proyecto")}</span>
     },
     {
         accessorKey: "titulo",
         header: "Título",
-        cell: ({ row }) => <span className="font-medium text-white">{row.getValue("titulo")}</span>
+        cell: ({ row }) => <span className="font-medium text-slate-900">{row.getValue("titulo")}</span>
     },
     {
         accessorKey: "descripcion",
         header: "Descripción",
-        cell: ({ row }) => <span className="text-slate-300 font-medium truncate max-w-[200px] block" title={row.getValue("descripcion") || ""}>{row.getValue("descripcion") || "Sin descripción"}</span>
+        cell: ({ row }) => <span className="text-slate-500 font-medium truncate max-w-[200px] block" title={row.getValue("descripcion") || ""}>{row.getValue("descripcion") || "Sin descripción"}</span>
     },
     {
         accessorKey: "estatus",
@@ -42,23 +42,23 @@ export const columns: ColumnDef<Task>[] = [
             const normalizedStatus = estatus ? estatus.toLowerCase() : "";
 
             let variant: "default" | "secondary" | "destructive" | "outline" = "outline";
-            let className = "text-slate-400 border-slate-700";
+            let className = "text-slate-500 border-slate-200";
 
             if (normalizedStatus.includes("completada") || normalizedStatus.includes("terminada")) {
                 variant = "secondary";
-                className = "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border-none";
+                className = "bg-green-100 text-green-700 hover:bg-green-200 border-none";
             } else if (normalizedStatus.includes("pendiente")) {
                 variant = "secondary";
-                className = "bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 border-none";
+                className = "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-none";
             } else if (normalizedStatus.includes("en proceso") || normalizedStatus.includes("curso")) {
                 variant = "secondary";
-                className = "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border-none";
+                className = "bg-blue-100 text-blue-700 hover:bg-blue-200 border-none";
             } else if (normalizedStatus.includes("revisión") || normalizedStatus.includes("revision")) {
                 variant = "secondary";
-                className = "bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 border-none";
+                className = "bg-orange-100 text-orange-700 hover:bg-orange-200 border-none";
             } else if (normalizedStatus.includes("cancelada")) {
                 variant = "destructive";
-                className = "bg-red-500/20 text-red-400 hover:bg-red-500/30 border-none";
+                className = "bg-red-100 text-red-700 hover:bg-red-200 border-none";
             } else if (normalizedStatus.includes("retrasada") || normalizedStatus.includes("urgente")) {
                 variant = "destructive";
             }
@@ -73,6 +73,7 @@ export const columns: ColumnDef<Task>[] = [
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 pl-0"
                 >
                     Fechas
                     <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -83,10 +84,10 @@ export const columns: ColumnDef<Task>[] = [
         cell: ({ row }) => {
             const inicio = row.original.fecha_inicio
             const fin = row.original.fecha_fin
-            if (!inicio && !fin) return <div className="text-slate-500">—</div>;
+            if (!inicio && !fin) return <div className="text-slate-400">—</div>;
             return (
-                <div className="flex items-center text-slate-300 text-sm">
-                    <Calendar className="mr-2 h-3 w-3 text-slate-500" />
+                <div className="flex items-center text-slate-700 text-sm">
+                    <Calendar className="mr-2 h-3 w-3 text-slate-400" />
                     <span>
                         {inicio ? format(parseLocalDate(inicio), "dd MMM", { locale: es }) : "?"}
                         {" → "}

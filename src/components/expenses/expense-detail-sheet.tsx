@@ -51,26 +51,26 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
         <Sheet>
             <SheetTrigger asChild>
                 {iconOnly ? (
-                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800 text-blue-400">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 text-blue-600">
                         <Eye className="h-4 w-4" />
                         <span className="sr-only">Ver Detalles</span>
                     </Button>
                 ) : (
-                    <Button variant="outline" size="sm" className="w-full mt-4 border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors">
+                    <Button variant="outline" size="sm" className="w-full mt-4 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 transition-colors">
                         <Camera className="mr-2 h-4 w-4" />
                         Ver Evidencias
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white text-xl flex flex-col gap-2 items-start">
+                    <SheetTitle className="text-[#02457A] text-xl flex flex-col gap-2 items-start">
                         <span className="break-words w-full text-left">{expense.concepto}</span>
-                        <Badge variant="outline" className="border-blue-500/50 text-blue-400">
+                        <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
                             {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(expense.monto)}
                         </Badge>
                     </SheetTitle>
-                    <SheetDescription className="text-slate-400 text-left">
+                    <SheetDescription className="text-slate-500 text-left">
                         {expense.proyectos?.nombre || "Gasto General / Sin Proyecto"}
                     </SheetDescription>
                 </SheetHeader>
@@ -78,13 +78,13 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
                 <div className="mt-6 space-y-6">
                     {/* Basic Info */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2">Información del Gasto</h4>
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2">Información del Gasto</h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <span className="text-xs text-slate-500 block">Fecha</span>
                                 <div className="flex items-center gap-1">
                                     <Calendar className="h-3 w-3 text-slate-500" />
-                                    <span className="text-sm font-medium">
+                                    <span className="text-sm font-medium text-slate-900">
                                         {(() => {
                                             if (!expense.fecha) return "N/A";
                                             const dateStr = expense.fecha.includes('T') ? expense.fecha : `${expense.fecha}T00:00:00`;
@@ -98,7 +98,7 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
                                 <span className="text-xs text-slate-500 block">Categoría</span>
                                 <div className="flex items-center gap-1">
                                     <Tag className="h-3 w-3 text-slate-500" />
-                                    <span className="text-sm font-medium text-slate-200">
+                                    <span className="text-sm font-medium text-slate-900">
                                         {expense.categoria || "N/A"}
                                     </span>
                                 </div>
@@ -108,7 +108,7 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
                                     <span className="text-xs text-slate-500 block">Método de Pago</span>
                                     <div className="flex items-center gap-1">
                                         <CreditCard className="h-3 w-3 text-slate-500" />
-                                        <span className="text-sm font-medium">
+                                        <span className="text-sm font-medium text-slate-900">
                                             {expense.metodo_pago}
                                         </span>
                                     </div>
@@ -118,7 +118,7 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
                                 <span className="text-xs text-slate-500 block">Ubicación (Proyecto)</span>
                                 <div className="flex items-center gap-1">
                                     <MapPin className="h-3 w-3 text-slate-500" />
-                                    <span className="text-sm font-medium truncate" title={expense.proyectos?.ubicacion}>
+                                    <span className="text-sm font-medium truncate text-slate-900" title={expense.proyectos?.ubicacion}>
                                         {expense.proyectos?.ubicacion || "N/A"}
                                     </span>
                                 </div>
@@ -128,14 +128,14 @@ export function ExpenseDetailSheet({ expense, iconOnly = false }: ExpenseDetailS
 
                     {/* Photos Gallery (Ticket) */}
                     <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
                             <Camera className="h-4 w-4" /> Evidencia (Ticket) ({photos.length})
                         </h4>
 
                         {photos.length > 0 ? (
                             <div className="grid grid-cols-2 gap-2">
                                 {photos.map((url, idx) => (
-                                    <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="block relative aspect-[3/4] bg-slate-950 rounded border border-slate-800 overflow-hidden hover:opacity-80 transition-opacity">
+                                    <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="block relative aspect-[3/4] bg-slate-50 rounded border border-slate-200 overflow-hidden hover:opacity-80 transition-opacity">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={url} alt={`Ticket ${idx + 1}`} className="w-full h-full object-contain" />
                                     </a>

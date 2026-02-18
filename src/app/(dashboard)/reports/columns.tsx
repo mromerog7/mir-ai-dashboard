@@ -35,47 +35,47 @@ export const columns: ColumnDef<Report>[] = [
         id: "proyecto",
         accessorFn: (row) => row.proyectos?.nombre || "General",
         header: "Proyecto",
-        cell: ({ row }) => <span className="font-medium text-blue-400">{row.getValue("proyecto")}</span>
+        cell: ({ row }) => <span className="font-medium text-blue-600">{row.getValue("proyecto")}</span>
     },
     {
         accessorKey: "cliente", // accessorKey might not work for nested unless we use accessorFn or it's flattened
         accessorFn: (row) => row.proyectos?.cliente || "-",
         header: "Cliente",
-        cell: ({ row }) => <span className="text-slate-400">{row.getValue("cliente")}</span>
+        cell: ({ row }) => <span className="text-slate-700">{row.getValue("cliente")}</span>
     },
     {
         accessorKey: "folio",
         header: ({ column }) => {
             return (
                 <div className="flex justify-center w-full">
-                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} className="text-slate-500 hover:text-slate-900 hover:bg-slate-100">
                         Folio
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
             )
         },
-        cell: ({ row }) => <div className="text-center font-medium text-slate-300 bg-slate-800/50 rounded px-2 py-1">{row.getValue("folio") || "S/F"}</div> // Added badge style background
+        cell: ({ row }) => <div className="text-center font-medium text-slate-900 bg-slate-100 rounded px-2 py-1">{row.getValue("folio") || "S/F"}</div> // Added badge style background
     },
     {
         accessorKey: "resumen_titulo", // or header
         header: "Título / Resumen",
         cell: ({ row }) => (
             <div className="flex items-center">
-                <FileText className="mr-2 h-4 w-4 text-slate-500" />
-                <span className="text-slate-300">{row.original.resumen_titulo || row.original.titulo || "Sin título"}</span>
+                <FileText className="mr-2 h-4 w-4 text-slate-400" />
+                <span className="text-slate-700">{row.original.resumen_titulo || row.original.titulo || "Sin título"}</span>
             </div>
         )
     },
     {
         accessorKey: "fecha_reporte",
-        header: () => <div className="text-center">Fecha</div>,
+        header: () => <div className="text-center text-slate-500">Fecha</div>,
         cell: ({ row }) => {
             const dateStr = row.getValue("fecha_reporte") as string
             if (!dateStr) return <div className="text-center font-medium text-slate-500">-</div>;
             // Append T12:00:00 to ensure it's treated as noon local time
             const date = new Date(dateStr.split('T')[0] + 'T12:00:00')
-            return <div className="text-center font-medium text-slate-300">{date.toLocaleDateString("es-MX")}</div>
+            return <div className="text-center font-medium text-slate-700">{date.toLocaleDateString("es-MX")}</div>
         },
     },
     {
@@ -92,7 +92,7 @@ export const columns: ColumnDef<Report>[] = [
                         report={report}
                         isDuplicate={true}
                         trigger={
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800 text-slate-400 hover:text-white" title="Duplicar">
+                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 text-slate-500 hover:text-slate-900" title="Duplicar">
                                 <Copy className="h-4 w-4" />
                                 <span className="sr-only">Duplicar</span>
                             </Button>
@@ -104,12 +104,12 @@ export const columns: ColumnDef<Report>[] = [
 
                     {/* PDF Button */}
                     {report.pdf_final_url ? (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800" onClick={() => window.open(report.pdf_final_url!, '_blank')}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100" onClick={() => window.open(report.pdf_final_url!, '_blank')}>
                             <span className="sr-only">Descargar PDF</span>
-                            <Download className="h-4 w-4 text-blue-400" />
+                            <Download className="h-4 w-4 text-blue-600" />
                         </Button>
                     ) : (
-                        <span className="text-xs text-slate-500">Sin archivo</span>
+                        <span className="text-xs text-slate-400">Sin archivo</span>
                     )}
                 </div>
             )

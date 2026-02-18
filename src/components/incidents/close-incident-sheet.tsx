@@ -93,16 +93,16 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 {trigger || (
-                    <Button variant="outline" size="sm" className="w-full mt-2 border-blue-500/50 text-blue-500 hover:bg-blue-500/10 hover:text-blue-400">
+                    <Button variant="outline" size="sm" className="w-full mt-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700">
                         <CheckCircle className="mr-2 h-4 w-4" />
                         Cerrar Incidencia
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="overflow-y-auto sm:max-w-[500px] w-full bg-slate-900 border-l-slate-800 text-white">
+            <SheetContent className="overflow-y-auto sm:max-w-[500px] w-full bg-white border-l-slate-200 text-slate-900">
                 <SheetHeader>
-                    <SheetTitle className="text-white">Cerrar Incidencia</SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetTitle className="text-[#02457A]">Cerrar Incidencia</SheetTitle>
+                    <SheetDescription className="text-slate-500">
                         Completa la información para marcar esta incidencia como resuelta.
                     </SheetDescription>
                 </SheetHeader>
@@ -115,15 +115,15 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
                             name="fecha_cierre"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Fecha de Cierre</FormLabel>
+                                    <FormLabel className="text-slate-900">Fecha de Cierre</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
-                                                        !field.value && "text-muted-foreground"
+                                                        "w-full pl-3 text-left font-normal bg-white border-slate-200 text-slate-900 hover:bg-slate-50 hover:text-slate-900",
+                                                        !field.value && "text-slate-500"
                                                     )}
                                                 >
                                                     {field.value ? (
@@ -135,7 +135,7 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0 bg-slate-800 border-slate-700 text-white" align="start">
+                                        <PopoverContent className="w-auto p-0 bg-white border-slate-200 text-slate-900" align="start">
                                             <Calendar
                                                 mode="single"
                                                 selected={field.value}
@@ -144,6 +144,7 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
                                                 disabled={(date) =>
                                                     date > new Date() || date < new Date("1900-01-01")
                                                 }
+                                                className="p-3 pointer-events-auto"
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -157,11 +158,11 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
                             name="solucion_final"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Solución Final</FormLabel>
+                                    <FormLabel className="text-slate-900">Solución Final</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Describe la solución implementada..."
-                                            className="bg-slate-800 border-slate-700 min-h-[120px]"
+                                            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 min-h-[120px]"
                                             {...field}
                                         />
                                     </FormControl>
@@ -171,7 +172,7 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
                         />
 
                         <SheetFooter>
-                            <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+                            <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto text-white">
                                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Confirmar Cierre
                             </Button>

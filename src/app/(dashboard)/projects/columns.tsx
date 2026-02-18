@@ -25,43 +25,42 @@ export const columns: ColumnDef<Project>[] = [
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 pl-0"
                 >
                     Nombre
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }: { row: Row<Project> }) => <span className="font-medium text-blue-400">{row.getValue("nombre")}</span>
+        cell: ({ row }: { row: Row<Project> }) => <span className="font-medium text-blue-600">{row.getValue("nombre")}</span>
     },
     {
         accessorKey: "cliente",
         header: "Cliente",
+        cell: ({ row }) => <span className="text-slate-700">{row.getValue("cliente") || "-"}</span>
     },
     {
         accessorKey: "ubicacion",
         header: "Ubicación",
+        cell: ({ row }) => <span className="text-slate-500">{row.getValue("ubicacion") || "-"}</span>
     },
     {
         accessorKey: "status",
         header: "Estatus",
         cell: ({ row }: { row: Row<Project> }) => {
             const status = row.getValue("status") as string
-            return <Badge variant={status === "Completado" ? "secondary" : "default"}>{status}</Badge>
+            return <Badge variant={status === "Completado" ? "secondary" : "default"} className={status === "Completado" ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-blue-600 text-white hover:bg-blue-700"}>{status}</Badge>
         }
     },
     {
         accessorKey: "fecha_inicio",
-        header: () => <div className="text-center">Inicio</div>,
+        header: () => <div className="text-center text-slate-500">Inicio</div>,
         cell: ({ row }: { row: Row<Project> }) => {
             const dateStr = row.getValue("fecha_inicio") as string
-            // Append T00:00:00 to force local time interpretation or just split
-            // Simpler: use the string directly if it's YYYY-MM-DD
-            if (!dateStr) return <div className="text-center">-</div>
+            if (!dateStr) return <div className="text-center text-slate-400">-</div>
 
-            // Fix: Treat YYYY-MM-DD as local date by appending time, or just format the string
-            // Using timeZone: 'UTC' effectively treats the UTC midnight as the date we want to show
             const date = new Date(dateStr)
-            return <div className="text-center font-medium">{date.toLocaleDateString("es-MX", { timeZone: 'UTC' })}</div>
+            return <div className="text-center font-medium text-slate-700">{date.toLocaleDateString("es-MX", { timeZone: 'UTC' })}</div>
         },
     },
     {

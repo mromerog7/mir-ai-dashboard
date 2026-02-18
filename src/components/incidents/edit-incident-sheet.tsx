@@ -368,10 +368,10 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">{isEditing ? "Editar Incidencia" : "Nueva Incidencia"}</SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetTitle className="text-[#02457A]">{isEditing ? "Editar Incidencia" : "Nueva Incidencia"}</SheetTitle>
+                    <SheetDescription className="text-slate-500">
                         {isEditing ? "Modifica los detalles del riesgo o incidencia." : "Registra un nuevo riesgo o incidencia en el proyecto."}
                     </SheetDescription>
                 </SheetHeader>
@@ -385,9 +385,9 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                             name="titulo"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Título</FormLabel>
+                                    <FormLabel className="text-slate-900">Título</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Resumen del incidente" {...field} className="bg-slate-800 border-slate-700" />
+                                        <Input placeholder="Resumen del incidente" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -401,17 +401,17 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 name="proyecto_id"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Proyecto</FormLabel>
+                                        <FormLabel className="text-slate-900">Proyecto</FormLabel>
                                         <Select
                                             onValueChange={(value) => field.onChange(Number(value))}
                                             defaultValue={field.value?.toString()}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-white border-slate-200 text-slate-900">
                                                     <SelectValue placeholder="Seleccionar Proyecto" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 {projects.map((project) => (
                                                     <SelectItem key={project.id} value={project.id.toString()}>
                                                         {project.nombre}
@@ -428,9 +428,9 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 name="fecha_inicio"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Fecha Inicio</FormLabel>
+                                        <FormLabel className="text-slate-900">Fecha Inicio</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                            <Input type="date" {...field} className="bg-white border-slate-200 text-slate-900 block w-full" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -440,22 +440,22 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
 
                         {/* Tareas vinculadas (multi-select) */}
                         <div className="space-y-2">
-                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Tareas Vinculadas</label>
+                            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-900">Tareas Vinculadas</label>
                             <div className="relative">
                                 <button
                                     type="button"
                                     onClick={() => setTaskDropdownOpen(!taskDropdownOpen)}
-                                    className="w-full flex items-center justify-between bg-slate-800 border border-slate-700 rounded-md px-3 py-2 text-sm text-left hover:bg-slate-700 transition-colors"
+                                    className="w-full flex items-center justify-between bg-white border border-slate-200 rounded-md px-3 py-2 text-sm text-left hover:bg-slate-50 transition-colors"
                                 >
-                                    <span className={selectedTaskIds.length === 0 ? "text-slate-400" : "text-white"}>
+                                    <span className={selectedTaskIds.length === 0 ? "text-slate-500" : "text-slate-900"}>
                                         {selectedTaskIds.length === 0
                                             ? "Sin tareas vinculadas"
                                             : `${selectedTaskIds.length} tarea${selectedTaskIds.length > 1 ? "s" : ""} seleccionada${selectedTaskIds.length > 1 ? "s" : ""}`}
                                     </span>
-                                    <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${taskDropdownOpen ? "rotate-180" : ""}`} />
+                                    <ChevronDown className={`h-4 w-4 text-slate-500 transition-transform ${taskDropdownOpen ? "rotate-180" : ""}`} />
                                 </button>
                                 {taskDropdownOpen && (
-                                    <div className="absolute z-50 mt-1 w-full bg-slate-800 border border-slate-700 rounded-md shadow-xl max-h-48 overflow-y-auto">
+                                    <div className="absolute z-50 mt-1 w-full bg-white border border-slate-200 rounded-md shadow-xl max-h-48 overflow-y-auto">
                                         {projectTasks.length === 0 ? (
                                             <div className="px-3 py-2 text-sm text-slate-500">
                                                 {watchedProjectId > 0 ? "No hay tareas para este proyecto" : "Selecciona un proyecto primero"}
@@ -468,16 +468,16 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                                         key={task.id}
                                                         type="button"
                                                         onClick={() => toggleTaskId(task.id)}
-                                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-slate-700 transition-colors ${isSelected ? "bg-slate-700/50" : ""
+                                                        className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-slate-50 transition-colors ${isSelected ? "bg-blue-50" : ""
                                                             }`}
                                                     >
                                                         <div className={`h-4 w-4 rounded border flex items-center justify-center flex-shrink-0 ${isSelected
-                                                                ? "bg-blue-600 border-blue-500"
-                                                                : "border-slate-600 bg-slate-900"
+                                                            ? "bg-blue-600 border-blue-600"
+                                                            : "border-slate-300 bg-white"
                                                             }`}>
                                                             {isSelected && <Check className="h-3 w-3 text-white" />}
                                                         </div>
-                                                        <span className="text-slate-200 truncate">{task.titulo}</span>
+                                                        <span className="text-slate-900 truncate">{task.titulo}</span>
                                                     </button>
                                                 )
                                             })
@@ -492,9 +492,9 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                         const task = projectTasks.find(t => t.id === id)
                                         if (!task) return null
                                         return (
-                                            <span key={id} className="inline-flex items-center gap-1 bg-blue-600/20 text-blue-300 border border-blue-500/30 rounded-full px-2.5 py-0.5 text-xs">
+                                            <span key={id} className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full px-2.5 py-0.5 text-xs">
                                                 {task.titulo}
-                                                <button type="button" onClick={() => toggleTaskId(id)} className="hover:text-white">
+                                                <button type="button" onClick={() => toggleTaskId(id)} className="hover:text-blue-900">
                                                     <X className="h-3 w-3" />
                                                 </button>
                                             </span>
@@ -511,14 +511,14 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 name="severidad"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Severidad</FormLabel>
+                                        <FormLabel className="text-slate-900">Severidad</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-white border-slate-200 text-slate-900">
                                                     <SelectValue placeholder="Seleccionar" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 <SelectItem value="Baja">Baja</SelectItem>
                                                 <SelectItem value="Media">Media</SelectItem>
                                                 <SelectItem value="Alta">Alta</SelectItem>
@@ -534,14 +534,14 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 name="estatus"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Estatus</FormLabel>
+                                        <FormLabel className="text-slate-900">Estatus</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-slate-100 border-slate-200 text-slate-500">
                                                     <SelectValue placeholder="Seleccionar" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 <SelectItem value="Abierta">Abierta</SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -558,13 +558,13 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 name="impacto_costo"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Impacto Costo ($)</FormLabel>
+                                        <FormLabel className="text-slate-900">Impacto Costo ($)</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="number"
                                                 placeholder="0.00"
                                                 {...field}
-                                                className="bg-slate-800 border-slate-700"
+                                                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400"
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -576,9 +576,9 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 name="impacto_tiempo"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Impacto Tiempo</FormLabel>
+                                        <FormLabel className="text-slate-900">Impacto Tiempo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Ej. 1 semana" {...field} value={field.value || ""} className="bg-slate-800 border-slate-700" />
+                                            <Input placeholder="Ej. 1 semana" {...field} value={field.value || ""} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -592,13 +592,13 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                             name="descripcion"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Descripción Detallada</FormLabel>
+                                    <FormLabel className="text-slate-900">Descripción Detallada</FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="Detalles del incidente"
                                             {...field}
                                             value={field.value || ""}
-                                            className="bg-slate-800 border-slate-700 resize-none h-24"
+                                            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 resize-none h-24"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -609,13 +609,13 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                         {/* Image Upload for Evidence */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
-                                <h4 className="text-sm font-medium text-slate-300">Evidencia Fotográfica</h4>
+                                <h4 className="text-sm font-medium text-slate-900">Evidencia Fotográfica</h4>
                                 <Button
                                     type="button"
                                     variant="outline"
                                     size="sm"
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="h-8 border-slate-600 bg-slate-800 hover:bg-slate-700 text-slate-300"
+                                    className="h-8 border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
                                 >
                                     <ImagePlus className="h-4 w-4 mr-2" />
                                     Agregar Fotos
@@ -635,7 +635,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
                                     {/* Existing Photos */}
                                     {existingPhotos.map((url, idx) => (
-                                        <div key={`existing-${idx}`} className="relative group aspect-video rounded-md overflow-hidden bg-slate-950 border border-slate-800">
+                                        <div key={`existing-${idx}`} className="relative group aspect-video rounded-md overflow-hidden bg-slate-50 border border-slate-200">
                                             <img
                                                 src={url}
                                                 alt={`Evidence ${idx}`}
@@ -660,7 +660,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
 
                                     {/* New Files */}
                                     {newFiles.map((file, idx) => (
-                                        <div key={`new-${idx}`} className="relative group aspect-video rounded-md overflow-hidden bg-slate-950 border border-slate-800 ring-2 ring-blue-500/50">
+                                        <div key={`new-${idx}`} className="relative group aspect-video rounded-md overflow-hidden bg-slate-50 border border-slate-200 ring-2 ring-blue-500/50">
                                             <img
                                                 src={URL.createObjectURL(file)}
                                                 alt={`Preview ${idx}`}
@@ -685,7 +685,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 </div>
                             )}
                             {existingPhotos.length === 0 && newFiles.length === 0 && (
-                                <div className="text-center py-8 text-slate-500 text-sm border border-dashed border-slate-800 rounded-md">
+                                <div className="text-center py-8 text-slate-500 text-sm border border-dashed border-slate-300 rounded-md">
                                     No hay imágenes seleccionadas.
                                 </div>
                             )}
