@@ -322,9 +322,9 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">{isEditing ? "Editar Cotización" : "Nueva Cotización"}</SheetTitle>
+                    <SheetTitle className="text-slate-900">{isEditing ? "Editar Cotización" : "Nueva Cotización"}</SheetTitle>
                     <SheetDescription className="text-slate-400">
                         {isEditing ? "Modifica los detalles y los ítems de la cotización." : "Ingresa los datos para crear una nueva cotización."}
                     </SheetDescription>
@@ -343,7 +343,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                         <FormItem>
                                             <FormLabel>Folio</FormLabel>
                                             <FormControl>
-                                                <Input {...field} readOnly className="bg-slate-900 border-slate-800 text-slate-400 cursor-not-allowed focus-visible:ring-0" />
+                                                <Input {...field} readOnly className="bg-[#E5E5E5] border-slate-200 text-slate-500 cursor-not-allowed focus-visible:ring-0" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -357,7 +357,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                     <FormItem>
                                         <FormLabel>Fecha de Emisión</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                            <Input type="date" {...field} className="bg-[#E5E5E5] border-slate-200 text-black block w-full" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -374,7 +374,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                     <FormItem>
                                         <FormLabel>Cliente</FormLabel>
                                         <FormControl>
-                                            <Input {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -387,7 +387,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                     <FormItem>
                                         <FormLabel>Solicitante</FormLabel>
                                         <FormControl>
-                                            <Input {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -408,11 +408,11 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                             defaultValue={field.value?.toString()}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar Proyecto" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 {projects.map((project) => (
                                                     <SelectItem key={project.id} value={project.id.toString()}>
                                                         {project.nombre}
@@ -431,7 +431,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                     <FormItem>
                                         <FormLabel>Ubicación</FormLabel>
                                         <FormControl>
-                                            <Input {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -445,7 +445,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                 control={form.control}
                                 name="requiere_factura"
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border border-slate-700 p-3 bg-slate-800 mt-[1.7rem]">
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border border-slate-200 p-3 bg-white mt-[1.7rem]">
                                         <div className="space-y-0.5">
                                             <FormLabel className="text-base">Requiere Factura</FormLabel>
                                         </div>
@@ -455,7 +455,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                                     type="checkbox"
                                                     checked={field.value}
                                                     onChange={field.onChange}
-                                                    className="h-4 w-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-blue-500"
+                                                    className="h-4 w-4 rounded border-slate-300 bg-white text-blue-600 focus:ring-blue-500"
                                                 />
                                             </div>
                                         </FormControl>
@@ -470,11 +470,11 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                         <FormLabel>Estatus</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 <SelectItem value="Borrador">Borrador</SelectItem>
                                                 <SelectItem value="Enviada">Enviada</SelectItem>
                                                 <SelectItem value="Aprobada">Aprobada</SelectItem>
@@ -490,7 +490,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                         {/* Items Section */}
                         <div className="space-y-4">
                             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                                <h4 className="text-sm font-medium text-slate-300">Ítems / Conceptos</h4>
+                                <h4 className="text-sm font-medium text-slate-700">Ítems / Conceptos</h4>
                                 <Button
                                     type="button"
                                     variant="outline"
@@ -513,7 +513,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
 
                             <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                                 {fields.map((field, index) => (
-                                    <div key={field.id} className="grid grid-cols-12 gap-2 items-start bg-slate-950/30 p-2 rounded">
+                                    <div key={field.id} className="grid grid-cols-12 gap-2 items-start bg-slate-50 p-2 rounded border border-slate-100">
                                         <div className="col-span-5">
                                             <FormField
                                                 control={form.control}
@@ -524,7 +524,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                                             <textarea
                                                                 placeholder="Descripción"
                                                                 {...field}
-                                                                className="flex min-h-[32px] w-full rounded-md border border-slate-700 bg-slate-800 px-3 py-1 text-xs shadow-sm transition-all placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400 focus:min-h-[96px] resize-y"
+                                                                className="flex min-h-[32px] w-full rounded-md border border-slate-200 bg-[#E5E5E5] px-3 py-1 text-xs shadow-sm transition-all placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400 focus:min-h-[96px] resize-y text-black"
                                                             />
                                                         </FormControl>
                                                     </FormItem>
@@ -538,7 +538,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-1">
                                                         <FormControl>
-                                                            <Input type="number" placeholder="Cant." {...field} className="h-8 bg-slate-800 border-slate-700 text-xs" />
+                                                            <Input type="number" placeholder="Cant." {...field} className="h-8 bg-[#E5E5E5] border-slate-200 text-xs text-black" />
                                                         </FormControl>
                                                     </FormItem>
                                                 )}
@@ -551,14 +551,14 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                                 render={({ field }) => (
                                                     <FormItem className="space-y-1">
                                                         <FormControl>
-                                                            <Input type="number" placeholder="Precio" {...field} className="h-8 bg-slate-800 border-slate-700 text-xs" />
+                                                            <Input type="number" placeholder="Precio" {...field} className="h-8 bg-[#E5E5E5] border-slate-200 text-xs text-black" />
                                                         </FormControl>
                                                     </FormItem>
                                                 )}
                                             />
                                         </div>
                                         <div className="col-span-2">
-                                            <div className="h-8 flex items-center px-3 text-xs text-slate-300 bg-slate-900/50 rounded border border-slate-700/50">
+                                            <div className="h-8 flex items-center px-3 text-xs text-slate-700 bg-slate-100 rounded border border-slate-200">
                                                 {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
                                                     (items[index]?.cantidad || 0) * (items[index]?.precio || 0)
                                                 )}
@@ -580,7 +580,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                             </div>
 
                             {/* Totals Summary */}
-                            <div className="bg-slate-900 p-3 rounded border border-slate-800 space-y-1 text-sm">
+                            <div className="bg-slate-50 p-3 rounded border border-slate-200 space-y-1 text-sm">
                                 <div className="flex justify-between text-slate-400">
                                     <span>Subtotal:</span>
                                     <span>{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.subtotal)}</span>
@@ -589,9 +589,9 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                                     <span>IVA ({requiereFactura ? "16%" : "0%"}):</span>
                                     <span>{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.iva)}</span>
                                 </div>
-                                <div className="flex justify-between font-bold text-white border-t border-slate-700 pt-1 mt-1">
+                                <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1 mt-1">
                                     <span>Total:</span>
-                                    <span className="text-blue-400">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.total)}</span>
+                                    <span className="text-blue-600">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.total)}</span>
                                 </div>
                             </div>
                         </div>

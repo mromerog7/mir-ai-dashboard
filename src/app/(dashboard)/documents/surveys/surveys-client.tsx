@@ -83,9 +83,14 @@ export function SurveysClient({ initialSurveys }: SurveysClientProps) {
     }, [surveys, selectedProjectId]);
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Levantamientos</h1>
+        <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
+            <div className="flex items-center justify-between space-y-2">
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight text-[#02457A]">Levantamientos</h2>
+                    <p className="text-muted-foreground text-slate-500">
+                        Registro de levantamientos y visitas técnicas.
+                    </p>
+                </div>
                 <div className="flex items-center space-x-3">
                     {/* Project Filter */}
                     <div className="relative flex items-center">
@@ -93,7 +98,7 @@ export function SurveysClient({ initialSurveys }: SurveysClientProps) {
                         <select
                             value={selectedProjectId}
                             onChange={(e) => setSelectedProjectId(e.target.value)}
-                            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
+                            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-2 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
                         >
                             <option value="all">Todos los proyectos</option>
                             {projects.map((p) => (
@@ -108,7 +113,7 @@ export function SurveysClient({ initialSurveys }: SurveysClientProps) {
                     </div>
                     <EditSurveySheet
                         trigger={
-                            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-900/20">
                                 <Plus className="mr-2 h-4 w-4" />
                                 Nuevo Levantamiento
                             </Button>

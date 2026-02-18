@@ -52,15 +52,15 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white text-xl flex items-center gap-2">
+                    <SheetTitle className="text-slate-900 text-xl flex items-center gap-2">
                         {quote.folio}
                         <Badge variant={quote.estatus === 'Aprobada' ? 'secondary' : 'outline'}>
                             {quote.estatus}
                         </Badge>
                     </SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetDescription className="text-slate-500">
                         {project?.nombre || quote.proyectos?.nombre || "Proyecto General"}
                     </SheetDescription>
                 </SheetHeader>
@@ -69,7 +69,7 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                     <div className="mt-4 flex justify-end">
                         <Button
                             variant="outline"
-                            className="bg-slate-950 border-blue-900/50 text-blue-400 hover:bg-slate-900 hover:text-blue-300"
+                            className="bg-white border-blue-600 text-blue-600 hover:bg-slate-50"
                             onClick={() => window.open(quote.pdf_url!, "_blank")}
                         >
                             <FileText className="mr-2 h-4 w-4" />
@@ -81,7 +81,7 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                 <div className="mt-6 space-y-6">
                     {/* Basic Info */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2">Información General</h4>
+                        <h4 className="text-sm font-medium text-slate-700 border-b border-slate-200 pb-2">Información General</h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <span className="text-xs text-slate-500 block">Cliente</span>
@@ -119,7 +119,7 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                                 <span className="text-xs text-slate-500 block">Total</span>
                                 <div className="flex items-center gap-1">
                                     <DollarSign className="h-3 w-3 text-blue-400" />
-                                    <span className="text-sm font-bold text-blue-400">
+                                    <span className="text-sm font-bold text-blue-600">
                                         {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.total || 0)}
                                     </span>
                                 </div>
@@ -130,15 +130,15 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                     {/* Items List */}
                     {items.length > 0 && (
                         <div className="space-y-2">
-                            <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <h4 className="text-sm font-medium text-slate-700 border-b border-slate-200 pb-2 flex items-center gap-2">
                                 <FileText className="h-4 w-4" /> Conceptos / Ítems
                             </h4>
                             <div className="space-y-2">
                                 {items.map((item, idx) => (
-                                    <div key={idx} className="bg-slate-950/50 p-3 rounded-md border border-slate-800 flex justify-between items-start text-sm">
+                                    <div key={idx} className="bg-[#E5E5E5] p-3 rounded-md border border-slate-200 flex justify-between items-start text-sm">
                                         <div className="flex-1 mr-4">
-                                            <div className="font-medium text-slate-200 whitespace-pre-line">{item.concepto || item.descripcion || "Ítem sin descripción"}</div>
-                                            <div className="flex gap-4 text-xs text-slate-500">
+                                            <div className="font-medium text-black whitespace-pre-line">{item.concepto || item.descripcion || "Ítem sin descripción"}</div>
+                                            <div className="flex gap-4 text-xs text-slate-600">
                                                 {item.cantidad && <span>Cant: {item.cantidad}</span>}
                                                 {(item.precio || item.precio_unitario) && (
                                                     <span>
@@ -147,7 +147,7 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="font-medium text-slate-300">
+                                        <div className="font-medium text-slate-700">
                                             {item.importe ? new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(item.importe) :
                                                 (item.precio || item.precio_unitario) ? new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(item.precio || item.precio_unitario) : "-"}
                                         </div>
@@ -158,23 +158,23 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                     )}
 
                     {/* Totals Breakdown */}
-                    <div className="flex justify-end pt-4 border-t border-slate-800">
+                    <div className="flex justify-end pt-4 border-t border-slate-200">
                         <div className="w-1/2 space-y-2">
                             <div className="flex justify-between text-sm">
-                                <span className="text-slate-400">Subtotal:</span>
-                                <span className="text-slate-200 font-medium">
+                                <span className="text-slate-500">Subtotal:</span>
+                                <span className="text-slate-700 font-medium">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.subtotal || 0)}
                                 </span>
                             </div>
                             <div className="flex justify-between text-sm">
-                                <span className="text-slate-400">IVA (16%):</span>
-                                <span className="text-slate-200 font-medium">
+                                <span className="text-slate-500">IVA (16%):</span>
+                                <span className="text-slate-700 font-medium">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.iva || 0)}
                                 </span>
                             </div>
-                            <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-800">
-                                <span className="text-white">Total:</span>
-                                <span className="text-blue-400">
+                            <div className="flex justify-between text-base font-bold pt-2 border-t border-slate-200">
+                                <span className="text-slate-900">Total:</span>
+                                <span className="text-blue-600">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.total || 0)}
                                 </span>
                             </div>

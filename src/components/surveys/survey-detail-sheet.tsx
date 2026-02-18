@@ -48,18 +48,18 @@ export function SurveyDetailSheet({ survey, project, trigger }: SurveyDetailShee
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
                     {/* Header: Folio and Project */}
                     <div className="flex justify-between items-start">
                         <div>
-                            <SheetTitle className="text-white text-xl flex items-center gap-2">
+                            <SheetTitle className="text-slate-900 text-xl flex items-center gap-2">
                                 {survey.folio || "Sin Folio"}
                                 <Badge variant={survey.estatus === 'Completado' ? 'secondary' : 'outline'}>
                                     {survey.estatus}
                                 </Badge>
                             </SheetTitle>
-                            <SheetDescription className="text-slate-400">
+                            <SheetDescription className="text-slate-500">
                                 {project?.nombre || survey.proyectos?.nombre || "Proyecto General"}
                             </SheetDescription>
                         </div>
@@ -74,11 +74,11 @@ export function SurveyDetailSheet({ survey, project, trigger }: SurveyDetailShee
                 <div className="mt-6 space-y-6">
                     {/* Basic Info */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2">Información General</h4>
+                        <h4 className="text-sm font-medium text-slate-700 border-b border-slate-200 pb-2">Información General</h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <span className="text-xs text-slate-500 block">Cliente</span>
-                                <div className="text-sm font-medium text-slate-200">
+                                <div className="text-sm font-medium text-slate-700">
                                     {project?.cliente || survey.cliente_prospecto || survey.proyectos?.cliente || "N/A"}
                                 </div>
                             </div>
@@ -116,10 +116,10 @@ export function SurveyDetailSheet({ survey, project, trigger }: SurveyDetailShee
 
                     {/* 1. Requerimientos (Moved up) */}
                     <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-slate-700 border-b border-slate-200 pb-2 flex items-center gap-2">
                             <ClipboardList className="h-4 w-4" /> Requerimientos
                         </h4>
-                        <div className="text-sm text-slate-400 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md">
+                        <div className="text-sm text-slate-900 whitespace-pre-wrap bg-[#E5E5E5] p-3 rounded-md">
                             {survey.requerimientos || "Sin requerimientos especificados."}
                         </div>
                     </div>
@@ -127,10 +127,10 @@ export function SurveyDetailSheet({ survey, project, trigger }: SurveyDetailShee
                     {/* 2. Detalles Técnicos (Moved down) */}
                     {survey.detalles_tecnicos && (
                         <div className="space-y-2">
-                            <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <h4 className="text-sm font-medium text-slate-700 border-b border-slate-200 pb-2 flex items-center gap-2">
                                 <FileText className="h-4 w-4" /> Detalles Técnicos
                             </h4>
-                            <div className="text-sm text-slate-400 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md">
+                            <div className="text-sm text-slate-900 whitespace-pre-wrap bg-[#E5E5E5] p-3 rounded-md">
                                 {survey.detalles_tecnicos}
                             </div>
                         </div>
@@ -138,10 +138,10 @@ export function SurveyDetailSheet({ survey, project, trigger }: SurveyDetailShee
 
                     {/* 3. Medidas Aproximadas / Datos Técnicos */}
                     <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-slate-700 border-b border-slate-200 pb-2 flex items-center gap-2">
                             <Ruler className="h-4 w-4" /> Medidas Aproximadas / Datos Técnicos
                         </h4>
-                        <div className="text-sm text-slate-400 whitespace-pre-wrap bg-slate-950/50 p-3 rounded-md">
+                        <div className="text-sm text-slate-900 whitespace-pre-wrap bg-[#E5E5E5] p-3 rounded-md">
                             {survey.medidas_aprox || "Sin medidas registradas."}
                         </div>
                     </div>
@@ -149,7 +149,7 @@ export function SurveyDetailSheet({ survey, project, trigger }: SurveyDetailShee
                     {/* 4. Evidencia Fotográfica */}
                     {photos.length > 0 && (
                         <div className="space-y-2">
-                            <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <h4 className="text-sm font-medium text-slate-700 border-b border-slate-200 pb-2 flex items-center gap-2">
                                 <Camera className="h-4 w-4" /> Evidencia Fotográfica ({photos.length})
                             </h4>
                             <div className="grid grid-cols-2 gap-2">

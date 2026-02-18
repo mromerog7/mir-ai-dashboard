@@ -312,12 +312,12 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">
+                    <SheetTitle className="text-slate-900">
                         {isEditing ? `Editar Levantamiento${survey?.folio ? ` - ${survey.folio}` : ''}` : "Nuevo Levantamiento"}
                     </SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetDescription className="text-slate-500">
                         Modifica los detalles del levantamiento y evidencia.
                     </SheetDescription>
                 </SheetHeader>
@@ -338,11 +338,11 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar Tipo" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 {['CCTV', 'Redes', 'Automatización', 'Obra Civil', 'Eléctrico', 'Software'].map((type) => (
                                                     <SelectItem key={type} value={type}>
                                                         {type}
@@ -362,7 +362,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                     <FormItem>
                                         <FormLabel>Fecha Visita</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-slate-800 border-slate-700 block w-full" />
+                                            <Input type="date" {...field} className="bg-[#E5E5E5] border-slate-200 text-black block w-full" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -383,11 +383,11 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                             defaultValue={field.value?.toString()}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar Proyecto" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 <SelectItem value="0">Proyecto General (Sin Asignar)</SelectItem>
                                                 {projects.map((project) => (
                                                     <SelectItem key={project.id} value={project.id.toString()}>
@@ -407,7 +407,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                     <FormItem>
                                         <FormLabel>Cliente / Prospecto</FormLabel>
                                         <FormControl>
-                                            <Input {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -424,7 +424,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                     <FormItem>
                                         <FormLabel>Ubicación</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Ubicación del sitio" {...field} className="bg-slate-800 border-slate-700" />
+                                            <Input placeholder="Ubicación del sitio" {...field} className="bg-[#E5E5E5] border-slate-200 text-black" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -441,11 +441,11 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-800 border-slate-700">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar Estatus" />
                                                 </SelectTrigger>
                                             </FormControl>
-                                            <SelectContent className="bg-slate-800 border-slate-700 text-white">
+                                            <SelectContent className="bg-white border-slate-200 text-slate-900">
                                                 <SelectItem value="Pendiente Cotizar">Pendiente Cotizar</SelectItem>
                                                 <SelectItem value="Cotizado">Cotizado</SelectItem>
                                                 <SelectItem value="Descartado">Descartado</SelectItem>
@@ -468,7 +468,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                         <Textarea
                                             placeholder="Describa los requerimientos..."
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 min-h-[80px]"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black min-h-[80px]"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -487,7 +487,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                         <Textarea
                                             placeholder="Detalles técnicos observados..."
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 min-h-[100px]"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black min-h-[100px]"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -498,7 +498,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                             value={aiInstruction}
                                             onChange={(e) => setAiInstruction(e.target.value)}
                                             disabled={!field.value || aiImproving}
-                                            className="bg-slate-800 border-slate-700 text-xs h-8"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black text-xs h-8"
                                         />
                                         <Button
                                             type="button"
@@ -531,7 +531,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                                         <Textarea
                                             placeholder="Medias. distancias, datos técnicos separados por '.'"
                                             {...field}
-                                            className="bg-slate-800 border-slate-700 min-h-[80px]"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black min-h-[80px]"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -540,7 +540,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                         />
 
                         {/* Image Gallery */}
-                        <div className="space-y-4 pt-2 border-t border-slate-800">
+                        <div className="space-y-4 pt-2 border-t border-slate-200">
                             <div className="flex items-center justify-between">
                                 <h4 className="text-sm font-medium">Evidencia Fotográfica</h4>
                                 <Button
@@ -566,7 +566,7 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
 
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                 {existingPhotos.map((url, idx) => (
-                                    <div key={`existing-${idx}`} className="relative group aspect-square rounded-md overflow-hidden bg-black border border-slate-800">
+                                    <div key={`existing-${idx}`} className="relative group aspect-square rounded-md overflow-hidden bg-slate-100 border border-slate-200">
                                         <img src={url} alt={`Evidencia ${idx}`} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <Button
