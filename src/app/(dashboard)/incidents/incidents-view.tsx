@@ -96,7 +96,7 @@ export function IncidentsView({ initialIncidents }: IncidentsViewProps) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Centro de Riesgos (Incidencias)</h1>
                 <div className="flex items-center space-x-3">

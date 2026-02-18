@@ -387,7 +387,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 <FormItem>
                                     <FormLabel className="text-slate-900">Título</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Resumen del incidente" {...field} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400" />
+                                        <Input placeholder="Resumen del incidente" {...field} className="bg-[#E5E5E5] border-slate-200 text-black placeholder:text-slate-400" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -407,7 +407,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                             defaultValue={field.value?.toString()}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-white border-slate-200 text-slate-900">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar Proyecto" />
                                                 </SelectTrigger>
                                             </FormControl>
@@ -430,7 +430,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                     <FormItem>
                                         <FormLabel className="text-slate-900">Fecha Inicio</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} className="bg-white border-slate-200 text-slate-900 block w-full" />
+                                            <Input type="date" {...field} className="bg-[#E5E5E5] border-slate-200 text-black block w-full" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -445,7 +445,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                 <button
                                     type="button"
                                     onClick={() => setTaskDropdownOpen(!taskDropdownOpen)}
-                                    className="w-full flex items-center justify-between bg-white border border-slate-200 rounded-md px-3 py-2 text-sm text-left hover:bg-slate-50 transition-colors"
+                                    className="w-full flex items-center justify-between bg-[#E5E5E5] border border-slate-200 rounded-md px-3 py-2 text-sm text-left hover:bg-slate-200 transition-colors"
                                 >
                                     <span className={selectedTaskIds.length === 0 ? "text-slate-500" : "text-slate-900"}>
                                         {selectedTaskIds.length === 0
@@ -514,7 +514,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                         <FormLabel className="text-slate-900">Severidad</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-white border-slate-200 text-slate-900">
+                                                <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-black">
                                                     <SelectValue placeholder="Seleccionar" />
                                                 </SelectTrigger>
                                             </FormControl>
@@ -537,7 +537,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                         <FormLabel className="text-slate-900">Estatus</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value} disabled>
                                             <FormControl>
-                                                <SelectTrigger className="w-full bg-slate-100 border-slate-200 text-slate-500">
+                                                <SelectTrigger className="w-full bg-slate-100 border-slate-200 text-slate-500 cursor-not-allowed">
                                                     <SelectValue placeholder="Seleccionar" />
                                                 </SelectTrigger>
                                             </FormControl>
@@ -564,7 +564,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                                 type="number"
                                                 placeholder="0.00"
                                                 {...field}
-                                                className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400"
+                                                className="bg-[#E5E5E5] border-slate-200 text-black placeholder:text-slate-400"
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -578,7 +578,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                     <FormItem>
                                         <FormLabel className="text-slate-900">Impacto Tiempo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Ej. 1 semana" {...field} value={field.value || ""} className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400" />
+                                            <Input placeholder="Ej. 1 semana" {...field} value={field.value || ""} className="bg-[#E5E5E5] border-slate-200 text-black placeholder:text-slate-400" />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -598,7 +598,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
                                             placeholder="Detalles del incidente"
                                             {...field}
                                             value={field.value || ""}
-                                            className="bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 resize-none h-24"
+                                            className="bg-[#E5E5E5] border-slate-200 text-black placeholder:text-slate-400 resize-none h-24"
                                         />
                                     </FormControl>
                                     <FormMessage />

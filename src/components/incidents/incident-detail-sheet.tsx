@@ -140,7 +140,7 @@ export function IncidentDetailSheet({ incident, trigger }: IncidentDetailSheetPr
                         <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
                             <FileText className="h-4 w-4" /> Descripción
                         </h4>
-                        <div className="text-sm text-slate-700 whitespace-pre-wrap bg-slate-50 p-3 rounded-md min-h-[100px] border border-slate-200">
+                        <div className="text-sm text-slate-900 whitespace-pre-wrap bg-[#E5E5E5] p-3 rounded-md min-h-[100px] border border-slate-200">
                             {incident.descripcion || "Sin descripción."}
                         </div>
                     </div>
@@ -154,7 +154,7 @@ export function IncidentDetailSheet({ incident, trigger }: IncidentDetailSheetPr
                         {photos.length > 0 ? (
                             <div className="grid grid-cols-2 gap-2">
                                 {photos.map((url, idx) => (
-                                    <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="block relative aspect-video bg-slate-50 rounded border border-slate-200 overflow-hidden hover:opacity-80 transition-opacity">
+                                    <a key={idx} href={url} target="_blank" rel="noopener noreferrer" className="block relative aspect-video bg-[#E5E5E5] rounded border border-slate-200 overflow-hidden hover:opacity-80 transition-opacity">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={url} alt={`Evidencia ${idx + 1}`} className="w-full h-full object-cover" />
                                     </a>
