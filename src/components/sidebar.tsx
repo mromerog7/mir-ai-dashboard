@@ -65,7 +65,7 @@ export function Sidebar({ className }: SidebarProps) {
         },
         {
             label: "Notas",
-            icon: Notebook,
+            icon: BookOpen,
             href: "/notes",
             color: "text-emerald-500",
         },
