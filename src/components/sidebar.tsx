@@ -112,7 +112,7 @@ export function Sidebar({ className }: SidebarProps) {
                                     )}
                                 >
                                     <div className="flex items-center flex-1">
-                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-white" : "text-[#02457A]")} />
+                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-white" : "text-white")} />
                                         {route.label}
                                     </div>
                                 </Link>
@@ -124,11 +124,11 @@ export function Sidebar({ className }: SidebarProps) {
                     <div
                         onClick={() => window.location.href = "/logout"}
                         className={cn(
-                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-[#02457A]/10 rounded-xl transition duration-200 text-[#02457A]"
+                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-white/10 rounded-xl transition duration-200 text-white"
                         )}
                     >
                         <div className="flex items-center flex-1">
-                            <LogOut className="h-5 w-5 mr-3 text-[#02457A]" />
+                            <LogOut className="h-5 w-5 mr-3 text-white" />
                             Cerrar Sesión
                         </div>
                     </div>
@@ -147,7 +147,7 @@ export function MobileSidebar() {
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 bg-[#D6E8EE] border-none">
-                <Sidebar className="text-[#02457A]" />
+                <Sidebar className="text-white" />
             </SheetContent>
         </Sheet>
     )
