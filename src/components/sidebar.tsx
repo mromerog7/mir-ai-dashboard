@@ -108,7 +108,7 @@ export function Sidebar({ className }: SidebarProps) {
                                         "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                         isActive
                                             ? "text-white bg-slate-900 shadow-lg translate-x-2"
-                                            : "text-[#02457A] hover:bg-[#02457A]/10"
+                                            : "text-white hover:bg-white/10"
                                     )}
                                 >
                                     <div className="flex items-center flex-1">
@@ -147,7 +147,7 @@ export function MobileSidebar() {
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 bg-[#D6E8EE] border-none">
-                <Sidebar className="text-white" />
+                <Sidebar />
             </SheetContent>
         </Sheet>
     )
