@@ -483,24 +483,24 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                                     )}
                                                     <div className="grid grid-cols-2 gap-1.5">
                                                         <div className="flex items-center gap-1">
-                                                            <CalendarIcon className="h-3 w-3 text-slate-500" />
+                                                            <CalendarIcon className="h-3 w-3 text-slate-400" />
                                                             <div>
-                                                                <span className="text-[10px] text-slate-500 block">Fecha</span>
-                                                                <span className="text-[11px] text-slate-300">{inc.fecha_inicio ? new Date(inc.fecha_inicio).toLocaleDateString("es-MX") : "N/A"}</span>
+                                                                <span className="text-[10px] text-slate-500 block font-semibold">Fecha</span>
+                                                                <span className="text-[11px] text-slate-700">{inc.fecha_inicio ? new Date(inc.fecha_inicio).toLocaleDateString("es-MX") : "N/A"}</span>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-1">
-                                                            <DollarSign className="h-3 w-3 text-slate-500" />
+                                                            <DollarSign className="h-3 w-3 text-slate-400" />
                                                             <div>
-                                                                <span className="text-[10px] text-slate-500 block">Costo</span>
-                                                                <span className="text-[11px] text-slate-300">{inc.impacto_costo ? `$${inc.impacto_costo.toLocaleString()}` : "N/A"}</span>
+                                                                <span className="text-[10px] text-slate-500 block font-semibold">Costo</span>
+                                                                <span className="text-[11px] text-slate-700">{inc.impacto_costo ? `$${inc.impacto_costo.toLocaleString()}` : "N/A"}</span>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-1">
-                                                            <Clock className="h-3 w-3 text-slate-500" />
+                                                            <Clock className="h-3 w-3 text-slate-400" />
                                                             <div>
-                                                                <span className="text-[10px] text-slate-500 block">Tiempo</span>
-                                                                <span className="text-[11px] text-slate-300">{inc.impacto_tiempo || "N/A"}</span>
+                                                                <span className="text-[10px] text-slate-500 block font-semibold">Tiempo</span>
+                                                                <span className="text-[11px] text-slate-700">{inc.impacto_tiempo || "N/A"}</span>
                                                             </div>
                                                         </div>
                                                     </div>
