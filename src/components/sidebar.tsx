@@ -94,7 +94,7 @@ export function Sidebar({ className }: SidebarProps) {
     ]
 
     return (
-        <div className={cn("pb-12 h-full bg-[#D6E8EE]", className)}>
+        <div className={cn("pb-12 h-full bg-[#018ABE]", className)}>
             <div className="space-y-4 py-4 h-full flex flex-col">
                 <div className="px-3 py-2 flex-1">
                     <div className="space-y-2">
@@ -146,7 +146,7 @@ export function MobileSidebar() {
                     <Menu />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 bg-[#D6E8EE] border-none">
+            <SheetContent side="left" className="p-0 bg-[#018ABE] border-none">
                 <Sidebar />
             </SheetContent>
         </Sheet>

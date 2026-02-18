@@ -9,8 +9,8 @@ export default function DashboardLayout({
 }) {
     return (
         <div className="h-full relative">
-            <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-[#D6E8EE] rounded-tr-[3rem] rounded-br-[3rem] shadow-xl overflow-hidden">
-                <div className="bg-[#D6E8EE] p-6 flex items-center justify-center h-[73px]">
+            <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-[#018ABE] rounded-tr-[3rem] rounded-br-[3rem] shadow-xl overflow-hidden">
+                <div className="bg-[#018ABE] p-6 flex items-center justify-center h-[73px]">
                     <div className="relative h-12 w-40 opacity-60 brightness-75 contrast-125 saturate-0">
                         <Image
                             src="https://pub-2b7c10c04cbb4824bc36f52820ace933.r2.dev/logo/logoMiR-AI-Finalweb.png"
