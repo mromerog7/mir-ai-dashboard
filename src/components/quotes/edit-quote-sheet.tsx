@@ -581,13 +581,13 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
 
                             {/* Totals Summary */}
                             <div className="bg-slate-50 p-3 rounded border border-slate-200 space-y-1 text-sm">
-                                <div className="flex justify-between text-slate-400">
-                                    <span>Subtotal:</span>
-                                    <span>{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.subtotal)}</span>
+                                <div className="flex justify-between text-base font-medium">
+                                    <span className="text-slate-600 font-bold">Subtotal:</span>
+                                    <span className="text-slate-900 font-bold">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.subtotal)}</span>
                                 </div>
-                                <div className="flex justify-between text-slate-400">
-                                    <span>IVA ({requiereFactura ? "16%" : "0%"}):</span>
-                                    <span>{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.iva)}</span>
+                                <div className="flex justify-between text-base font-medium">
+                                    <span className="text-slate-600 font-bold">IVA ({requiereFactura ? "16%" : "0%"}):</span>
+                                    <span className="text-slate-900 font-bold">{new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(totals.iva)}</span>
                                 </div>
                                 <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1 mt-1">
                                     <span>Total:</span>

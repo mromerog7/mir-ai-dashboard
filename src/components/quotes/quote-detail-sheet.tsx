@@ -161,14 +161,14 @@ export function QuoteDetailSheet({ quote, project, trigger }: QuoteDetailSheetPr
                     <div className="flex justify-end pt-4 border-t border-slate-200">
                         <div className="w-1/2 space-y-2">
                             <div className="flex justify-between text-sm">
-                                <span className="text-slate-500">Subtotal:</span>
-                                <span className="text-slate-700 font-medium">
+                                <span className="text-slate-600 font-bold">Subtotal:</span>
+                                <span className="text-slate-900 font-bold">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.subtotal || 0)}
                                 </span>
                             </div>
                             <div className="flex justify-between text-sm">
-                                <span className="text-slate-500">IVA (16%):</span>
-                                <span className="text-slate-700 font-medium">
+                                <span className="text-slate-600 font-bold">IVA (16%):</span>
+                                <span className="text-slate-900 font-bold">
                                     {new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(quote.iva || 0)}
                                 </span>
                             </div>
