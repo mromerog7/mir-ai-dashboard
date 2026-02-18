@@ -107,12 +107,12 @@ export function Sidebar({ className }: SidebarProps) {
                                     className={cn(
                                         "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                         isActive
-                                            ? "text-blue-600 bg-white shadow-lg translate-x-2"
+                                            ? "text-white bg-slate-900 shadow-lg translate-x-2"
                                             : "text-blue-100 hover:text-white hover:bg-white/10"
                                     )}
                                 >
                                     <div className="flex items-center flex-1">
-                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-blue-600" : "text-blue-100 group-hover:text-white")} />
+                                        <route.icon className={cn("h-5 w-5 mr-3", isActive ? "text-white" : "text-blue-100 group-hover:text-white")} />
                                         {route.label}
                                     </div>
                                 </Link>
