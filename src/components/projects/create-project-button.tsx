@@ -24,10 +24,10 @@ export function CreateProjectButton() {
                     Nuevo Proyecto
                 </Button>
             </SheetTrigger>
-            <SheetContent className="bg-slate-900 border-slate-800 text-white sm:max-w-[50vw] pl-8 pr-8">
+            <SheetContent className="bg-white border-slate-200 text-slate-900 sm:max-w-[50vw] pl-8 pr-8">
                 <SheetHeader>
-                    <SheetTitle className="text-white">Crear Nuevo Proyecto</SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetTitle className="text-[#02457A]">Crear Nuevo Proyecto</SheetTitle>
+                    <SheetDescription className="text-slate-500">
                         Ingresa los detalles del nuevo proyecto. Haz clic en guardar cuando termines.
                     </SheetDescription>
                 </SheetHeader>
