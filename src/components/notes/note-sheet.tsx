@@ -184,7 +184,7 @@ export function NoteSheet({ isOpen, onClose, nota, isEditing, onSaved }: NoteShe
 
     return (
         <Sheet open={isOpen} onOpenChange={onClose}>
-            <SheetContent className="w-[400px] sm:w-[50vw] sm:max-w-[800px] overflow-y-auto bg-white">
+            <SheetContent className="w-[400px] sm:w-[50vw] sm:max-w-[800px] overflow-y-auto bg-white px-8">
                 <SheetHeader>
                     <SheetTitle className="text-2xl font-bold text-[#02457A]">
                         {nota ? (isEditing ? "Editar Nota" : "Detalle de Nota") : "Nueva Nota"}
