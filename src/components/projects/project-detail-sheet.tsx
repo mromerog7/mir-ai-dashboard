@@ -79,18 +79,18 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-800 text-blue-400">
+                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 text-blue-600">
                     <Eye className="h-4 w-4" />
                     <span className="sr-only">Ver Detalles</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[50vw] bg-slate-900 border-slate-800 text-white overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader className="mb-4">
-                    <SheetTitle className="text-white text-xl flex items-center gap-2">
+                    <SheetTitle className="text-[#02457A] text-xl flex items-center gap-2">
                         {project.nombre}
                         <Badge variant={variant} className="ml-2">{project.status}</Badge>
                     </SheetTitle>
-                    <SheetDescription className="text-slate-400">
+                    <SheetDescription className="text-slate-500 text-left">
                         {project.ubicacion}
                     </SheetDescription>
                 </SheetHeader>
@@ -98,27 +98,27 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                 <div className="space-y-8">
                     {/* Basic Info */}
                     <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2">Información del Proyecto</h4>
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2">Información del Proyecto</h4>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <span className="text-xs text-slate-500 block">Cliente</span>
                                 <div className="flex items-center gap-2 mt-1">
                                     <User className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-200">{project.cliente}</span>
+                                    <span className="text-sm text-slate-900 font-medium">{project.cliente}</span>
                                 </div>
                             </div>
                             <div>
                                 <span className="text-xs text-slate-500 block">Solicitante</span>
                                 <div className="flex items-center gap-2 mt-1">
                                     <User className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-200">{project.solicitante}</span>
+                                    <span className="text-sm text-slate-900 font-medium">{project.solicitante}</span>
                                 </div>
                             </div>
                             <div>
                                 <span className="text-xs text-slate-500 block">Fecha Inicio</span>
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-200">
+                                    <span className="text-sm text-slate-900 font-medium">
                                         {project.fecha_inicio ? new Date(project.fecha_inicio.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
                                     </span>
                                 </div>
@@ -127,7 +127,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                 <span className="text-xs text-slate-500 block">Fecha Fin</span>
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-200">
+                                    <span className="text-sm text-slate-900 font-medium">
                                         {project.fecha_fin ? new Date(project.fecha_fin.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
                                     </span>
                                 </div>
@@ -137,8 +137,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                     {/* Tasks */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-blue-500" /> Tareas Vinculadas
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-blue-600" /> Tareas Vinculadas
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.tasks && relatedData.tasks.length > 0 ? (
@@ -148,9 +148,9 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                             key={task.id}
                                             task={task}
                                             trigger={
-                                                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
-                                                    <div className="text-sm text-slate-300">{task.titulo || task.descripcion}</div>
-                                                    <Badge variant="outline" className="text-xs scale-90">{task.estatus || "Pendiente"}</Badge>
+                                                <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                    <div className="text-sm text-slate-900 font-medium">{task.titulo || task.descripcion}</div>
+                                                    <Badge variant="outline" className="text-xs scale-90 border-slate-300">{task.estatus || "Pendiente"}</Badge>
                                                 </div>
                                             }
                                         />
@@ -162,8 +162,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                     {/* Incidents */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <AlertTriangle className="h-4 w-4 text-red-500" /> Incidencias
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-red-600" /> Incidencias
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.incidents && relatedData.incidents.length > 0 ? (
@@ -173,10 +173,10 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                             key={inc.id}
                                             incident={inc}
                                             trigger={
-                                                <div className="bg-slate-950 p-2 rounded border border-slate-800 cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
+                                                <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                     <div className="flex justify-between">
-                                                        <span className="text-sm text-white font-medium">{inc.titulo}</span>
-                                                        <Badge className={inc.severidad === 'Crítica' ? 'bg-red-900 text-red-200' : 'bg-slate-800 text-slate-400'}>{inc.severidad}</Badge>
+                                                        <span className="text-sm text-slate-900 font-medium">{inc.titulo}</span>
+                                                        <Badge className={inc.severidad === 'Crítica' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-slate-200 text-slate-600 border-slate-300'}>{inc.severidad}</Badge>
                                                     </div>
                                                     <div className="text-xs text-slate-500 mt-1">{inc.estatus}</div>
                                                 </div>
@@ -190,8 +190,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                     {/* Surveys */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <ClipboardList className="h-4 w-4 text-blue-500" /> Levantamientos
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                            <ClipboardList className="h-4 w-4 text-blue-600" /> Levantamientos
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.surveys && relatedData.surveys.length > 0 ? (
@@ -202,9 +202,9 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 survey={item as any}
                                                 project={project}
                                                 trigger={
-                                                    <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
+                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                         <div>
-                                                            <div className="text-sm text-slate-300">Folio: {item.folio}</div>
+                                                            <div className="text-sm text-slate-900 font-medium">Folio: {item.folio}</div>
                                                             <div className="text-xs text-slate-500">{item.fecha_visita ? new Date(item.fecha_visita.split('T')[0] + 'T00:00:00').toLocaleDateString() : 'Sin fecha'}</div>
                                                         </div>
                                                         {item.pdf_final_url && (
@@ -232,8 +232,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                     {/* Quotes */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <FileSpreadsheet className="h-4 w-4 text-orange-500" /> Cotizaciones
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                            <FileSpreadsheet className="h-4 w-4 text-orange-600" /> Cotizaciones
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.quotes && relatedData.quotes.length > 0 ? (
@@ -244,12 +244,12 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                             quote={quote as any}
                                             project={project}
                                             trigger={
-                                                <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
+                                                <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                     <div>
-                                                        <div className="text-sm text-slate-300">{quote.folio}</div>
-                                                        <div className="text-xs text-blue-400 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
+                                                        <div className="text-sm text-slate-900 font-medium">{quote.folio}</div>
+                                                        <div className="text-xs text-blue-600 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
                                                     </div>
-                                                    <Badge variant="outline">{quote.estatus}</Badge>
+                                                    <Badge variant="outline" className="border-slate-300">{quote.estatus}</Badge>
                                                 </div>
                                             }
                                         />
@@ -261,8 +261,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                     {/* Reports */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-purple-500" /> Reportes
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-purple-600" /> Reportes
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.reports && relatedData.reports.length > 0 ? (
@@ -273,8 +273,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 report={rep as any}
                                                 project={project}
                                                 trigger={
-                                                    <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
-                                                        <div className="text-sm text-slate-300">{rep.resumen_titulo}</div>
+                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                        <div className="text-sm text-slate-900 font-medium">{rep.resumen_titulo}</div>
                                                         {rep.pdf_final_url && (
                                                             <Button
                                                                 variant="ghost"
@@ -300,8 +300,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                     {/* Minutas */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <BookOpen className="h-4 w-4 text-indigo-500" /> Minutas
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                            <BookOpen className="h-4 w-4 text-indigo-600" /> Minutas
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.minutas && relatedData.minutas.length > 0 ? (
@@ -313,12 +313,12 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 defaultProjectId={Number(project.id)}
                                                 readonly={true}
                                                 trigger={
-                                                    <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
+                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                         <div>
-                                                            <div className="text-sm text-slate-300">{minuta.titulo}</div>
+                                                            <div className="text-sm text-slate-900 font-medium">{minuta.titulo}</div>
                                                             <div className="text-xs text-slate-500">{minuta.fecha ? new Date(minuta.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
                                                         </div>
-                                                        <Badge variant="outline" className="text-xs scale-90">Minuta</Badge>
+                                                        <Badge variant="outline" className="text-xs scale-90 border-slate-300">Minuta</Badge>
                                                     </div>
                                                 }
                                             />
@@ -331,8 +331,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                     {/* Client Meetings */}
                     <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-300 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <Users className="h-4 w-4 text-rose-500" /> Reuniones con Clientes
+                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                            <Users className="h-4 w-4 text-rose-600" /> Reuniones con Clientes
                         </h4>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.clientMeetings && relatedData.clientMeetings.length > 0 ? (
@@ -344,12 +344,12 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 defaultProjectId={Number(project.id)}
                                                 readonly={true}
                                                 trigger={
-                                                    <div className="bg-slate-950 p-2 rounded border border-slate-800 flex justify-between items-center cursor-pointer hover:bg-slate-900 hover:border-slate-700 transition-all">
+                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                         <div>
-                                                            <div className="text-sm text-slate-300">{meeting.titulo}</div>
+                                                            <div className="text-sm text-slate-900 font-medium">{meeting.titulo}</div>
                                                             <div className="text-xs text-slate-500">{meeting.fecha ? new Date(meeting.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
                                                         </div>
-                                                        <Badge variant="outline" className="text-xs scale-90">Reunión</Badge>
+                                                        <Badge variant="outline" className="text-xs scale-90 border-slate-300">Reunión</Badge>
                                                     </div>
                                                 }
                                             />

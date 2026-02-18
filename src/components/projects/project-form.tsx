@@ -109,7 +109,7 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                         <FormItem>
                             <FormLabel>Nombre del Proyecto</FormLabel>
                             <FormControl>
-                                <Input placeholder="Ej. Instalación CCTV" {...field} className="bg-slate-800 border-slate-700" />
+                                <Input placeholder="Ej. Instalación CCTV" {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -122,7 +122,7 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                         <FormItem>
                             <FormLabel>Cliente</FormLabel>
                             <FormControl>
-                                <Input placeholder="Ej. Grupo Cilar" {...field} className="bg-slate-800 border-slate-700" />
+                                <Input placeholder="Ej. Grupo Cilar" {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400" />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -136,7 +136,7 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                             <FormItem>
                                 <FormLabel>Solicitante</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Opcional" {...field} className="bg-slate-800 border-slate-700" />
+                                    <Input placeholder="Opcional" {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -149,7 +149,7 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                             <FormItem>
                                 <FormLabel>Ubicación</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="CDMX" {...field} className="bg-slate-800 border-slate-700" />
+                                    <Input placeholder="CDMX" {...field} className="bg-[#E5E5E5] border-slate-200 text-slate-900 placeholder:text-slate-400" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -169,8 +169,8 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                                         <Button
                                             variant={"outline"}
                                             className={cn(
-                                                "w-full pl-3 text-left font-normal bg-slate-800 border-slate-700 hover:bg-slate-700 hover:text-white",
-                                                !field.value && "text-muted-foreground"
+                                                "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                !field.value && "text-slate-400"
                                             )}
                                         >
                                             {field.value ? (
@@ -178,11 +178,11 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                                             ) : (
                                                 <span>Seleccionar fecha</span>
                                             )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
                                         </Button>
                                     </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
+                                <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
                                     <Calendar
                                         mode="single"
                                         selected={field.value}
