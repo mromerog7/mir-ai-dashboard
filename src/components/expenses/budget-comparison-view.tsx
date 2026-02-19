@@ -26,6 +26,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
     const [totalBudget, setTotalBudget] = useState(0)
     const [totalSpent, setTotalSpent] = useState(0)
     const [activeBudgetId, setActiveBudgetId] = useState<number | null>(null)
+    const [budgetCategoryNames, setBudgetCategoryNames] = useState<string[]>([])
 
     useEffect(() => {
         if (!projectId) {
@@ -33,6 +34,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
             setTotalBudget(0)
             setTotalSpent(0)
             setActiveBudgetId(null)
+            setBudgetCategoryNames([])
             return
         }
 
@@ -81,6 +83,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                         })
 
                         budgetItems = Array.from(budgetMap.entries()).map(([categoria, costo_total]) => ({ categoria, costo_total }))
+                        setBudgetCategoryNames(Array.from(budgetMap.keys()))
                     }
                 }
 
@@ -149,7 +152,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                         <span>Comparativa: Real vs Programado</span>
                         {loading && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
                     </div>
-                    {projectId && <CreateExpenseSheet defaultProjectId={projectId} defaultBudgetId={activeBudgetId || undefined} />}
+                    {projectId && <CreateExpenseSheet defaultProjectId={projectId} defaultBudgetId={activeBudgetId || undefined} preloadedCategories={budgetCategoryNames} />}
                 </CardTitle>
             </CardHeader>
             <CardContent>
