@@ -29,6 +29,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
     const [budgetCategoryNames, setBudgetCategoryNames] = useState<string[]>([])
     const [refreshTrigger, setRefreshTrigger] = useState(0)
 
+    // 1. Fetch Data Effect
     useEffect(() => {
         if (!projectId) {
             setComparisonData([])
@@ -45,7 +46,6 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
 
             try {
                 // 1. Fetch Active Budget (Concepts)
-                // We need to find the latest budget first
                 const { data: budget } = await supabase
                     .from("presupuestos")
                     .select("id")
@@ -58,8 +58,6 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
 
                 if (budget) {
                     setActiveBudgetId(budget.id)
-                    // Fetch Categories with nested Items (using the working pattern from BudgetView)
-                    // Note: costo_total does not exist in DB, it is calculated
                     const { data: catsData, error: catsError } = await supabase
                         .from("presupuesto_categorias")
                         .select("id, nombre, items:presupuesto_items(cantidad, costo_unitario)")
@@ -69,13 +67,11 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                         console.error("Error fetching budget categories:", catsError)
                     }
 
-                    // Map budget by category name
                     const budgetMap = new Map<string, number>()
 
                     if (catsData) {
                         catsData.forEach((cat: any) => {
                             const catName = cat.nombre
-                            // Calculate total for this category
                             const catTotal = cat.items?.reduce((sum: number, item: any) => {
                                 return sum + ((item.cantidad || 0) * (item.costo_unitario || 0))
                             }, 0) || 0
@@ -97,23 +93,19 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                 // 3. Aggregate Data
                 const comparisonMap = new Map<string, { budgeted: number, spent: number }>()
 
-                // Process Budget
                 budgetItems.forEach(item => {
                     const existing = comparisonMap.get(item.categoria) || { budgeted: 0, spent: 0 }
                     existing.budgeted += item.costo_total
                     comparisonMap.set(item.categoria, existing)
                 })
 
-                // Process Expenses
                 expenses?.forEach(expense => {
-                    // Expenses store category name directly
                     const catName = expense.categoria
                     const existing = comparisonMap.get(catName) || { budgeted: 0, spent: 0 }
                     existing.spent += expense.monto
                     comparisonMap.set(catName, existing)
                 })
 
-                // Convert to Array
                 const result: CategoryComparison[] = Array.from(comparisonMap.entries()).map(([category, vals]) => ({
                     category,
                     budgeted: vals.budgeted,
@@ -122,13 +114,12 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                     percentage: vals.budgeted > 0 ? (vals.spent / vals.budgeted) * 100 : (vals.spent > 0 ? 100 : 0)
                 }))
 
-                // Calculate Totals
                 const totBudget = result.reduce((acc, curr) => acc + curr.budgeted, 0)
                 const totSpent = result.reduce((acc, curr) => acc + curr.spent, 0)
 
                 setTotalBudget(totBudget)
                 setTotalSpent(totSpent)
-                setComparisonData(result.sort((a, b) => b.spent - a.spent)) // Sort by highest spenders
+                setComparisonData(result.sort((a, b) => b.spent - a.spent))
 
             } catch (error) {
                 console.error("Error fetching comparison data:", error)
@@ -138,10 +129,15 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
         }
 
         fetchData()
+    }, [projectId, refreshTrigger])
+
+    // 2. Realtime Subscription Effect
+    useEffect(() => {
+        if (!projectId) return
 
         const supabase = createClient()
         const channel = supabase
-            .channel('budget-comparison-changes')
+            .channel(`budget-comparison-${projectId}`)
             .on(
                 'postgres_changes',
                 {
@@ -160,7 +156,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
         return () => {
             supabase.removeChannel(channel)
         }
-    }, [projectId, refreshTrigger])
+    }, [projectId])
 
     if (!projectId) return null // Don't show if no project selected (or show generic message)
 
