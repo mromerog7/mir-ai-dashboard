@@ -57,7 +57,7 @@ function parseLocalDate(dateStr: string): Date {
     return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]))
 }
 
-export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () => void, initialData?: any, taskId?: number }) {
+export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: { onSuccess?: () => void, initialData?: any, taskId?: number, defaultProjectId?: string }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [projects, setProjects] = useState<any[]>([])
@@ -101,7 +101,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             titulo: initialData?.titulo || "",
             descripcion: initialData?.descripcion || "",
             observaciones: initialData?.observaciones || "",
-            proyecto_id: initialData?.proyecto_id?.toString() || "",
+            proyecto_id: initialData?.proyecto_id?.toString() || defaultProjectId || "",
             prioridad: initialData?.prioridad || "Media",
             estatus: initialData?.estatus || "Pendiente",
             responsable: initialData?.responsable || "",
@@ -109,9 +109,15 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             fecha_fin: initialData?.fecha_fin ? parseLocalDate(initialData.fecha_fin) : undefined,
             fecha_inicio_real: initialData?.fecha_inicio_real ? parseLocalDate(initialData.fecha_inicio_real) : undefined,
             fecha_fin_real: initialData?.fecha_fin_real ? parseLocalDate(initialData.fecha_fin_real) : undefined,
-            fecha_vencimiento: initialData?.fecha_vencimiento ? new Date(initialData.fecha_vencimiento) : undefined,
+            fecha_vencimiento: initialData?.fecha_vencimiento ? parseLocalDate(initialData.fecha_vencimiento) : undefined,
         },
     })
+
+    useEffect(() => {
+        if (defaultProjectId && !form.getValues('proyecto_id')) {
+            form.setValue('proyecto_id', defaultProjectId);
+        }
+    }, [defaultProjectId, form]);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)

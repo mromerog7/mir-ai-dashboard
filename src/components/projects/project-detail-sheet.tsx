@@ -27,6 +27,10 @@ import { ReportDetailSheet } from "@/components/reports/report-detail-sheet"
 import { MinutaDetailSheet } from "@/components/minutes/minuta-detail-sheet"
 import { ClientMeetingDetailSheet } from "@/components/client-meetings/client-meeting-detail-sheet"
 import { TaskProgressSummary } from "@/components/tasks/task-progress-summary"
+import { CreateTaskButton } from "@/components/tasks/create-task-button"
+import { TaskGantt } from "@/components/tasks/task-gantt"
+import { TaskGanttReal } from "@/components/tasks/task-gantt-real"
+import { LayoutList, Clock } from "lucide-react"
 
 interface ProjectDetailSheetProps {
     project: Project
@@ -47,6 +51,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     } | null>(null);
 
     const [loading, setLoading] = useState(false);
+    const [viewMode, setViewMode] = useState<"list" | "gantt" | "gantt_real">("list")
 
     useEffect(() => {
         async function fetchData() {
@@ -349,38 +354,90 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                         </div>
                     </TabsContent>
 
+
+
                     {/* TAB: TAREAS */}
                     <TabsContent value="tasks" className="space-y-4 animate-in fade-in-50 focus-visible:outline-none">
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <h4 className="text-sm font-medium text-slate-900 flex items-center gap-2">
                                 <CheckCircle className="h-4 w-4 text-blue-600" /> Lista de Tareas
                             </h4>
-                            {/* Potential "Add Task" button here */}
+
+                            <div className="flex items-center gap-2 w-full md:w-auto">
+                                {/* View Switcher */}
+                                <div className="flex items-center bg-slate-100 p-1 rounded-md border border-slate-200">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className={`h-7 px-2 text-xs ${viewMode === "list" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}
+                                        onClick={() => setViewMode("list")}
+                                        title="Lista"
+                                    >
+                                        <LayoutList className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className={`h-7 px-2 text-xs ${viewMode === "gantt" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}
+                                        onClick={() => setViewMode("gantt")}
+                                        title="Gantt Programado"
+                                    >
+                                        <Calendar className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className={`h-7 px-2 text-xs ${viewMode === "gantt_real" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}
+                                        onClick={() => setViewMode("gantt_real")}
+                                        title="Gantt Real vs Programado"
+                                    >
+                                        <Clock className="h-4 w-4" />
+                                    </Button>
+                                </div>
+
+                                <CreateTaskButton defaultProjectId={Number(project.id)} />
+                            </div>
                         </div>
 
-                        {/* Task Progress Summary */}
+                        {/* Task Progress Summary - Always visible */}
                         {relatedData?.tasks && relatedData.tasks.length > 0 && (
                             <TaskProgressSummary tasks={relatedData.tasks} />
                         )}
 
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.tasks && relatedData.tasks.length > 0 ? (
-                                <div className="space-y-2">
-                                    {relatedData.tasks.map(task => (
-                                        <TaskDetailSheet
-                                            key={task.id}
-                                            task={task}
-                                            trigger={
-                                                <div className="bg-[#E5E5E5] p-3 rounded-md border border-slate-200 flex justify-between items-start cursor-pointer hover:bg-slate-100 hover:border-blue-300 transition-all">
-                                                    <div className="space-y-1">
-                                                        <div className="text-sm text-slate-900 font-semibold">{task.titulo || task.descripcion}</div>
-                                                        <div className="text-xs text-slate-500 line-clamp-2">{task.descripcion}</div>
-                                                    </div>
-                                                    <Badge variant="outline" className="text-xs border-slate-300 bg-white ml-2 shrink-0">{task.estatus || "Pendiente"}</Badge>
-                                                </div>
-                                            }
-                                        />
-                                    ))}
+                                <div className="min-h-[300px]">
+                                    {viewMode === "list" && (
+                                        <div className="space-y-2">
+                                            {relatedData.tasks.map(task => (
+                                                <TaskDetailSheet
+                                                    key={task.id}
+                                                    task={task}
+                                                    trigger={
+                                                        <div className="bg-[#E5E5E5] p-3 rounded-md border border-slate-200 flex justify-between items-start cursor-pointer hover:bg-slate-100 hover:border-blue-300 transition-all">
+                                                            <div className="space-y-1">
+                                                                <div className="text-sm text-slate-900 font-semibold">{task.titulo || task.descripcion}</div>
+                                                                <div className="text-xs text-slate-500 line-clamp-2">{task.descripcion}</div>
+                                                            </div>
+                                                            <Badge variant="outline" className="text-xs border-slate-300 bg-white ml-2 shrink-0">{task.estatus || "Pendiente"}</Badge>
+                                                        </div>
+                                                    }
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {viewMode === "gantt" && (
+                                        <div className="overflow-x-auto border border-slate-200 rounded-md bg-white p-4">
+                                            <TaskGantt tasks={relatedData.tasks} />
+                                        </div>
+                                    )}
+
+                                    {viewMode === "gantt_real" && (
+                                        <div className="overflow-x-auto border border-slate-200 rounded-md bg-white p-4">
+                                            <TaskGanttReal tasks={relatedData.tasks} />
+                                        </div>
+                                    )}
                                 </div>
                             ) : (
                                 <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-300">

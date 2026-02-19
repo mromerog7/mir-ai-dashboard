@@ -13,7 +13,7 @@ import { Plus } from "lucide-react"
 import { TaskForm } from "@/components/tasks/task-form"
 import { useState } from "react"
 
-export function CreateTaskButton() {
+export function CreateTaskButton({ defaultProjectId }: { defaultProjectId?: string | number }) {
     const [open, setOpen] = useState(false)
 
     return (
@@ -32,7 +32,10 @@ export function CreateTaskButton() {
                     </SheetDescription>
                 </SheetHeader>
                 <div className="py-4">
-                    <TaskForm onSuccess={() => setOpen(false)} />
+                    <TaskForm
+                        onSuccess={() => setOpen(false)}
+                        defaultProjectId={defaultProjectId?.toString()}
+                    />
                 </div>
             </SheetContent>
         </Sheet>
