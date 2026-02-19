@@ -302,285 +302,289 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                         )}
                     />
                 </div>
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Recordatorio</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="datetime-local"
-                                className="bg-[#E5E5E5] border-slate-200 text-slate-900"
-                                {...field}
-                                value={field.value ? format(field.value, "yyyy-MM-dd'T'HH:mm") : ""}
-                                onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : undefined)}
-                            />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-                    />
-            </div>
-
-            {/* Date range: Programado */}
-            <div className="grid grid-cols-2 gap-4">
-                <FormField
-                    control={form.control}
-                    name="fecha_inicio"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Fecha Inicio PROG</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
-                                                !field.value && "text-slate-400"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP", { locale: es })
-                                            ) : (
-                                                <span>Seleccionar fecha</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(date) => date < new Date("1900-01-01")}
-                                        initialFocus
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="fecha_vencimiento"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Recordatorio</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="datetime-local"
+                                        className="bg-[#E5E5E5] border-slate-200 text-slate-900"
+                                        {...field}
+                                        value={field.value ? format(field.value, "yyyy-MM-dd'T'HH:mm") : ""}
+                                        onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : undefined)}
                                     />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="fecha_fin"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Fecha Fin PROG</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
-                                                !field.value && "text-slate-400"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP", { locale: es })
-                                            ) : (
-                                                <span>Seleccionar fecha</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(date) => {
-                                            const inicio = form.getValues("fecha_inicio")
-                                            if (inicio && date < inicio) return true
-                                            return date < new Date("1900-01-01")
-                                        }}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </div>
-
-            {/* Date range: Real */}
-            <div className="grid grid-cols-2 gap-4">
-                <FormField
-                    control={form.control}
-                    name="fecha_inicio_real"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Fecha Inicio Real</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
-                                                !field.value && "text-slate-400"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP", { locale: es })
-                                            ) : (
-                                                <span>Seleccionar fecha</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(date) => date < new Date("1900-01-01")}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="fecha_fin_real"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Fecha Fin Real</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
-                                                !field.value && "text-slate-400"
-                                            )}
-                                        >
-                                            {field.value ? (
-                                                format(field.value, "PPP", { locale: es })
-                                            ) : (
-                                                <span>Seleccionar fecha</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(date) => {
-                                            const inicio = form.getValues("fecha_inicio_real")
-                                            if (inicio && date < inicio) return true
-                                            return date < new Date("1900-01-01")
-                                        }}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </div>
-
-
-            {/* Notas asociadas (solo en modo edición) */}
-            {taskId && (
-                <TaskNotesList taskId={taskId} />
-            )}
-
-            {/* Incidencias asociadas (solo en modo edición) */}
-            {taskId && (
-                <div className="space-y-2 border border-slate-200 rounded-md p-4 bg-slate-50">
-                    <h4 className="text-sm font-medium text-slate-900 flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-red-600" />
-                        Incidencias Asociadas
-                        {linkedIncidents.length > 0 && (
-                            <span className="text-xs bg-red-100 text-red-700 rounded-full px-2 py-0.5">{linkedIncidents.length}</span>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
                         )}
-                    </h4>
-                    {linkedIncidents.length > 0 ? (
-                        <div className="space-y-1.5">
-                            {linkedIncidents.map((inc: any) => {
-                                const sevColors: Record<string, string> = {
-                                    "Baja": "bg-blue-100 text-blue-700",
-                                    "Media": "bg-yellow-100 text-yellow-700",
-                                    "Alta": "bg-orange-100 text-orange-700",
-                                    "Cr\u00edtica": "bg-red-100 text-red-700",
-                                }
-                                const isExpanded = expandedIncId === inc.id
-                                return (
-                                    <div key={inc.id} className="bg-white rounded border border-slate-200 overflow-hidden">
-                                        <button
-                                            type="button"
-                                            onClick={() => setExpandedIncId(isExpanded ? null : inc.id)}
-                                            className="w-full flex items-center justify-between p-2 hover:bg-slate-50 transition-colors text-left"
-                                        >
-                                            <span className="text-xs text-slate-900 font-medium truncate flex-1 mr-2">{inc.titulo}</span>
-                                            <div className="flex items-center gap-1 flex-shrink-0">
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
-                                                <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${inc.estatus === "Resuelta" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{inc.estatus}</span>
-                                                <ChevronDown className={`h-3 w-3 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                                            </div>
-                                        </button>
-                                        {isExpanded && (
-                                            <div className="px-2.5 pb-2.5 pt-1 border-t border-slate-200 space-y-1.5 bg-slate-50/50">
-                                                {inc.descripcion && (
-                                                    <div>
-                                                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Descripci\u00f3n</span>
-                                                        <p className="text-[11px] text-slate-700 mt-0.5 leading-relaxed">{inc.descripcion}</p>
-                                                    </div>
+                    />
+                </div>
+
+                {/* Date range: Programado */}
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="fecha_inicio"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Fecha Inicio PROG</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
                                                 )}
-                                                <div className="grid grid-cols-2 gap-1.5">
-                                                    <div className="flex items-center gap-1">
-                                                        <CalendarIcon className="h-3 w-3 text-slate-400" />
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => date < new Date("1900-01-01")}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="fecha_fin"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Fecha Fin PROG</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => {
+                                                const inicio = form.getValues("fecha_inicio")
+                                                if (inicio && date < inicio) return true
+                                                return date < new Date("1900-01-01")
+                                            }}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                {/* Date range: Real */}
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="fecha_inicio_real"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Fecha Inicio Real</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => date < new Date("1900-01-01")}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="fecha_fin_real"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Fecha Fin Real</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full pl-3 text-left font-normal bg-[#E5E5E5] border-slate-200 text-slate-900 hover:bg-slate-100 hover:text-[#02457A]",
+                                                    !field.value && "text-slate-400"
+                                                )}
+                                            >
+                                                {field.value ? (
+                                                    format(field.value, "PPP", { locale: es })
+                                                ) : (
+                                                    <span>Seleccionar fecha</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 text-slate-400" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0 bg-white border-slate-200" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(date) => {
+                                                const inicio = form.getValues("fecha_inicio_real")
+                                                if (inicio && date < inicio) return true
+                                                return date < new Date("1900-01-01")
+                                            }}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+
+                {/* Notas asociadas (solo en modo edición) */}
+                {taskId && (
+                    <TaskNotesList taskId={taskId} />
+                )}
+
+                {/* Incidencias asociadas (solo en modo edición) */}
+                {taskId && (
+                    <div className="space-y-2 border border-slate-200 rounded-md p-4 bg-slate-50">
+                        <h4 className="text-sm font-medium text-slate-900 flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-red-600" />
+                            Incidencias Asociadas
+                            {linkedIncidents.length > 0 && (
+                                <span className="text-xs bg-red-100 text-red-700 rounded-full px-2 py-0.5">{linkedIncidents.length}</span>
+                            )}
+                        </h4>
+                        {linkedIncidents.length > 0 ? (
+                            <div className="space-y-1.5">
+                                {linkedIncidents.map((inc: any) => {
+                                    const sevColors: Record<string, string> = {
+                                        "Baja": "bg-blue-100 text-blue-700",
+                                        "Media": "bg-yellow-100 text-yellow-700",
+                                        "Alta": "bg-orange-100 text-orange-700",
+                                        "Cr\u00edtica": "bg-red-100 text-red-700",
+                                    }
+                                    const isExpanded = expandedIncId === inc.id
+                                    return (
+                                        <div key={inc.id} className="bg-white rounded border border-slate-200 overflow-hidden">
+                                            <button
+                                                type="button"
+                                                onClick={() => setExpandedIncId(isExpanded ? null : inc.id)}
+                                                className="w-full flex items-center justify-between p-2 hover:bg-slate-50 transition-colors text-left"
+                                            >
+                                                <span className="text-xs text-slate-900 font-medium truncate flex-1 mr-2">{inc.titulo}</span>
+                                                <div className="flex items-center gap-1 flex-shrink-0">
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${sevColors[inc.severidad] || ""}`}>{inc.severidad}</span>
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${inc.estatus === "Resuelta" ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"}`}>{inc.estatus}</span>
+                                                    <ChevronDown className={`h-3 w-3 text-slate-400 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                                </div>
+                                            </button>
+                                            {isExpanded && (
+                                                <div className="px-2.5 pb-2.5 pt-1 border-t border-slate-200 space-y-1.5 bg-slate-50/50">
+                                                    {inc.descripcion && (
                                                         <div>
-                                                            <span className="text-[10px] text-slate-500 block font-semibold">Fecha</span>
-                                                            <span className="text-[11px] text-slate-700">{inc.fecha_inicio ? new Date(inc.fecha_inicio).toLocaleDateString("es-MX") : "N/A"}</span>
+                                                            <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Descripci\u00f3n</span>
+                                                            <p className="text-[11px] text-slate-700 mt-0.5 leading-relaxed">{inc.descripcion}</p>
                                                         </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <DollarSign className="h-3 w-3 text-slate-400" />
-                                                        <div>
-                                                            <span className="text-[10px] text-slate-500 block font-semibold">Costo</span>
-                                                            <span className="text-[11px] text-slate-700">{inc.impacto_costo ? `$${inc.impacto_costo.toLocaleString()}` : "N/A"}</span>
+                                                    )}
+                                                    <div className="grid grid-cols-2 gap-1.5">
+                                                        <div className="flex items-center gap-1">
+                                                            <CalendarIcon className="h-3 w-3 text-slate-400" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block font-semibold">Fecha</span>
+                                                                <span className="text-[11px] text-slate-700">{inc.fecha_inicio ? new Date(inc.fecha_inicio).toLocaleDateString("es-MX") : "N/A"}</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <Clock className="h-3 w-3 text-slate-400" />
-                                                        <div>
-                                                            <span className="text-[10px] text-slate-500 block font-semibold">Tiempo</span>
-                                                            <span className="text-[11px] text-slate-700">{inc.impacto_tiempo || "N/A"}</span>
+                                                        <div className="flex items-center gap-1">
+                                                            <DollarSign className="h-3 w-3 text-slate-400" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block font-semibold">Costo</span>
+                                                                <span className="text-[11px] text-slate-700">{inc.impacto_costo ? `$${inc.impacto_costo.toLocaleString()}` : "N/A"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <Clock className="h-3 w-3 text-slate-400" />
+                                                            <div>
+                                                                <span className="text-[10px] text-slate-500 block font-semibold">Tiempo</span>
+                                                                <span className="text-[11px] text-slate-700">{inc.impacto_tiempo || "N/A"}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    ) : (
-                        <p className="text-xs text-slate-500">No hay incidencias asociadas.</p>
-                    )}
-                </div>
-            )}
+                                            )}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        ) : (
+                            <p className="text-xs text-slate-500">No hay incidencias asociadas.</p>
+                        )}
+                    </div>
+                )}
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
-                {loading ? "Guardando..." : (taskId ? "Actualizar Tarea" : "Crear Tarea")}
-            </Button>
-        </form>
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
+                    {loading ? "Guardando..." : (taskId ? "Actualizar Tarea" : "Crear Tarea")}
+                </Button>
+            </form>
         </Form >
     )
 }
