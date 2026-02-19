@@ -46,7 +46,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId }: { trigger?: React.ReactNode, defaultProjectId?: number, defaultBudgetId?: number }) {
+export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId, preloadedCategories }: { trigger?: React.ReactNode, defaultProjectId?: number, defaultBudgetId?: number, preloadedCategories?: string[] }) {
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -102,6 +102,12 @@ export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId 
                 return
             }
 
+            // Use preloaded categories if available and matching the default project
+            if (defaultProjectId && selectedProjectId === defaultProjectId && preloadedCategories && preloadedCategories.length > 0) {
+                setBudgetCategories(preloadedCategories)
+                return
+            }
+
             const supabase = createClient()
             let budgetId = defaultBudgetId
 
@@ -139,7 +145,7 @@ export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId 
         }
 
         fetchBudgetCategories()
-    }, [selectedProjectId, defaultProjectId, defaultBudgetId])
+    }, [selectedProjectId, defaultProjectId, defaultBudgetId, preloadedCategories])
 
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
