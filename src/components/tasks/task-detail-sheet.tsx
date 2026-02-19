@@ -11,7 +11,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Eye, Calendar, FolderOpen, CheckCircle, AlertTriangle, ChevronDown, DollarSign, Clock } from "lucide-react"
+import { Eye, Calendar, FolderOpen, CheckCircle, AlertTriangle, ChevronDown, DollarSign, Clock, User } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Task } from "@/types"
 import { createClient } from "@/lib/supabase/client"
@@ -33,6 +33,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
     const [sheetOpen, setSheetOpen] = useState(false)
     const [linkedIncidents, setLinkedIncidents] = useState<any[]>([])
     const [expandedIncId, setExpandedIncId] = useState<number | null>(null)
+    const [responsableProfile, setResponsableProfile] = useState<any>(null)
 
     useEffect(() => {
         if (sheetOpen && task.id) {
@@ -49,6 +50,19 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
             fetchIncidents()
         }
     }, [sheetOpen, task.id])
+
+    useEffect(() => {
+        if (sheetOpen && task.responsable) {
+            const fetchProfile = async () => {
+                const supabase = createClient()
+                const { data } = await supabase.from('profiles').select('full_name, email').eq('id', task.responsable).single()
+                if (data) setResponsableProfile(data)
+            }
+            fetchProfile()
+        } else {
+            setResponsableProfile(null)
+        }
+    }, [sheetOpen, task.responsable])
 
     const estatus = task.estatus || "Pendiente";
     const normalizedStatus = estatus.toLowerCase();
@@ -139,6 +153,24 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                     <Calendar className="h-4 w-4 text-blue-600" />
                                     <span className="text-sm text-slate-900">
                                         {task.fecha_fin_real ? format(parseLocalDate(task.fecha_fin_real), "PPP", { locale: es }) : "Pendiente"}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-xs text-slate-500 block">Responsable</span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <User className="h-4 w-4 text-slate-500" />
+                                    <span className="text-sm text-slate-900">
+                                        {responsableProfile ? (responsableProfile.full_name || responsableProfile.email) : "No asignado"}
+                                    </span>
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-xs text-slate-500 block">Responsable</span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <User className="h-4 w-4 text-slate-500" />
+                                    <span className="text-sm text-slate-900">
+                                        {responsableProfile ? (responsableProfile.full_name || responsableProfile.email) : "No asignado"}
                                     </span>
                                 </div>
                             </div>
