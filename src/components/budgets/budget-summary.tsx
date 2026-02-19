@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Budget, BudgetCategory } from "@/types"
 import { createClient } from "@/lib/supabase/client"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -143,16 +144,12 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
                     </div>
                     <div className="flex justify-between items-center text-xs">
                         <div className="flex items-center gap-2">
-                            <span className="text-slate-500">IVA</span>
-                            <div className="w-12 relative h-5">
-                                <Input
-                                    type="number"
-                                    value={ivaPerc * 100}
-                                    onChange={(e) => setIvaPerc((parseFloat(e.target.value) || 0) / 100)}
-                                    className="h-5 w-12 p-0 text-center text-[10px] bg-transparent border-slate-200"
-                                />
-                                <span className="absolute -right-2 top-1 opacity-0 pointer-events-none">%</span>
-                            </div>
+                            <span className="text-slate-500">IVA (16%)</span>
+                            <Checkbox
+                                checked={ivaPerc > 0}
+                                onCheckedChange={(checked) => setIvaPerc(checked ? 0.16 : 0)}
+                                className="h-4 w-4 border-slate-300 data-[state=checked]:bg-[#02457A] data-[state=checked]:border-[#02457A]"
+                            />
                         </div>
                         <span className="text-slate-600">+ ${ivaMonto.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                     </div>
