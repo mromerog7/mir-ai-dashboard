@@ -77,8 +77,7 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
         setLoading(false)
     }
 
-    const handleUpdateItem = async (itemId: number, updates: Partial<BudgetItem>) => {
-        // Optimistic update
+    const handleLocalChange = (itemId: number, field: keyof BudgetItem, value: any) => {
         const catId = Object.keys(localItems).find(key =>
             localItems[parseInt(key)].some(item => item.id === itemId)
         )
@@ -88,13 +87,15 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
             setLocalItems(prev => ({
                 ...prev,
                 [categoryId]: prev[categoryId].map(item =>
-                    item.id === itemId ? { ...item, ...updates } : item
+                    item.id === itemId ? { ...item, [field]: value } : item
                 )
             }))
         }
+    }
 
+    const handleBlurItem = async (itemId: number, updates: Partial<BudgetItem>) => {
         // Debounce actual DB update could be implemented here for performance
-        // For now direct update
+        // For now direct update on blur
         const supabase = createClient()
         const { error } = await supabase
             .from("presupuesto_items")
@@ -103,7 +104,7 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
 
         if (error) {
             console.error("Error updating item:", error)
-            onUpdate() // Revert on error
+            onUpdate() // Revert on error (re-fetch)
         } else {
             onUpdate() // Sync calculations
         }
@@ -224,14 +225,16 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
                                                 <td className="px-4 py-1.5 align-middle border-l-4 border-transparent pl-8">
                                                     <Input
                                                         value={item.concepto}
-                                                        onChange={(e) => handleUpdateItem(item.id, { concepto: e.target.value })}
+                                                        onChange={(e) => handleLocalChange(item.id, 'concepto', e.target.value)}
+                                                        onBlur={(e) => handleBlurItem(item.id, { concepto: e.target.value })}
                                                         className="h-8 border-transparent hover:border-slate-200 focus:border-blue-500 bg-transparent px-2 text-sm"
                                                     />
                                                 </td>
                                                 <td className="px-2 py-1.5 align-middle">
                                                     <Input
                                                         value={item.unidad || ""}
-                                                        onChange={(e) => handleUpdateItem(item.id, { unidad: e.target.value })}
+                                                        onChange={(e) => handleLocalChange(item.id, 'unidad', e.target.value)}
+                                                        onBlur={(e) => handleBlurItem(item.id, { unidad: e.target.value })}
                                                         className="h-8 border-transparent hover:border-slate-200 focus:border-blue-500 bg-transparent text-center px-1 text-sm"
                                                     />
                                                 </td>
@@ -239,7 +242,8 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
                                                     <Input
                                                         type="number"
                                                         value={item.cantidad}
-                                                        onChange={(e) => handleUpdateItem(item.id, { cantidad: parseFloat(e.target.value) || 0 })}
+                                                        onChange={(e) => handleLocalChange(item.id, 'cantidad', parseFloat(e.target.value) || 0)}
+                                                        onBlur={(e) => handleBlurItem(item.id, { cantidad: parseFloat(e.target.value) || 0 })}
                                                         className="h-8 border-transparent hover:border-slate-200 focus:border-blue-500 bg-transparent text-center px-1 font-medium text-slate-700 text-sm"
                                                     />
                                                 </td>
@@ -249,7 +253,8 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
                                                         <Input
                                                             type="number"
                                                             value={item.costo_unitario}
-                                                            onChange={(e) => handleUpdateItem(item.id, { costo_unitario: parseFloat(e.target.value) || 0 })}
+                                                            onChange={(e) => handleLocalChange(item.id, 'costo_unitario', parseFloat(e.target.value) || 0)}
+                                                            onBlur={(e) => handleBlurItem(item.id, { costo_unitario: parseFloat(e.target.value) || 0 })}
                                                             className="h-8 border-transparent hover:border-orange-300 focus:border-orange-500 bg-transparent text-right pl-5 pr-2 text-sm text-slate-600"
                                                         />
                                                     </div>
@@ -260,7 +265,8 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
                                                         <Input
                                                             type="number"
                                                             value={item.prec_venta_unitario}
-                                                            onChange={(e) => handleUpdateItem(item.id, { prec_venta_unitario: parseFloat(e.target.value) || 0 })}
+                                                            onChange={(e) => handleLocalChange(item.id, 'prec_venta_unitario', parseFloat(e.target.value) || 0)}
+                                                            onBlur={(e) => handleBlurItem(item.id, { prec_venta_unitario: parseFloat(e.target.value) || 0 })}
                                                             className="h-8 border-transparent hover:border-emerald-300 focus:border-emerald-500 bg-transparent text-right pl-5 pr-2 font-medium text-emerald-700 text-sm"
                                                         />
                                                     </div>
