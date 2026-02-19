@@ -134,9 +134,9 @@ export function BudgetView({ projectId }: BudgetViewProps) {
     }
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
+        <div className="flex flex-col lg:flex-row gap-6 animate-in fade-in duration-500 items-start">
             {/* Main Content: Table */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="flex-1 space-y-4 min-w-0">
                 <div className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                     <div className="flex items-center gap-3">
                         <span className="text-sm font-medium text-slate-500">Versión:</span>
@@ -175,7 +175,7 @@ export function BudgetView({ projectId }: BudgetViewProps) {
             </div>
 
             {/* Sidebar: Summary */}
-            <div className="lg:col-span-1">
+            <div className="flex-none lg:w-80">
                 {selectedBudget && (
                     <BudgetSummary
                         budget={selectedBudget}
