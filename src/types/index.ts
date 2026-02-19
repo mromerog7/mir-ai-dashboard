@@ -20,6 +20,7 @@ export type Task = {
     proyecto_id: number | null;
     prioridad: string | null;
     asignado_a: string | null;
+    responsable: string | null; // Profile ID (UUID)
     fecha_inicio?: string | null;
     fecha_fin?: string | null;
     fecha_inicio_real?: string | null;
