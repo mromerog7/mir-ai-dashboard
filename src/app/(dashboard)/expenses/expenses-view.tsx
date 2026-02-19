@@ -12,6 +12,7 @@ import Image from "next/image"
 import { useEffect, useState, useMemo } from "react"
 import { Expense } from "@/types"
 import { FolderOpen } from "lucide-react"
+import { BudgetComparisonView } from "@/components/expenses/budget-comparison-view"
 
 interface Project {
     id: number;
@@ -157,6 +158,10 @@ export function ExpensesView({ initialExpenses, projectId }: ExpensesViewProps) 
 
 
             {/* Top 3 Recent Expenses Cards - REMOVED per user request for space */}
+            {/* Replaced with Budget vs Actual Comparison */}
+            {selectedProjectId !== "all" && (
+                <BudgetComparisonView projectId={parseInt(selectedProjectId)} />
+            )}
 
             {/* All Expenses Table */}
             <div className="mt-8">
