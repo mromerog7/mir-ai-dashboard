@@ -240,7 +240,7 @@ export function EditExpenseSheet({ expense, open, onOpenChange }: EditExpenseShe
                 concepto: data.concepto,
                 monto: data.monto,
                 categoria: data.categoria,
-                ticket_url: finalUrls.length > 0 ? (finalUrls.length === 1 ? finalUrls[0] : finalUrls) : null,
+                ticket_url: finalUrls.length > 0 ? finalUrls : null,
                 // We keep the original usuario_id
             }
 
