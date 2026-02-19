@@ -25,12 +25,14 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
     const [comparisonData, setComparisonData] = useState<CategoryComparison[]>([])
     const [totalBudget, setTotalBudget] = useState(0)
     const [totalSpent, setTotalSpent] = useState(0)
+    const [activeBudgetId, setActiveBudgetId] = useState<number | null>(null)
 
     useEffect(() => {
         if (!projectId) {
             setComparisonData([])
             setTotalBudget(0)
             setTotalSpent(0)
+            setActiveBudgetId(null)
             return
         }
 
@@ -52,6 +54,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                 let budgetItems: { categoria: string, costo_total: number }[] = []
 
                 if (budget) {
+                    setActiveBudgetId(budget.id)
                     // Fetch Categories with nested Items (using the working pattern from BudgetView)
                     // Note: costo_total does not exist in DB, it is calculated
                     const { data: catsData, error: catsError } = await supabase
@@ -146,7 +149,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                         <span>Comparativa: Real vs Programado</span>
                         {loading && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
                     </div>
-                    {projectId && <CreateExpenseSheet defaultProjectId={projectId} />}
+                    {projectId && <CreateExpenseSheet defaultProjectId={projectId} defaultBudgetId={activeBudgetId || undefined} />}
                 </CardTitle>
             </CardHeader>
             <CardContent>

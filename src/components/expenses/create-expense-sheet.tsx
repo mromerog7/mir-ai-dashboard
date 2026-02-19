@@ -46,7 +46,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function CreateExpenseSheet({ trigger, defaultProjectId }: { trigger?: React.ReactNode, defaultProjectId?: number }) {
+export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId }: { trigger?: React.ReactNode, defaultProjectId?: number, defaultBudgetId?: number }) {
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -97,46 +97,49 @@ export function CreateExpenseSheet({ trigger, defaultProjectId }: { trigger?: Re
     const selectedProjectId = form.watch("proyecto_id")
     useEffect(() => {
         const fetchBudgetCategories = async () => {
-            console.log("Fetching categories for project:", selectedProjectId)
             if (!selectedProjectId) {
-                console.log("No project selected, clearing categories")
                 setBudgetCategories([])
                 return
             }
 
             const supabase = createClient()
-            // 1. Get latest approved or draft budget for this project
-            const { data: budget } = await supabase
-                .from("presupuestos")
-                .select("id")
-                .eq("proyecto_id", selectedProjectId)
-                .order("version", { ascending: false })
-                .limit(1)
-                .single()
+            let budgetId = defaultBudgetId
 
-            if (budget) {
+            // If no default budget ID provided, or if the selected project is different from the default one, we need to fetch the budget
+            if (!budgetId || (defaultProjectId && selectedProjectId !== defaultProjectId)) {
+                const { data: budget } = await supabase
+                    .from("presupuestos")
+                    .select("id")
+                    .eq("proyecto_id", selectedProjectId)
+                    .order("version", { ascending: false })
+                    .limit(1)
+                    .single()
+
+                if (budget) {
+                    budgetId = budget.id
+                }
+            }
+
+            if (budgetId) {
                 // 2. Get categories for this budget
                 const { data: categories } = await supabase
                     .from("presupuesto_categorias")
                     .select("nombre")
-                    .eq("presupuesto_id", budget.id)
+                    .eq("presupuesto_id", budgetId)
                     .order("orden", { ascending: true })
 
                 if (categories && categories.length > 0) {
-                    console.log("Categories found:", categories)
                     setBudgetCategories(categories.map(c => c.nombre))
                     return // Found specific categories
                 }
-            } else {
-                console.log("No budget found for project", selectedProjectId)
             }
+
             // Fallback: No budget/categories found
-            console.log("Using default fallback categories")
             setBudgetCategories([])
         }
 
         fetchBudgetCategories()
-    }, [selectedProjectId])
+    }, [selectedProjectId, defaultProjectId, defaultBudgetId])
 
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -283,6 +286,7 @@ export function CreateExpenseSheet({ trigger, defaultProjectId }: { trigger?: Re
                                         <Select
                                             onValueChange={(value) => field.onChange(Number(value))}
                                             defaultValue={field.value?.toString()}
+                                            value={field.value?.toString()}
                                         >
                                             <FormControl>
                                                 <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-slate-900">
