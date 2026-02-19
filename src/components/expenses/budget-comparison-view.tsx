@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, TrendingDown, TrendingUp, AlertCircle } from "lucide-react"
+import { CreateExpenseSheet } from "@/components/expenses/create-expense-sheet"
 
 interface BudgetComparisonViewProps {
     projectId: number | null
@@ -141,8 +142,11 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
         <Card className="bg-white border-slate-200 mb-8 shadow-sm">
             <CardHeader className="pb-2">
                 <CardTitle className="text-lg font-semibold text-[#02457A] flex items-center justify-between">
-                    <span>Comparativa: Real vs Programado</span>
-                    {loading && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
+                    <div className="flex items-center gap-2">
+                        <span>Comparativa: Real vs Programado</span>
+                        {loading && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
+                    </div>
+                    {projectId && <CreateExpenseSheet defaultProjectId={projectId} />}
                 </CardTitle>
             </CardHeader>
             <CardContent>

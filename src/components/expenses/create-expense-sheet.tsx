@@ -46,7 +46,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
+export function CreateExpenseSheet({ trigger, defaultProjectId }: { trigger?: React.ReactNode, defaultProjectId?: number }) {
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -62,7 +62,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema) as any,
         defaultValues: {
-            proyecto_id: 0,
+            proyecto_id: defaultProjectId || 0,
             fecha: format(new Date(), "yyyy-MM-dd"),
             concepto: "",
             monto: 0,
@@ -82,6 +82,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
             }
             fetchProjects()
             form.reset({
+                proyecto_id: defaultProjectId || 0,
                 fecha: format(new Date(), "yyyy-MM-dd"),
                 concepto: "",
                 monto: 0,
@@ -90,7 +91,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
             setNewFiles([])
             setBudgetCategories([])
         }
-    }, [open, form])
+    }, [open, form, defaultProjectId])
 
     // Fetch Budget Categories when Project changes
     const selectedProjectId = form.watch("proyecto_id")
