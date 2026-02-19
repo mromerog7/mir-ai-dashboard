@@ -15,6 +15,13 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 interface BudgetTableProps {
     budgetId: number
@@ -239,12 +246,29 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
                                                     />
                                                 </td>
                                                 <td className="px-2 py-1.5 align-middle">
-                                                    <Input
-                                                        value={item.unidad || ""}
-                                                        onChange={(e) => handleLocalChange(item.id, 'unidad', e.target.value)}
-                                                        onBlur={(e) => handleBlurItem(item.id, { unidad: e.target.value })}
-                                                        className="h-8 border-transparent hover:border-slate-200 focus:border-blue-500 bg-transparent text-center px-1 text-sm"
-                                                    />
+                                                    <Select
+                                                        value={item.unidad || "pza"}
+                                                        onValueChange={(val) => {
+                                                            handleLocalChange(item.id, 'unidad', val)
+                                                            handleBlurItem(item.id, { unidad: val })
+                                                        }}
+                                                    >
+                                                        <SelectTrigger className="h-8 border-transparent hover:border-slate-200 focus:border-blue-500 bg-transparent px-1 text-sm">
+                                                            <SelectValue />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="serv">serv</SelectItem>
+                                                            <SelectItem value="pza">pza</SelectItem>
+                                                            <SelectItem value="m">m</SelectItem>
+                                                            <SelectItem value="m2">m2</SelectItem>
+                                                            <SelectItem value="m3">m3</SelectItem>
+                                                            <SelectItem value="gal">gal</SelectItem>
+                                                            <SelectItem value="bote">bote</SelectItem>
+                                                            <SelectItem value="kg">kg</SelectItem>
+                                                            <SelectItem value="ton">ton</SelectItem>
+                                                            <SelectItem value="lt">lt</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
                                                 </td>
                                                 <td className="px-2 py-1.5 align-middle">
                                                     <Input
