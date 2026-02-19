@@ -211,3 +211,43 @@ export type Nota = {
         titulo: string;
     } | null;
 };
+
+export type Budget = {
+    id: number;
+    proyecto_id: number;
+    version: number;
+    nombre: string;
+    estatus: "Borrador" | "Enviado" | "Aprobado" | "Rechazado";
+    honorarios_porcentaje: number;
+    honorarios_monto_fijo: number;
+    tipo_honorarios: "Porcentaje" | "Fijo" | "Mixto";
+    indirectos_porcentaje: number;
+    iva_porcentaje: number;
+    total_costo_directo: number;
+    total_venta_directa: number;
+    total_final: number;
+    created_at?: string;
+    updated_at?: string;
+    categorias?: BudgetCategory[];
+};
+
+export type BudgetCategory = {
+    id: number;
+    presupuesto_id: number;
+    nombre: string;
+    orden: number;
+    created_at?: string;
+    items?: BudgetItem[];
+};
+
+export type BudgetItem = {
+    id: number;
+    categoria_id: number;
+    concepto: string;
+    unidad: string | null;
+    cantidad: number;
+    costo_unitario: number;
+    prec_venta_unitario: number;
+    orden: number;
+    created_at?: string;
+};

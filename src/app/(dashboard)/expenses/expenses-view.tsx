@@ -19,16 +19,19 @@ interface Project {
 }
 
 interface ExpensesViewProps {
-    initialExpenses: Expense[]
+    initialExpenses?: Expense[]
+    projectId?: number
 }
 
-export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
-    const [expenses, setExpenses] = useState<Expense[]>(initialExpenses)
+export function ExpensesView({ initialExpenses, projectId }: ExpensesViewProps) {
+    const [expenses, setExpenses] = useState<Expense[]>(initialExpenses || [])
     const [projects, setProjects] = useState<Project[]>([])
-    const [selectedProjectId, setSelectedProjectId] = useState<string>("all")
+    const [selectedProjectId, setSelectedProjectId] = useState<string>(projectId ? projectId.toString() : "all")
 
     useEffect(() => {
-        setExpenses(initialExpenses)
+        if (initialExpenses) {
+            setExpenses(initialExpenses)
+        }
     }, [initialExpenses])
 
     useEffect(() => {
@@ -43,6 +46,25 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
         fetchProjects();
     }, []);
 
+    // Fetch expenses for specific project if in Project Detail view
+    useEffect(() => {
+        if (projectId) {
+            const fetchProjectExpenses = async () => {
+                const supabase = createClient()
+                const { data } = await supabase
+                    .from('gastos')
+                    .select('*, proyectos(nombre, cliente, ubicacion)')
+                    .eq('proyecto_id', projectId)
+                    .order('fecha', { ascending: false })
+
+                if (data) {
+                    setExpenses(data as unknown as Expense[])
+                }
+            }
+            fetchProjectExpenses()
+        }
+    }, [projectId])
+
     useEffect(() => {
         const supabase = createClient()
         const channel = supabase
@@ -52,6 +74,10 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
                 { event: '*', schema: 'public', table: 'gastos' },
                 async (payload) => {
                     console.log("Realtime event received:", payload);
+                    if (projectId && payload.new && 'proyecto_id' in payload.new && payload.new.proyecto_id !== projectId) {
+                        return; // Ignore if not for this project
+                    }
+
                     if (payload.eventType === 'INSERT') {
                         const { data } = await supabase
                             .from('gastos')
@@ -76,7 +102,7 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
         return () => {
             supabase.removeChannel(channel)
         }
-    }, [])
+    }, [projectId])
 
     // Filter expenses by selected project
     const filteredExpenses = useMemo(() => {
@@ -105,25 +131,27 @@ export function ExpensesView({ initialExpenses }: ExpensesViewProps) {
                         </span>
                     </div>
 
-                    {/* Project Filter */}
-                    <div className="relative flex items-center">
-                        <FolderOpen className="absolute left-2.5 h-4 w-4 text-slate-400 pointer-events-none" />
-                        <select
-                            value={selectedProjectId}
-                            onChange={(e) => setSelectedProjectId(e.target.value)}
-                            className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
-                        >
-                            <option value="all">Todos los proyectos</option>
-                            {projects.map((p) => (
-                                <option key={p.id} value={p.id.toString()}>
-                                    {p.nombre}
-                                </option>
-                            ))}
-                        </select>
-                        <svg className="absolute right-2 h-4 w-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
+                    {/* Project Filter - Only show if NOT in specific project view */}
+                    {!projectId && (
+                        <div className="relative flex items-center">
+                            <FolderOpen className="absolute left-2.5 h-4 w-4 text-slate-400 pointer-events-none" />
+                            <select
+                                value={selectedProjectId}
+                                onChange={(e) => setSelectedProjectId(e.target.value)}
+                                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-md pl-8 pr-8 py-1.5 appearance-none cursor-pointer hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-colors"
+                            >
+                                <option value="all">Todos los proyectos</option>
+                                {projects.map((p) => (
+                                    <option key={p.id} value={p.id.toString()}>
+                                        {p.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                            <svg className="absolute right-2 h-4 w-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    )}
                 </div>
             </div>
 

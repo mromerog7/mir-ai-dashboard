@@ -15,6 +15,9 @@ import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting }
 import { useEffect, useState } from "react"
 import { getProjectDetails } from "@/app/actions/get-project-details"
 import { ProjectNotesList } from "./project-notes-list"
+import { BudgetView } from "@/components/budgets/budget-view"
+import { ExpensesView } from "@/app/(dashboard)/expenses/expenses-view"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 import { IncidentDetailSheet } from "@/components/incidents/incident-detail-sheet"
@@ -96,51 +99,272 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                     </SheetDescription>
                 </SheetHeader>
 
-                <div className="space-y-8">
-                    {/* Basic Info */}
-                    <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2">Información del Proyecto</h4>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <span className="text-xs text-slate-500 block">Cliente</span>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <User className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-900 font-medium">{project.cliente}</span>
+                <Tabs defaultValue="info" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4 bg-slate-100 p-1 rounded-lg mb-6">
+                        <TabsTrigger value="info" className="data-[state=active]:bg-white data-[state=active]:text-[#02457A] data-[state=active]:shadow-sm rounded-md transition-all">Información</TabsTrigger>
+                        <TabsTrigger value="tasks" className="data-[state=active]:bg-white data-[state=active]:text-[#02457A] data-[state=active]:shadow-sm rounded-md transition-all">Tareas</TabsTrigger>
+                        <TabsTrigger value="gastos" className="data-[state=active]:bg-white data-[state=active]:text-[#02457A] data-[state=active]:shadow-sm rounded-md transition-all">Gastos</TabsTrigger>
+                        <TabsTrigger value="presupuestos" className="data-[state=active]:bg-[#02457A] data-[state=active]:text-white data-[state=active]:shadow-sm rounded-md transition-all">Presupuesto</TabsTrigger>
+                    </TabsList>
+
+                    {/* TAB: INFORMACIÓN */}
+                    <TabsContent value="info" className="space-y-6 animate-in fade-in-50 focus-visible:outline-none">
+                        {/* Basic Info */}
+                        <div className="space-y-4">
+                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2">Información del Proyecto</h4>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <span className="text-xs text-slate-500 block">Cliente</span>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <User className="h-4 w-4 text-slate-400" />
+                                        <span className="text-sm text-slate-900 font-medium">{project.cliente}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <span className="text-xs text-slate-500 block">Solicitante</span>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <User className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-900 font-medium">{project.solicitante}</span>
+                                <div>
+                                    <span className="text-xs text-slate-500 block">Solicitante</span>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <User className="h-4 w-4 text-slate-400" />
+                                        <span className="text-sm text-slate-900 font-medium">{project.solicitante}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <span className="text-xs text-slate-500 block">Fecha Inicio</span>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <Calendar className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-900 font-medium">
-                                        {project.fecha_inicio ? new Date(project.fecha_inicio.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
-                                    </span>
+                                <div>
+                                    <span className="text-xs text-slate-500 block">Fecha Inicio</span>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Calendar className="h-4 w-4 text-slate-400" />
+                                        <span className="text-sm text-slate-900 font-medium">
+                                            {project.fecha_inicio ? new Date(project.fecha_inicio.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <span className="text-xs text-slate-500 block">Fecha Fin</span>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <Calendar className="h-4 w-4 text-slate-400" />
-                                    <span className="text-sm text-slate-900 font-medium">
-                                        {project.fecha_fin ? new Date(project.fecha_fin.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
-                                    </span>
+                                <div>
+                                    <span className="text-xs text-slate-500 block">Fecha Fin</span>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Calendar className="h-4 w-4 text-slate-400" />
+                                        <span className="text-sm text-slate-900 font-medium">
+                                            {project.fecha_fin ? new Date(project.fecha_fin.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX") : "-"}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Tasks */}
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-blue-600" /> Tareas Vinculadas
-                        </h4>
+                        {/* Project Notes */}
+                        <ProjectNotesList projectId={Number(project.id)} />
+
+                        {/* Incidents (Mixed in Info or separated? Keeping in Info as "Highlights" for now, or move to Tasks?) 
+                            Let's keep Incidents, Surveys, Quotes, Reports, Minutas, Meetings in Info as "Documentation/Events" 
+                            except Tasks and Expenses which have their own tabs. 
+                        */}
+
+                        {/* Incidents */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                                <AlertTriangle className="h-4 w-4 text-red-600" /> Incidencias
+                            </h4>
+                            {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                                relatedData?.incidents && relatedData.incidents.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {relatedData.incidents.map(inc => (
+                                            <IncidentDetailSheet
+                                                key={inc.id}
+                                                incident={inc}
+                                                trigger={
+                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                        <div className="flex justify-between">
+                                                            <span className="text-sm text-slate-900 font-medium">{inc.titulo}</span>
+                                                            <Badge className={inc.severidad === 'Crítica' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-slate-200 text-slate-600 border-slate-300'}>{inc.severidad}</Badge>
+                                                        </div>
+                                                        <div className="text-xs text-slate-500 mt-1">{inc.estatus}</div>
+                                                    </div>
+                                                }
+                                            />
+                                        ))}
+                                    </div>
+                                ) : <p className="text-xs text-slate-500 italic">No hay incidencias registradas.</p>
+                            )}
+                        </div>
+
+                        {/* Surveys */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                                <ClipboardList className="h-4 w-4 text-blue-600" /> Levantamientos
+                            </h4>
+                            {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                                relatedData?.surveys && relatedData.surveys.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {relatedData.surveys.map(item => (
+                                            <div key={item.id} className="relative group">
+                                                <SurveyDetailSheet
+                                                    survey={item as any}
+                                                    project={project}
+                                                    trigger={
+                                                        <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                            <div>
+                                                                <div className="text-sm text-slate-900 font-medium">Folio: {item.folio}</div>
+                                                                <div className="text-xs text-slate-500">{item.fecha_visita ? new Date(item.fecha_visita.split('T')[0] + 'T00:00:00').toLocaleDateString() : 'Sin fecha'}</div>
+                                                            </div>
+                                                            {item.pdf_final_url && (
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="sm"
+                                                                    className="h-6 text-xs absolute right-2 z-10"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        window.open(item.pdf_final_url!, '_blank')
+                                                                    }}
+                                                                >
+                                                                    PDF
+                                                                </Button>
+                                                            )}
+                                                        </div>
+                                                    }
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : <p className="text-xs text-slate-500 italic">No hay levantamientos.</p>
+                            )}
+                        </div>
+
+                        {/* Quotes */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                                <FileSpreadsheet className="h-4 w-4 text-orange-600" /> Cotizaciones
+                            </h4>
+                            {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                                relatedData?.quotes && relatedData.quotes.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {relatedData.quotes.map(quote => (
+                                            <QuoteDetailSheet
+                                                key={quote.id}
+                                                quote={quote as any}
+                                                project={project}
+                                                trigger={
+                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                        <div>
+                                                            <div className="text-sm text-slate-900 font-medium">{quote.folio}</div>
+                                                            <div className="text-xs text-blue-600 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
+                                                        </div>
+                                                        <Badge variant="outline" className="border-slate-300">{quote.estatus}</Badge>
+                                                    </div>
+                                                }
+                                            />
+                                        ))}
+                                    </div>
+                                ) : <p className="text-xs text-slate-500 italic">No hay cotizaciones.</p>
+                            )}
+                        </div>
+
+                        {/* Reports */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                                <FileText className="h-4 w-4 text-purple-600" /> Reportes
+                            </h4>
+                            {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                                relatedData?.reports && relatedData.reports.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {relatedData.reports.map(rep => (
+                                            <div key={rep.id} className="relative group">
+                                                <ReportDetailSheet
+                                                    report={rep as any}
+                                                    project={project}
+                                                    trigger={
+                                                        <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                            <div className="text-sm text-slate-900 font-medium">{rep.resumen_titulo}</div>
+                                                            {rep.pdf_final_url && (
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="sm"
+                                                                    className="h-6 text-xs absolute right-2 z-10"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        window.open(rep.pdf_final_url!, '_blank')
+                                                                    }}
+                                                                >
+                                                                    PDF
+                                                                </Button>
+                                                            )}
+                                                        </div>
+                                                    }
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : <p className="text-xs text-slate-500 italic">No hay reportes.</p>
+                            )}
+                        </div>
+
+                        {/* Minutas */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                                <BookOpen className="h-4 w-4 text-indigo-600" /> Minutas
+                            </h4>
+                            {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                                relatedData?.minutas && relatedData.minutas.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {relatedData.minutas.map(minuta => (
+                                            <div key={minuta.id} className="relative group">
+                                                <MinutaDetailSheet
+                                                    minuta={minuta}
+                                                    defaultProjectId={Number(project.id)}
+                                                    readonly={true}
+                                                    trigger={
+                                                        <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                            <div>
+                                                                <div className="text-sm text-slate-900 font-medium">{minuta.titulo}</div>
+                                                                <div className="text-xs text-slate-500">{minuta.fecha ? new Date(minuta.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
+                                                            </div>
+                                                            <Badge variant="outline" className="text-xs scale-90 border-slate-300">Minuta</Badge>
+                                                        </div>
+                                                    }
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : <p className="text-xs text-slate-500 italic">No hay minutas registradas.</p>
+                            )}
+                        </div>
+
+                        {/* Client Meetings */}
+                        <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
+                                <Users className="h-4 w-4 text-rose-600" /> Reuniones con Clientes
+                            </h4>
+                            {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
+                                relatedData?.clientMeetings && relatedData.clientMeetings.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {relatedData.clientMeetings.map(meeting => (
+                                            <div key={meeting.id} className="relative group">
+                                                <ClientMeetingDetailSheet
+                                                    meeting={meeting}
+                                                    defaultProjectId={Number(project.id)}
+                                                    readonly={true}
+                                                    trigger={
+                                                        <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                            <div>
+                                                                <div className="text-sm text-slate-900 font-medium">{meeting.titulo}</div>
+                                                                <div className="text-xs text-slate-500">{meeting.fecha ? new Date(meeting.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
+                                                            </div>
+                                                            <Badge variant="outline" className="text-xs scale-90 border-slate-300">Reunión</Badge>
+                                                        </div>
+                                                    }
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : <p className="text-xs text-slate-500 italic">No hay reuniones registradas.</p>
+                            )}
+                        </div>
+                    </TabsContent>
+
+                    {/* TAB: TAREAS */}
+                    <TabsContent value="tasks" className="space-y-4 animate-in fade-in-50 focus-visible:outline-none">
+                        <div className="flex justify-between items-center">
+                            <h4 className="text-sm font-medium text-slate-900 flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-blue-600" /> Lista de Tareas
+                            </h4>
+                            {/* Potential "Add Task" button here */}
+                        </div>
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.tasks && relatedData.tasks.length > 0 ? (
                                 <div className="space-y-2">
@@ -149,221 +373,35 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                             key={task.id}
                                             task={task}
                                             trigger={
-                                                <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                    <div className="text-sm text-slate-900 font-medium">{task.titulo || task.descripcion}</div>
-                                                    <Badge variant="outline" className="text-xs scale-90 border-slate-300">{task.estatus || "Pendiente"}</Badge>
+                                                <div className="bg-[#E5E5E5] p-3 rounded-md border border-slate-200 flex justify-between items-start cursor-pointer hover:bg-slate-100 hover:border-blue-300 transition-all">
+                                                    <div className="space-y-1">
+                                                        <div className="text-sm text-slate-900 font-semibold">{task.titulo || task.descripcion}</div>
+                                                        <div className="text-xs text-slate-500 line-clamp-2">{task.descripcion}</div>
+                                                    </div>
+                                                    <Badge variant="outline" className="text-xs border-slate-300 bg-white ml-2 shrink-0">{task.estatus || "Pendiente"}</Badge>
                                                 </div>
                                             }
                                         />
                                     ))}
                                 </div>
-                            ) : <p className="text-xs text-slate-500 italic">No hay tareas vinculadas.</p>
-                        )}
-                    </div>
-
-                    {/* Incidents */}
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                            <AlertTriangle className="h-4 w-4 text-red-600" /> Incidencias
-                        </h4>
-                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
-                            relatedData?.incidents && relatedData.incidents.length > 0 ? (
-                                <div className="space-y-2">
-                                    {relatedData.incidents.map(inc => (
-                                        <IncidentDetailSheet
-                                            key={inc.id}
-                                            incident={inc}
-                                            trigger={
-                                                <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                    <div className="flex justify-between">
-                                                        <span className="text-sm text-slate-900 font-medium">{inc.titulo}</span>
-                                                        <Badge className={inc.severidad === 'Crítica' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-slate-200 text-slate-600 border-slate-300'}>{inc.severidad}</Badge>
-                                                    </div>
-                                                    <div className="text-xs text-slate-500 mt-1">{inc.estatus}</div>
-                                                </div>
-                                            }
-                                        />
-                                    ))}
+                            ) : (
+                                <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-300">
+                                    <p className="text-sm text-slate-500">No hay tareas vinculadas.</p>
                                 </div>
-                            ) : <p className="text-xs text-slate-500 italic">No hay incidencias registradas.</p>
+                            )
                         )}
-                    </div>
+                    </TabsContent>
 
-                    {/* Project Notes */}
-                    <ProjectNotesList projectId={Number(project.id)} />
+                    {/* TAB: GASTOS */}
+                    <TabsContent value="gastos" className="h-[600px] animate-in fade-in-50 focus-visible:outline-none overflow-y-auto pr-2">
+                        <ExpensesView projectId={Number(project.id)} />
+                    </TabsContent>
 
-                    {/* Surveys */}
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                            <ClipboardList className="h-4 w-4 text-blue-600" /> Levantamientos
-                        </h4>
-                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
-                            relatedData?.surveys && relatedData.surveys.length > 0 ? (
-                                <div className="space-y-2">
-                                    {relatedData.surveys.map(item => (
-                                        <div key={item.id} className="relative group">
-                                            <SurveyDetailSheet
-                                                survey={item as any}
-                                                project={project}
-                                                trigger={
-                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                        <div>
-                                                            <div className="text-sm text-slate-900 font-medium">Folio: {item.folio}</div>
-                                                            <div className="text-xs text-slate-500">{item.fecha_visita ? new Date(item.fecha_visita.split('T')[0] + 'T00:00:00').toLocaleDateString() : 'Sin fecha'}</div>
-                                                        </div>
-                                                        {item.pdf_final_url && (
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                className="h-6 text-xs absolute right-2 z-10"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    window.open(item.pdf_final_url!, '_blank')
-                                                                }}
-                                                            >
-                                                                PDF
-                                                            </Button>
-                                                        )}
-                                                    </div>
-                                                }
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : <p className="text-xs text-slate-500 italic">No hay levantamientos.</p>
-                        )}
-                    </div>
-
-                    {/* Quotes */}
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                            <FileSpreadsheet className="h-4 w-4 text-orange-600" /> Cotizaciones
-                        </h4>
-                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
-                            relatedData?.quotes && relatedData.quotes.length > 0 ? (
-                                <div className="space-y-2">
-                                    {relatedData.quotes.map(quote => (
-                                        <QuoteDetailSheet
-                                            key={quote.id}
-                                            quote={quote as any}
-                                            project={project}
-                                            trigger={
-                                                <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                    <div>
-                                                        <div className="text-sm text-slate-900 font-medium">{quote.folio}</div>
-                                                        <div className="text-xs text-blue-600 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
-                                                    </div>
-                                                    <Badge variant="outline" className="border-slate-300">{quote.estatus}</Badge>
-                                                </div>
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                            ) : <p className="text-xs text-slate-500 italic">No hay cotizaciones.</p>
-                        )}
-                    </div>
-
-                    {/* Reports */}
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-purple-600" /> Reportes
-                        </h4>
-                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
-                            relatedData?.reports && relatedData.reports.length > 0 ? (
-                                <div className="space-y-2">
-                                    {relatedData.reports.map(rep => (
-                                        <div key={rep.id} className="relative group">
-                                            <ReportDetailSheet
-                                                report={rep as any}
-                                                project={project}
-                                                trigger={
-                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                        <div className="text-sm text-slate-900 font-medium">{rep.resumen_titulo}</div>
-                                                        {rep.pdf_final_url && (
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                className="h-6 text-xs absolute right-2 z-10"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    window.open(rep.pdf_final_url!, '_blank')
-                                                                }}
-                                                            >
-                                                                PDF
-                                                            </Button>
-                                                        )}
-                                                    </div>
-                                                }
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : <p className="text-xs text-slate-500 italic">No hay reportes.</p>
-                        )}
-                    </div>
-
-                    {/* Minutas */}
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                            <BookOpen className="h-4 w-4 text-indigo-600" /> Minutas
-                        </h4>
-                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
-                            relatedData?.minutas && relatedData.minutas.length > 0 ? (
-                                <div className="space-y-2">
-                                    {relatedData.minutas.map(minuta => (
-                                        <div key={minuta.id} className="relative group">
-                                            <MinutaDetailSheet
-                                                minuta={minuta}
-                                                defaultProjectId={Number(project.id)}
-                                                readonly={true}
-                                                trigger={
-                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                        <div>
-                                                            <div className="text-sm text-slate-900 font-medium">{minuta.titulo}</div>
-                                                            <div className="text-xs text-slate-500">{minuta.fecha ? new Date(minuta.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
-                                                        </div>
-                                                        <Badge variant="outline" className="text-xs scale-90 border-slate-300">Minuta</Badge>
-                                                    </div>
-                                                }
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : <p className="text-xs text-slate-500 italic">No hay minutas registradas.</p>
-                        )}
-                    </div>
-
-                    {/* Client Meetings */}
-                    <div className="space-y-3">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                            <Users className="h-4 w-4 text-rose-600" /> Reuniones con Clientes
-                        </h4>
-                        {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
-                            relatedData?.clientMeetings && relatedData.clientMeetings.length > 0 ? (
-                                <div className="space-y-2">
-                                    {relatedData.clientMeetings.map(meeting => (
-                                        <div key={meeting.id} className="relative group">
-                                            <ClientMeetingDetailSheet
-                                                meeting={meeting}
-                                                defaultProjectId={Number(project.id)}
-                                                readonly={true}
-                                                trigger={
-                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                        <div>
-                                                            <div className="text-sm text-slate-900 font-medium">{meeting.titulo}</div>
-                                                            <div className="text-xs text-slate-500">{meeting.fecha ? new Date(meeting.fecha.split('T')[0] + 'T00:00:00').toLocaleDateString("es-MX", { day: '2-digit', month: 'short', year: 'numeric' }) : 'Sin fecha'}</div>
-                                                        </div>
-                                                        <Badge variant="outline" className="text-xs scale-90 border-slate-300">Reunión</Badge>
-                                                    </div>
-                                                }
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : <p className="text-xs text-slate-500 italic">No hay reuniones registradas.</p>
-                        )}
-                    </div>
-                </div>
+                    {/* TAB: PRESUPUESTO */}
+                    <TabsContent value="presupuestos" className="animate-in fade-in-50 focus-visible:outline-none">
+                        <BudgetView projectId={Number(project.id)} />
+                    </TabsContent>
+                </Tabs>
             </SheetContent>
         </Sheet>
     )
