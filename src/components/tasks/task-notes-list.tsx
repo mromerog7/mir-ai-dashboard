@@ -14,7 +14,7 @@ interface TaskNotesListProps {
     taskId: number
 }
 
-export function TaskNotesList({ taskId }: TaskNotesListProps): JSX.Element {
+export function TaskNotesList({ taskId }: TaskNotesListProps) {
     const [notes, setNotes] = useState<Nota[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [expandedNoteId, setExpandedNoteId] = useState<string | null>(null)
