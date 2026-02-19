@@ -91,7 +91,6 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
     }
 
     return (
-    return (
         <Card className="h-fit sticky top-4 border-slate-200 shadow-sm bg-slate-50/50">
             <CardHeader className="pb-2 pt-3 border-b border-slate-200 bg-white rounded-t-lg">
                 <CardTitle className="text-base font-semibold text-slate-800 flex items-center gap-2">
