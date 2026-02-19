@@ -51,16 +51,7 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
     // Calculate Indirectos
     const indirectosMonto = totalVentaDirecta * (indirectosPerc / 100)
 
-    // Calculate Honorarios
-    let honorariosMonto = 0
-    if (honorariosType === "Porcentaje" || honorariosType === "Mixto") {
-        honorariosMonto += totalVentaDirecta * (honorariosPerc / 100)
-    }
-    if (honorariosType === "Fijo" || honorariosType === "Mixto") {
-        honorariosMonto += Number(honorariosFixed)
-    }
-
-    const subtotal = totalVentaDirecta + indirectosMonto + honorariosMonto
+    const subtotal = totalVentaDirecta + indirectosMonto
     const ivaMonto = subtotal * ivaPerc
     const totalFinal = subtotal + ivaMonto
 
@@ -81,9 +72,8 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
         const { error } = await supabase
             .from("presupuestos")
             .update({
-                tipo_honorarios: honorariosType,
-                honorarios_porcentaje: honorariosPerc,
-                honorarios_monto_fijo: honorariosFixed,
+                honorarios_porcentaje: 0,
+                honorarios_monto_fijo: 0,
                 indirectos_porcentaje: indirectosPerc,
                 iva_porcentaje: ivaPerc,
                 total_costo_directo: totalCostoDirecto,
@@ -123,48 +113,6 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
 
                 <Separator />
 
-                {/* Config: Honorarios */}
-                <div className="space-y-3">
-                    <Label className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Honorarios de Diseño</Label>
-                    <Select value={honorariosType} onValueChange={(v: "Porcentaje" | "Fijo" | "Mixto") => setHonorariosType(v)}>
-                        <SelectTrigger className="h-8 bg-white border-slate-200">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Porcentaje">% Porcentaje de Obra</SelectItem>
-                            <SelectItem value="Fijo">Monto Fijo</SelectItem>
-                            <SelectItem value="Mixto">Mixto (% + Fijo)</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <div className="flex gap-2">
-                        {(honorariosType === "Porcentaje" || honorariosType === "Mixto") && (
-                            <div className="flex-1 relative">
-                                <Input
-                                    type="number"
-                                    value={honorariosPerc}
-                                    onChange={(e) => setHonorariosPerc(parseFloat(e.target.value) || 0)}
-                                    className="h-8 bg-white pr-6 text-right"
-                                />
-                                <span className="absolute right-2 top-2 text-xs text-slate-400">%</span>
-                            </div>
-                        )}
-                        {(honorariosType === "Fijo" || honorariosType === "Mixto") && (
-                            <div className="flex-1 relative">
-                                <span className="absolute left-2 top-2 text-xs text-slate-400">$</span>
-                                <Input
-                                    type="number"
-                                    value={honorariosFixed}
-                                    onChange={(e) => setHonorariosFixed(parseFloat(e.target.value) || 0)}
-                                    className="h-8 bg-white pl-5 text-right"
-                                />
-                            </div>
-                        )}
-                    </div>
-                    <div className="text-right text-sm font-semibold text-[#02457A]">
-                        + ${honorariosMonto.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                    </div>
-                </div>
 
                 {/* Config: Indirectos */}
                 <div className="space-y-2">
