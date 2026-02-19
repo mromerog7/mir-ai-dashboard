@@ -30,6 +30,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
+import { TaskNotesList } from "./task-notes-list"
 
 const formSchema = z.object({
     titulo: z.string().min(2, {
@@ -438,6 +439,17 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                         )}
                     />
                 </div>
+
+                import {TaskNotesList} from "./task-notes-list"
+
+                // ... existing imports
+
+                // ... inside the component, above Incidencias section:
+
+                {/* Notas asociadas (solo en modo edición) */}
+                {taskId && (
+                    <TaskNotesList taskId={taskId} />
+                )}
 
                 {/* Incidencias asociadas (solo en modo edición) */}
                 {taskId && (
