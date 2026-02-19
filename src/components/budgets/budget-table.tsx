@@ -202,12 +202,14 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
                                     <>
                                         {/* Category Header Row */}
                                         <tr key={`cat-${cat.id}`} className="bg-slate-50 border-b border-slate-200 hover:bg-slate-100 transition-colors">
-                                            <td colSpan={5} className="px-4 py-2 font-semibold text-slate-800 flex items-center gap-2">
-                                                <button onClick={() => toggleCategory(cat.id)} className="p-1 hover:bg-slate-200 rounded">
-                                                    <ChevronDown className={cn("h-4 w-4 transition-transform", !isExpanded && "-rotate-90")} />
-                                                </button>
-                                                {cat.nombre}
-                                                <span className="text-xs font-normal text-slate-500 ml-2">({items.length} items)</span>
+                                            <td colSpan={5} className="px-4 py-2 font-semibold text-slate-800">
+                                                <div className="flex items-center gap-2">
+                                                    <button onClick={() => toggleCategory(cat.id)} className="p-1 hover:bg-slate-200 rounded">
+                                                        <ChevronDown className={cn("h-4 w-4 transition-transform", !isExpanded && "-rotate-90")} />
+                                                    </button>
+                                                    {cat.nombre}
+                                                    <span className="text-xs font-normal text-slate-500 ml-2">({items.length} items)</span>
+                                                </div>
                                             </td>
                                             <td className="px-2 py-2 text-right font-bold text-slate-800 bg-slate-100">
                                                 ${catSubtotal.toLocaleString()}

@@ -91,21 +91,22 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
     }
 
     return (
+    return (
         <Card className="h-fit sticky top-4 border-slate-200 shadow-sm bg-slate-50/50">
-            <CardHeader className="pb-3 border-b border-slate-200 bg-white rounded-t-lg">
-                <CardTitle className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                    <span className="text-xl">🧮</span>
+            <CardHeader className="pb-2 pt-3 border-b border-slate-200 bg-white rounded-t-lg">
+                <CardTitle className="text-base font-semibold text-slate-800 flex items-center gap-2">
+                    <span className="text-lg">🧮</span>
                     Resumen Financiero
                 </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5 pt-4">
+            <CardContent className="space-y-3 pt-3">
                 {/* Costos Directos */}
                 <div className="space-y-1">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-xs">
                         <span className="text-slate-500">Costo Directo (Real)</span>
                         <span className="font-medium text-slate-700">${totalCostoDirecto.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                     </div>
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-xs">
                         <span className="text-slate-500">Venta Directa (Base)</span>
                         <span className="font-medium text-slate-900">${totalVentaDirecta.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                     </div>
@@ -115,19 +116,19 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
 
 
                 {/* Config: Indirectos */}
-                <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Indirectos / Gestión</Label>
+                <div className="space-y-1">
+                    <Label className="text-[10px] font-semibold text-slate-900 uppercase tracking-wider">Indirectos / Gestión</Label>
                     <div className="flex gap-2 items-center">
-                        <div className="w-20 relative">
+                        <div className="w-16 relative">
                             <Input
                                 type="number"
                                 value={indirectosPerc}
                                 onChange={(e) => setIndirectosPerc(parseFloat(e.target.value) || 0)}
-                                className="h-8 bg-white pr-6 text-right"
+                                className="h-7 bg-white pr-5 text-right text-xs"
                             />
-                            <span className="absolute right-2 top-2 text-xs text-slate-400">%</span>
+                            <span className="absolute right-2 top-1.5 text-[10px] text-slate-400">%</span>
                         </div>
-                        <div className="flex-1 text-right text-sm font-medium text-slate-600">
+                        <div className="flex-1 text-right text-xs font-medium text-slate-600">
                             + ${indirectosMonto.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </div>
                     </div>
@@ -136,49 +137,49 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
                 <Separator className="bg-slate-300" />
 
                 {/* Totals */}
-                <div className="space-y-2">
+                <div className="space-y-1">
                     <div className="flex justify-between items-end">
-                        <span className="text-sm font-medium text-slate-600">Subtotal</span>
-                        <span className="text-lg font-bold text-slate-800">${subtotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                        <span className="text-xs font-medium text-slate-600">Subtotal</span>
+                        <span className="text-sm font-bold text-slate-800">${subtotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                     </div>
-                    <div className="flex justify-between items-center text-sm">
+                    <div className="flex justify-between items-center text-xs">
                         <div className="flex items-center gap-2">
                             <span className="text-slate-500">IVA</span>
-                            <div className="w-14 relative h-6">
+                            <div className="w-12 relative h-5">
                                 <Input
                                     type="number"
                                     value={ivaPerc * 100}
                                     onChange={(e) => setIvaPerc((parseFloat(e.target.value) || 0) / 100)}
-                                    className="h-6 w-14 p-0 text-center text-xs bg-transparent border-slate-200"
+                                    className="h-5 w-12 p-0 text-center text-[10px] bg-transparent border-slate-200"
                                 />
                                 <span className="absolute -right-2 top-1 opacity-0 pointer-events-none">%</span>
                             </div>
                         </div>
                         <span className="text-slate-600">+ ${ivaMonto.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                     </div>
-                    <div className="flex justify-between items-end pt-2">
-                        <span className="text-base font-bold text-[#02457A]">TOTAL CLIENTE</span>
-                        <span className="text-xl font-black text-[#02457A]">${totalFinal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                    <div className="flex justify-between items-end pt-1">
+                        <span className="text-sm font-bold text-[#02457A]">TOTAL CLIENTE</span>
+                        <span className="text-lg font-black text-[#02457A]">${totalFinal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                     </div>
                 </div>
 
                 {/* Margin Analysis */}
-                <div className="mt-4 pt-4 border-t border-slate-200 bg-emerald-50/50 -mx-6 px-6 pb-2">
+                <div className="mt-2 pt-2 border-t border-slate-200 bg-emerald-50/50 -mx-6 px-6 pb-2">
                     <div className="flex justify-between items-center text-emerald-800">
-                        <span className="text-xs font-bold uppercase tracking-wider">Margen Bruto</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Margen Bruto</span>
                         <div className="text-right">
-                            <div className="text-sm font-bold">${realMagin.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                            <div className="text-xs opacity-80">{marginPerc.toFixed(1)}%</div>
+                            <div className="text-xs font-bold">${realMagin.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                            <div className="text-[10px] opacity-80">{marginPerc.toFixed(1)}%</div>
                         </div>
                     </div>
                 </div>
 
                 <Button
                     onClick={handleSaveConfig}
-                    className="w-full bg-[#02457A] hover:bg-[#002a4d] shadow-md"
+                    className="w-full bg-[#02457A] hover:bg-[#002a4d] shadow-md h-8 text-xs"
                     disabled={loading}
                 >
-                    {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                    {loading ? <Loader2 className="mr-2 h-3 w-3 animate-spin" /> : <Save className="mr-2 h-3 w-3" />}
                     Guardar Configuración
                 </Button>
             </CardContent>
