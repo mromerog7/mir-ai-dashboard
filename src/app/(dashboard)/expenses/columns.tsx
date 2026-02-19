@@ -3,11 +3,21 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, DollarSign, Calendar, Tag } from "lucide-react"
+import { ArrowUpDown, DollarSign, Calendar, Tag, MoreHorizontal, Pencil, Trash } from "lucide-react"
 import { ExpenseDetailSheet } from "@/components/expenses/expense-detail-sheet"
+import { EditExpenseSheet } from "@/components/expenses/edit-expense-sheet"
 import { Expense } from "@/types"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useState } from "react"
 
 // Use the exported type from component or redefine if needed. 
 // Since we import it, we use it directly.
@@ -68,13 +78,44 @@ export const columns: ColumnDef<Expense>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const expense = row.original
-            return (
-                <div className="flex items-center justify-center">
-                    <ExpenseDetailSheet expense={expense} iconOnly={true} />
-                </div>
-            )
-        },
+        cell: ({ row }) => <ActionCell expense={row.original} />
     },
 ]
+
+const ActionCell = ({ expense }: { expense: Expense }) => {
+    const [showEditSheet, setShowEditSheet] = useState(false)
+
+    return (
+        <div className="flex items-center justify-end">
+            <ExpenseDetailSheet expense={expense} iconOnly={true} />
+
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Abrir menú</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                    <DropdownMenuItem onClick={() => setShowEditSheet(true)}>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Editar Gasto
+                    </DropdownMenuItem>
+                    {/* <DropdownMenuItem className="text-red-600">
+                        <Trash className="mr-2 h-4 w-4" />
+                        Eliminar
+                    </DropdownMenuItem> */}
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            {showEditSheet && (
+                <EditExpenseSheet
+                    expense={expense}
+                    open={showEditSheet}
+                    onOpenChange={setShowEditSheet}
+                />
+            )}
+        </div>
+    )
+}
