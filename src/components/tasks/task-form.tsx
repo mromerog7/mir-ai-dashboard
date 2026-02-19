@@ -45,6 +45,7 @@ const formSchema = z.object({
     fecha_fin: z.date().optional(),
     fecha_inicio_real: z.date().optional(),
     fecha_fin_real: z.date().optional(),
+    fecha_vencimiento: z.date().optional(),
 })
 
 // Parse date string as local date to avoid UTC timezone shift
@@ -98,6 +99,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             fecha_fin: initialData?.fecha_fin ? parseLocalDate(initialData.fecha_fin) : undefined,
             fecha_inicio_real: initialData?.fecha_inicio_real ? parseLocalDate(initialData.fecha_inicio_real) : undefined,
             fecha_fin_real: initialData?.fecha_fin_real ? parseLocalDate(initialData.fecha_fin_real) : undefined,
+            fecha_vencimiento: initialData?.fecha_vencimiento ? new Date(initialData.fecha_vencimiento) : undefined,
         },
     })
 
@@ -116,6 +118,7 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
             fecha_fin: values.fecha_fin ? values.fecha_fin.toISOString() : null,
             fecha_inicio_real: values.fecha_inicio_real ? values.fecha_inicio_real.toISOString() : null,
             fecha_fin_real: values.fecha_fin_real ? values.fecha_fin_real.toISOString() : null,
+            fecha_vencimiento: values.fecha_vencimiento ? values.fecha_vencimiento.toISOString() : null,
         }
 
         let error;
@@ -260,6 +263,25 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                                         <SelectItem value="Cancelada" className="hover:bg-slate-100">Cancelada</SelectItem>
                                     </SelectContent>
                                 </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="fecha_vencimiento"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Recordatorio</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="datetime-local"
+                                        className="bg-[#E5E5E5] border-slate-200 text-slate-900"
+                                        {...field}
+                                        value={field.value ? format(field.value, "yyyy-MM-dd'T'HH:mm") : ""}
+                                        onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : undefined)}
+                                    />
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
