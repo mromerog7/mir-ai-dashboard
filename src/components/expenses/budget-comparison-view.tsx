@@ -51,31 +51,25 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                 let budgetItems: { categoria: string, costo_total: number }[] = []
 
                 if (budget) {
-                    // Get concepts linked to budget -> categories
-                    // Since we don't have a direct 'category' string in 'presupuesto_conceptos' usually,
-                    // we look at 'presupuesto_categorias' and 'presupuesto_conceptos'.
-                    // However, based on previous context, 'presupuesto_conceptos' has 'categoria_id'.
-                    // Let's assume we can fetch concepts and their categories.
-                    // A simpler approach if we stored category names denormalized or just sum by category ID is preferred.
-                    // But previously we saw 'presupuesto_categorias' has 'nombre'.
-
-                    const { data: categories } = await supabase
+                    // Fetch Categories with nested Items (using the working pattern from BudgetView)
+                    const { data: catsData } = await supabase
                         .from("presupuesto_categorias")
-                        .select("id, nombre")
+                        .select("id, nombre, items:presupuesto_items(costo_total, cantidad, costo_unitario)")
                         .eq("presupuesto_id", budget.id)
 
-                    if (categories) {
-                        const { data: concepts } = await supabase
-                            .from("presupuesto_conceptos")
-                            .select("categoria_id, costo_total")
-                            .eq("presupuesto_id", budget.id)
+                    // Map budget by category name
+                    const budgetMap = new Map<string, number>()
 
-                        // Map budget by category name
-                        const budgetMap = new Map<string, number>()
-                        concepts?.forEach(c => {
-                            const catName = categories.find(cat => cat.id === c.categoria_id)?.nombre || "Sin Categoría"
-                            const current = budgetMap.get(catName) || 0
-                            budgetMap.set(catName, current + (c.costo_total || 0))
+                    if (catsData) {
+                        catsData.forEach((cat: any) => {
+                            const catName = cat.nombre
+                            // Calculate total for this category
+                            const catTotal = cat.items?.reduce((sum: number, item: any) => {
+                                // If costo_total is present use it, otherwise calculate
+                                return sum + (item.costo_total || (item.cantidad * item.costo_unitario) || 0)
+                            }, 0) || 0
+
+                            budgetMap.set(catName, (budgetMap.get(catName) || 0) + catTotal)
                         })
 
                         budgetItems = Array.from(budgetMap.entries()).map(([categoria, costo_total]) => ({ categoria, costo_total }))
