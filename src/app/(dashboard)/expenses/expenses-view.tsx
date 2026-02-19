@@ -155,49 +155,8 @@ export function ExpensesView({ initialExpenses, projectId }: ExpensesViewProps) 
                 </div>
             </div>
 
-            {/* Top 3 Recent Expenses Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {recentExpenses.map((expense) => (
-                    <Card key={expense.id} className="bg-white border-slate-200 text-slate-900 overflow-hidden hover:border-slate-300 transition-colors flex flex-col sm:flex-row h-full shadow-sm">
-                        {typeof expense.ticket_url === 'string' && expense.ticket_url.trim() !== "" && (
-                            <div className="w-full sm:w-24 h-48 sm:h-auto relative shrink-0 bg-slate-100 flex items-center justify-center">
-                                <div className="w-full h-full relative group">
-                                    <Image
-                                        src={expense.ticket_url}
-                                        alt="Ticket"
-                                        fill
-                                        className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                                    />
-                                </div>
-                            </div>
-                        )}
-                        <CardContent className="p-4 flex-1 flex flex-col justify-between">
-                            <div>
-                                <div className="flex justify-between items-start mb-2">
-                                    <Badge variant="outline" className="text-slate-500 border-slate-200">{expense.categoria || "Gasto"}</Badge>
-                                    <span className="font-bold text-blue-400">
-                                        {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(expense.monto)}
-                                    </span>
-                                </div>
-                                <h3 className="font-semibold text-sm line-clamp-2 mb-1" title={expense.concepto}>{expense.concepto}</h3>
-                                <p className="text-xs text-slate-400 line-clamp-1">
-                                    {expense.proyectos?.nombre || "Sin proyecto"}
-                                </p>
-                                <p className="text-xs text-slate-500 mt-2">
-                                    {(() => {
-                                        if (!expense.fecha) return "Fecha desconocida";
-                                        const dateStr = expense.fecha.includes('T') ? expense.fecha : `${expense.fecha}T00:00:00`;
-                                        const date = new Date(dateStr);
-                                        return !isNaN(date.getTime()) ? format(date, "PPP", { locale: es }) : "Fecha inválida";
-                                    })()}
-                                </p>
-                            </div>
 
-                            <ExpenseDetailSheet expense={expense} />
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+            {/* Top 3 Recent Expenses Cards - REMOVED per user request for space */}
 
             {/* All Expenses Table */}
             <div className="mt-8">
