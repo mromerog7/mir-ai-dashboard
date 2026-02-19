@@ -51,6 +51,7 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
     const [saving, setSaving] = useState(false)
     const [uploading, setUploading] = useState(false)
     const [projects, setProjects] = useState<{ id: number; nombre: string }[]>([])
+    const [budgetCategories, setBudgetCategories] = useState<string[]>([])
 
     // Image State
     const [newFiles, setNewFiles] = useState<File[]>([])
@@ -87,8 +88,48 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                 categoria: "",
             })
             setNewFiles([])
+            setBudgetCategories([])
         }
     }, [open, form])
+
+    // Fetch Budget Categories when Project changes
+    const selectedProjectId = form.watch("proyecto_id")
+    useEffect(() => {
+        const fetchBudgetCategories = async () => {
+            if (!selectedProjectId) {
+                setBudgetCategories([])
+                return
+            }
+
+            const supabase = createClient()
+            // 1. Get latest approved or draft budget for this project
+            const { data: budget } = await supabase
+                .from("presupuestos")
+                .select("id")
+                .eq("proyecto_id", selectedProjectId)
+                .order("version", { ascending: false })
+                .limit(1)
+                .single()
+
+            if (budget) {
+                // 2. Get categories for this budget
+                const { data: categories } = await supabase
+                    .from("presupuesto_categorias")
+                    .select("nombre")
+                    .eq("presupuesto_id", budget.id)
+                    .order("orden", { ascending: true })
+
+                if (categories && categories.length > 0) {
+                    setBudgetCategories(categories.map(c => c.nombre))
+                    return // Found specific categories
+                }
+            }
+            // Fallback: No budget/categories found
+            setBudgetCategories([])
+        }
+
+        fetchBudgetCategories()
+    }, [selectedProjectId])
 
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -302,12 +343,20 @@ export function CreateExpenseSheet({ trigger }: { trigger?: React.ReactNode }) {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent className="bg-white border-slate-200 text-slate-900">
-                                                <SelectItem value="Combustible">Combustible</SelectItem>
-                                                <SelectItem value="Materiales">Materiales</SelectItem>
-                                                <SelectItem value="Mano de Obra">Mano de Obra</SelectItem>
-                                                <SelectItem value="Viáticos">Viáticos</SelectItem>
-                                                <SelectItem value="Administrativo">Administrativo</SelectItem>
-                                                <SelectItem value="Otros">Otros</SelectItem>
+                                                {budgetCategories.length > 0 ? (
+                                                    budgetCategories.map((cat, index) => (
+                                                        <SelectItem key={index} value={cat}>{cat}</SelectItem>
+                                                    ))
+                                                ) : (
+                                                    <>
+                                                        <SelectItem value="Combustible">Combustible</SelectItem>
+                                                        <SelectItem value="Materiales">Materiales</SelectItem>
+                                                        <SelectItem value="Mano de Obra">Mano de Obra</SelectItem>
+                                                        <SelectItem value="Viáticos">Viáticos</SelectItem>
+                                                        <SelectItem value="Administrativo">Administrativo</SelectItem>
+                                                        <SelectItem value="Otros">Otros</SelectItem>
+                                                    </>
+                                                )}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
