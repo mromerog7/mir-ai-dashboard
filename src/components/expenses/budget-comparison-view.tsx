@@ -52,10 +52,15 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
 
                 if (budget) {
                     // Fetch Categories with nested Items (using the working pattern from BudgetView)
-                    const { data: catsData } = await supabase
+                    // Note: costo_total does not exist in DB, it is calculated
+                    const { data: catsData, error: catsError } = await supabase
                         .from("presupuesto_categorias")
-                        .select("id, nombre, items:presupuesto_items(costo_total, cantidad, costo_unitario)")
+                        .select("id, nombre, items:presupuesto_items(cantidad, costo_unitario)")
                         .eq("presupuesto_id", budget.id)
+
+                    if (catsError) {
+                        console.error("Error fetching budget categories:", catsError)
+                    }
 
                     // Map budget by category name
                     const budgetMap = new Map<string, number>()
@@ -65,8 +70,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                             const catName = cat.nombre
                             // Calculate total for this category
                             const catTotal = cat.items?.reduce((sum: number, item: any) => {
-                                // If costo_total is present use it, otherwise calculate
-                                return sum + (item.costo_total || (item.cantidad * item.costo_unitario) || 0)
+                                return sum + ((item.cantidad || 0) * (item.costo_unitario || 0))
                             }, 0) || 0
 
                             budgetMap.set(catName, (budgetMap.get(catName) || 0) + catTotal)
