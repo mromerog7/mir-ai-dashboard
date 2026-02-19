@@ -152,18 +152,6 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                         </div>
                     </div>
 
-                    import {TaskNotesList} from "./task-notes-list"
-
-                    // ... existing imports
-
-                    // ... inside the component JSX, above Incidencias Asociadas:
-
-                    <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2">Observaciones</h4>
-                        <div className="text-sm text-slate-700 whitespace-pre-wrap bg-slate-50 p-3 rounded-md min-h-[60px] border border-slate-200">
-                            {task.observaciones || "Sin observaciones."}
-                        </div>
-                    </div>
 
                     {/* Notas asociadas */}
                     <TaskNotesList taskId={task.id} />

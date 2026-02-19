@@ -440,11 +440,6 @@ export function TaskForm({ onSuccess, initialData, taskId }: { onSuccess?: () =>
                     />
                 </div>
 
-                import {TaskNotesList} from "./task-notes-list"
-
-                // ... existing imports
-
-                // ... inside the component, above Incidencias section:
 
                 {/* Notas asociadas (solo en modo edición) */}
                 {taskId && (
