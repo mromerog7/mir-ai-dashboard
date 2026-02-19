@@ -3,21 +3,15 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, DollarSign, Calendar, Tag, MoreHorizontal, Pencil, Trash } from "lucide-react"
+import { ArrowUpDown, DollarSign, Calendar, Tag, Pencil, Trash2 } from "lucide-react"
 import { ExpenseDetailSheet } from "@/components/expenses/expense-detail-sheet"
 import { EditExpenseSheet } from "@/components/expenses/edit-expense-sheet"
 import { Expense } from "@/types"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
 
 // Use the exported type from component or redefine if needed. 
 // Since we import it, we use it directly.
@@ -84,30 +78,51 @@ export const columns: ColumnDef<Expense>[] = [
 
 const ActionCell = ({ expense }: { expense: Expense }) => {
     const [showEditSheet, setShowEditSheet] = useState(false)
+    const router = useRouter()
+
+    const handleDelete = async () => {
+        const confirmed = window.confirm("¿Estás seguro de que deseas eliminar este gasto? Esta acción no se puede deshacer.")
+        if (!confirmed) return
+
+        try {
+            const supabase = createClient()
+            const { error } = await supabase
+                .from('gastos')
+                .delete()
+                .eq('id', expense.id)
+
+            if (error) throw error
+
+            router.refresh()
+        } catch (error) {
+            console.error("Error deleting expense:", error)
+            alert("Error al eliminar el gasto")
+        }
+    }
 
     return (
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end gap-1">
             <ExpenseDetailSheet expense={expense} iconOnly={true} />
 
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Abrir menú</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => setShowEditSheet(true)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Editar Gasto
-                    </DropdownMenuItem>
-                    {/* <DropdownMenuItem className="text-red-600">
-                        <Trash className="mr-2 h-4 w-4" />
-                        Eliminar
-                    </DropdownMenuItem> */}
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                onClick={() => setShowEditSheet(true)}
+                title="Editar Gasto"
+            >
+                <Pencil className="h-4 w-4" />
+            </Button>
+
+            <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                onClick={handleDelete}
+                title="Eliminar Gasto"
+            >
+                <Trash2 className="h-4 w-4" />
+            </Button>
 
             {showEditSheet && (
                 <EditExpenseSheet
