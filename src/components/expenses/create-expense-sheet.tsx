@@ -89,9 +89,15 @@ export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId,
                 categoria: "",
             })
             setNewFiles([])
-            setBudgetCategories([])
+
+            // Initialize categories immediately if we have them preloaded for the default project
+            if (preloadedCategories && preloadedCategories.length > 0 && defaultProjectId) {
+                setBudgetCategories(preloadedCategories)
+            } else {
+                setBudgetCategories([])
+            }
         }
-    }, [open, form, defaultProjectId])
+    }, [open, form, defaultProjectId, preloadedCategories])
 
     // Fetch Budget Categories when Project changes
     const selectedProjectId = form.watch("proyecto_id")
