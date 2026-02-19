@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting } from "@/types"
 import { useEffect, useState } from "react"
 import { getProjectDetails } from "@/app/actions/get-project-details"
+import { ProjectNotesList } from "./project-notes-list"
 
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 import { IncidentDetailSheet } from "@/components/incidents/incident-detail-sheet"
@@ -187,6 +188,9 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                             ) : <p className="text-xs text-slate-500 italic">No hay incidencias registradas.</p>
                         )}
                     </div>
+
+                    {/* Project Notes */}
+                    <ProjectNotesList projectId={Number(project.id)} />
 
                     {/* Surveys */}
                     <div className="space-y-3">
