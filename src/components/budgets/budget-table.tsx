@@ -253,10 +253,15 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
                                                             handleBlurItem(item.id, { unidad: val })
                                                         }}
                                                     >
-                                                        <SelectTrigger className="h-8 border-transparent hover:border-slate-200 focus:border-blue-500 bg-transparent px-1 text-sm">
-                                                            <SelectValue />
+                                                        <SelectTrigger className="h-8 w-full border-transparent hover:border-slate-200 focus:border-blue-500 bg-transparent px-1 text-sm justify-center">
+                                                            <SelectValue placeholder={item.unidad} />
                                                         </SelectTrigger>
                                                         <SelectContent>
+                                                            {item.unidad &&
+                                                                !["serv", "pza", "m", "m2", "m3", "gal", "bote", "kg", "ton", "lt"].includes(item.unidad) && (
+                                                                    <SelectItem value={item.unidad}>{item.unidad}</SelectItem>
+                                                                )
+                                                            }
                                                             <SelectItem value="serv">serv</SelectItem>
                                                             <SelectItem value="pza">pza</SelectItem>
                                                             <SelectItem value="m">m</SelectItem>
