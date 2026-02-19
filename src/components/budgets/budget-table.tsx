@@ -36,17 +36,27 @@ export function BudgetTable({ budgetId, categories, onUpdate }: BudgetTableProps
     const [expandedCategories, setExpandedCategories] = useState<Record<number, boolean>>({})
 
     // Initialize local state from props
+    // Initialize local state from props
     useEffect(() => {
         const itemsMap: Record<number, BudgetItem[]> = {}
-        const expandedMap: Record<number, boolean> = {}
 
         categories.forEach(cat => {
             itemsMap[cat.id] = cat.items || []
-            expandedMap[cat.id] = true // Default expanded
         })
 
         setLocalItems(itemsMap)
-        setExpandedCategories(expandedMap)
+
+        setExpandedCategories(prev => {
+            const next = { ...prev }
+            categories.forEach(cat => {
+                // Only set default if not already present in state
+                // Default to true (expanded) for new categories so user sees them
+                if (next[cat.id] === undefined) {
+                    next[cat.id] = true
+                }
+            })
+            return next
+        })
     }, [categories])
 
     const toggleCategory = (catId: number) => {
