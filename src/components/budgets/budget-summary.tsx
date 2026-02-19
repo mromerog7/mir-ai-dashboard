@@ -24,7 +24,7 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
     const [honorariosPerc, setHonorariosPerc] = useState(budget.honorarios_porcentaje || 0)
     const [honorariosFixed, setHonorariosFixed] = useState(budget.honorarios_monto_fijo || 0)
     const [indirectosPerc, setIndirectosPerc] = useState(budget.indirectos_porcentaje || 0)
-    const [ivaPerc, setIvaPerc] = useState(budget.iva_porcentaje || 0.16)
+    const [ivaPerc, setIvaPerc] = useState(budget.iva_porcentaje ?? 0.16)
 
     // Calculate totals from items
     const calculateTotals = () => {
