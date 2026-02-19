@@ -12,7 +12,7 @@ const STATUS_BAR_COLORS: Record<string, string> = {
     "Pendiente": "bg-yellow-500/80",
     "En Proceso": "bg-blue-500/80",
     "Revisión": "bg-orange-500/80",
-    "Completada": "bg-blue-500/80",
+    "Completada": "bg-emerald-500/80",
     "Cancelada": "bg-slate-500/80",
 }
 
@@ -20,7 +20,7 @@ const STATUS_BAR_BORDERS: Record<string, string> = {
     "Pendiente": "border-yellow-400",
     "En Proceso": "border-blue-400",
     "Revisión": "border-orange-400",
-    "Completada": "border-blue-400",
+    "Completada": "border-emerald-400",
     "Cancelada": "border-slate-400",
 }
 
@@ -28,7 +28,7 @@ const STATUS_DOT_COLORS: Record<string, string> = {
     "Pendiente": "bg-yellow-400",
     "En Proceso": "bg-blue-400",
     "Revisión": "bg-orange-400",
-    "Completada": "bg-blue-400",
+    "Completada": "bg-emerald-400",
     "Cancelada": "bg-slate-400",
 }
 
@@ -160,8 +160,8 @@ export function TaskGantt({ tasks, onEditTask }: TaskGanttProps) {
     // Auto-scroll to today on mount
     const scrollToToday = () => {
         if (scrollRef.current && todayPositionPx !== null) {
-            const containerWidth = scrollRef.current.clientWidth
-            const targetScroll = todayPositionPx - containerWidth / 2
+            // Align "Today" to the left with 2 days of context padding
+            const targetScroll = todayPositionPx - (DAY_WIDTH * 2)
             scrollRef.current.scrollLeft = Math.max(0, targetScroll)
         }
     }

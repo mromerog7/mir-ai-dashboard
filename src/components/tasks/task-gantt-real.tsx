@@ -147,8 +147,8 @@ export function TaskGanttReal({ tasks, onEditTask }: TaskGanttRealProps) {
 
     const scrollToToday = () => {
         if (scrollRef.current && todayPositionPx !== null) {
-            const containerWidth = scrollRef.current.clientWidth
-            const targetScroll = todayPositionPx - containerWidth / 2
+            // Align "Today" to the left with 2 days of context padding
+            const targetScroll = todayPositionPx - (DAY_WIDTH * 2)
             scrollRef.current.scrollLeft = Math.max(0, targetScroll)
         }
     }
@@ -187,7 +187,7 @@ export function TaskGanttReal({ tasks, onEditTask }: TaskGanttRealProps) {
                             <span className="text-slate-400">Programado</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <div className="w-3 h-2.5 rounded-sm bg-emerald-500/80 border border-emerald-400" />
+                            <div className="w-3 h-2.5 rounded-sm bg-orange-500/80 border border-orange-400" />
                             <span className="text-slate-400">Real</span>
                         </div>
                     </div>
@@ -345,10 +345,10 @@ export function TaskGanttReal({ tasks, onEditTask }: TaskGanttRealProps) {
                                                 </span>
                                             </div>
                                         )}
-                                        {/* Real bar (bottom) - Green */}
+                                        {/* Real bar (bottom) - Orange */}
                                         {realBar && (
                                             <div
-                                                className="absolute top-7 h-5 rounded-md bg-emerald-500/70 border border-emerald-400/60 flex items-center px-2 cursor-pointer shadow-sm hover:brightness-125 transition-all z-[6]"
+                                                className="absolute top-7 h-5 rounded-md bg-orange-500/70 border border-orange-400/60 flex items-center px-2 cursor-pointer shadow-sm hover:brightness-125 transition-all z-[6]"
                                                 style={realBar}
                                                 title={`REAL: ${task.fecha_inicio_real} → ${task.fecha_fin_real}`}
                                                 onClick={() => onEditTask?.(task)}
