@@ -91,7 +91,8 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
     }
 
     return (
-        <Card className="h-fit sticky top-4 border-slate-200 shadow-sm bg-slate-50/50">
+    return (
+        <Card className="h-fit sticky top-4 border-slate-200 shadow-sm bg-slate-50/50 w-80">
             <CardHeader className="pb-2 pt-3 border-b border-slate-200 bg-white rounded-t-lg">
                 <CardTitle className="text-base font-semibold text-slate-800 flex items-center gap-2">
                     <span className="text-lg">🧮</span>
@@ -101,11 +102,11 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
             <CardContent className="space-y-3 pt-3">
                 {/* Costos Directos */}
                 <div className="space-y-1">
-                    <div className="flex justify-between text-xs">
+                    <div className="flex justify-between text-sm">
                         <span className="text-slate-500">Costo Directo (Real)</span>
                         <span className="font-medium text-slate-700">${totalCostoDirecto.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                     </div>
-                    <div className="flex justify-between text-xs">
+                    <div className="flex justify-between text-sm">
                         <span className="text-slate-500">Venta Directa (Base)</span>
                         <span className="font-medium text-slate-900">${totalVentaDirecta.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                     </div>
@@ -165,10 +166,10 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
                 {/* Margin Analysis */}
                 <div className="mt-2 pt-2 border-t border-slate-200 bg-emerald-50/50 -mx-6 px-6 pb-2">
                     <div className="flex justify-between items-center text-emerald-800">
-                        <span className="text-[10px] font-bold uppercase tracking-wider">Margen Bruto</span>
+                        <span className="text-xs font-bold uppercase tracking-wider">Margen Bruto</span>
                         <div className="text-right">
-                            <div className="text-xs font-bold">${realMagin.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-                            <div className="text-[10px] opacity-80">{marginPerc.toFixed(1)}%</div>
+                            <div className="text-base font-bold">${realMagin.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                            <div className="text-xs opacity-80">{marginPerc.toFixed(1)}%</div>
                         </div>
                     </div>
                 </div>
