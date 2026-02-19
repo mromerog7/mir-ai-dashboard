@@ -97,7 +97,9 @@ export function CreateExpenseSheet({ trigger, defaultProjectId }: { trigger?: Re
     const selectedProjectId = form.watch("proyecto_id")
     useEffect(() => {
         const fetchBudgetCategories = async () => {
+            console.log("Fetching categories for project:", selectedProjectId)
             if (!selectedProjectId) {
+                console.log("No project selected, clearing categories")
                 setBudgetCategories([])
                 return
             }
@@ -121,11 +123,15 @@ export function CreateExpenseSheet({ trigger, defaultProjectId }: { trigger?: Re
                     .order("orden", { ascending: true })
 
                 if (categories && categories.length > 0) {
+                    console.log("Categories found:", categories)
                     setBudgetCategories(categories.map(c => c.nombre))
                     return // Found specific categories
                 }
+            } else {
+                console.log("No budget found for project", selectedProjectId)
             }
             // Fallback: No budget/categories found
+            console.log("Using default fallback categories")
             setBudgetCategories([])
         }
 
