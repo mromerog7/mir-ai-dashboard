@@ -5,7 +5,8 @@ import { Progress as ProgressPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
-className,
+function Progress({
+  className,
   value,
   indicatorClassName,
   ...props
