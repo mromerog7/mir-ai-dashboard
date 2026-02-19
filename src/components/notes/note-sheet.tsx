@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Nota, Project, Task } from "@/types"
 import { toast } from "sonner"
-import { Loader2, Trash2, Upload, X } from "lucide-react"
+import { Loader2, Trash2, Upload, X, Eye } from "lucide-react"
 import Image from "next/image"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -307,11 +307,26 @@ export function NoteSheet({ isOpen, onClose, nota, isEditing, onSaved }: NoteShe
                                         fill
                                         className="object-cover"
                                     />
+                                    {/* Hover Overlay */}
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            size="sm"
+                                            onClick={() => window.open(url, '_blank')}
+                                            className="h-8 text-xs"
+                                        >
+                                            <Eye className="mr-2 h-3 w-3" />
+                                            Ver
+                                        </Button>
+                                    </div>
+
                                     {!isReadOnly && (
                                         <button
                                             type="button"
                                             onClick={() => removeImage(index)}
-                                            className="absolute top-1 right-1 bg-red-500/80 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-red-600"
+                                            title="Eliminar imagen"
                                         >
                                             <X className="h-4 w-4" />
                                         </button>

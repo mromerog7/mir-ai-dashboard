@@ -87,36 +87,35 @@ export const columns: ColumnDef<Nota>[] = [
             const nota = row.original
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => (window as any).openNoteSheet?.(nota, false)} // View
-                        >
-                            <Eye className="mr-2 h-4 w-4" />
-                            Ver detalle
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => (window as any).openNoteSheet?.(nota, true)} // Edit
-                        >
-                            <Pencil className="mr-2 h-4 w-4" />
-                            Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => (window as any).deleteNote?.(nota.id)}
-                            className="text-red-600"
-                        >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="flex items-center gap-1">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => (window as any).openNoteSheet?.(nota, false)} // View
+                        title="Ver detalle"
+                        className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                    >
+                        <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => (window as any).openNoteSheet?.(nota, true)} // Edit
+                        title="Editar"
+                        className="h-8 w-8 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50"
+                    >
+                        <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => (window as any).deleteNote?.(nota.id)}
+                        title="Eliminar"
+                        className="h-8 w-8 text-slate-500 hover:text-red-600 hover:bg-red-50"
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                </div>
             )
         },
     },
