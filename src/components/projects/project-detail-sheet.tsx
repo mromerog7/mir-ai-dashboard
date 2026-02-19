@@ -26,6 +26,7 @@ import { QuoteDetailSheet } from "@/components/quotes/quote-detail-sheet"
 import { ReportDetailSheet } from "@/components/reports/report-detail-sheet"
 import { MinutaDetailSheet } from "@/components/minutes/minuta-detail-sheet"
 import { ClientMeetingDetailSheet } from "@/components/client-meetings/client-meeting-detail-sheet"
+import { TaskProgressSummary } from "@/components/tasks/task-progress-summary"
 
 interface ProjectDetailSheetProps {
     project: Project
@@ -51,10 +52,6 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
         async function fetchData() {
             setLoading(true);
             try {
-                // Ensure ID is number if DB uses numbers, or keep string if UUID. 
-                // Based on types types/index.ts, Project.id is string but referenced as number elsewhere?
-                // Checking previous files: "id: number" in setup_modules for tables, but "id: string" in index.ts Project type.
-                // Assuming implicit cast works or fixing type. Let's try casting to number if it looks numeric.
                 const pid = Number(project.id);
                 if (!isNaN(pid)) {
                     const data = await getProjectDetails(pid);
@@ -150,11 +147,6 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                         {/* Project Notes */}
                         <ProjectNotesList projectId={Number(project.id)} />
-
-                        {/* Incidents (Mixed in Info or separated? Keeping in Info as "Highlights" for now, or move to Tasks?) 
-                            Let's keep Incidents, Surveys, Quotes, Reports, Minutas, Meetings in Info as "Documentation/Events" 
-                            except Tasks and Expenses which have their own tabs. 
-                        */}
 
                         {/* Incidents */}
                         <div className="space-y-3">
@@ -365,6 +357,12 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                             </h4>
                             {/* Potential "Add Task" button here */}
                         </div>
+
+                        {/* Task Progress Summary */}
+                        {relatedData?.tasks && relatedData.tasks.length > 0 && (
+                            <TaskProgressSummary tasks={relatedData.tasks} />
+                        )}
+
                         {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                             relatedData?.tasks && relatedData.tasks.length > 0 ? (
                                 <div className="space-y-2">
