@@ -27,6 +27,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
     const [totalSpent, setTotalSpent] = useState(0)
     const [activeBudgetId, setActiveBudgetId] = useState<number | null>(null)
     const [budgetCategoryNames, setBudgetCategoryNames] = useState<string[]>([])
+    const [refreshTrigger, setRefreshTrigger] = useState(0)
 
     useEffect(() => {
         if (!projectId) {
@@ -137,7 +138,29 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
         }
 
         fetchData()
-    }, [projectId])
+
+        const supabase = createClient()
+        const channel = supabase
+            .channel('budget-comparison-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'gastos',
+                    filter: `proyecto_id=eq.${projectId}`
+                },
+                (payload) => {
+                    console.log('Realtime update received:', payload)
+                    setRefreshTrigger(prev => prev + 1)
+                }
+            )
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
+    }, [projectId, refreshTrigger])
 
     if (!projectId) return null // Don't show if no project selected (or show generic message)
 
