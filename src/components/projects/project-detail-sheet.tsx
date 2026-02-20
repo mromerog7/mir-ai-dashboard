@@ -34,6 +34,8 @@ import { TaskGanttReal } from "@/components/tasks/task-gantt-real"
 import { DataTable } from "@/app/(dashboard)/tasks/data-table"
 import { columns } from "@/app/(dashboard)/tasks/columns"
 import { LayoutList, Clock } from "lucide-react"
+import { TaskForm } from "@/components/tasks/task-form"
+
 
 interface ProjectDetailSheetProps {
     project: Project
@@ -58,6 +60,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
     const [loading, setLoading] = useState(false);
     const [viewMode, setViewMode] = useState<"list" | "gantt" | "gantt_real">("list")
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
+
 
     useEffect(() => {
         async function fetchData() {
@@ -489,13 +493,13 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                                     {viewMode === "gantt" && (
                                         <div className="overflow-x-auto border border-slate-200 rounded-md bg-white p-4">
-                                            <TaskGantt tasks={relatedData.tasks} />
+                                            <TaskGantt tasks={relatedData.tasks} onEditTask={setEditingTask} />
                                         </div>
                                     )}
 
                                     {viewMode === "gantt_real" && (
                                         <div className="overflow-x-auto border border-slate-200 rounded-md bg-white p-4">
-                                            <TaskGanttReal tasks={relatedData.tasks} />
+                                            <TaskGanttReal tasks={relatedData.tasks} onEditTask={setEditingTask} />
                                         </div>
                                     )}
                                 </div>
@@ -518,6 +522,27 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                     </TabsContent>
                 </Tabs>
             </SheetContent>
+
+            {/* Edit Task Sheet */}
+            <Sheet open={!!editingTask} onOpenChange={(open) => !open && setEditingTask(null)}>
+                <SheetContent className="w-full sm:max-w-[50vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
+                    <SheetHeader>
+                        <SheetTitle className="text-[#02457A]">Editar Tarea</SheetTitle>
+                        <SheetDescription className="text-slate-500">
+                            Modifica los detalles de la tarea.
+                        </SheetDescription>
+                    </SheetHeader>
+                    {editingTask && (
+                        <div className="py-4">
+                            <TaskForm
+                                onSuccess={() => setEditingTask(null)}
+                                initialData={editingTask}
+                                taskId={editingTask.id}
+                            />
+                        </div>
+                    )}
+                </SheetContent>
+            </Sheet>
         </Sheet>
     )
 }
