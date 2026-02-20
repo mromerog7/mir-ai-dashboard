@@ -12,6 +12,7 @@ interface CircularProgressProps {
     color?: string
     className?: string
     gradientId?: string
+    tooltipContent?: React.ReactNode
 }
 
 export function CircularProgress({
@@ -23,7 +24,8 @@ export function CircularProgress({
     course = false, // unused but kept for compatibility if needed later
     color = "#3b82f6",
     className,
-    gradientId = "blue-gradient"
+    gradientId = "blue-gradient",
+    tooltipContent
 }: CircularProgressProps & { course?: boolean }) {
     const radius = (size - strokeWidth) / 2
     const circumference = radius * 2 * Math.PI
@@ -44,9 +46,20 @@ export function CircularProgress({
 
     return (
         <div
-            className={cn("flex flex-col items-center justify-center p-4 animate-in fade-in zoom-in duration-500", className)}
-            title={label} // Browser native tooltip
+            className={cn("group relative flex flex-col items-center justify-center p-4 animate-in fade-in zoom-in duration-500", className)}
+        // Removed title attribute to avoid double tooltips
         >
+            {/* Custom Tooltip */}
+            {tooltipContent && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 transition-all duration-200 ease-out">
+                    <div className="bg-white border border-slate-200 p-2 rounded-md shadow-xl text-xs min-w-[180px]">
+                        {tooltipContent}
+                        {/* Little arrow pointing down */}
+                        <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2 h-2 bg-white border-b border-r border-slate-200 rotate-45 transform"></div>
+                    </div>
+                </div>
+            )}
+
             <div className="relative" style={{ width: size, height: size }}>
                 {/* SVG Ring */}
                 <svg width={size} height={size} className="transform -rotate-90">

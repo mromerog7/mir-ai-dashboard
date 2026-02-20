@@ -45,6 +45,21 @@ export function ProjectProgressChart({ projects }: ProjectProgressChartProps) {
                                 size={140}
                                 strokeWidth={10}
                                 gradientId={GRADIENTS[index % GRADIENTS.length]}
+                                tooltipContent={
+                                    <div className="flex flex-col">
+                                        <p className="font-semibold mb-2 text-slate-800 break-words">{project.nombre}</p>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                            <span className="text-slate-500">Avance:</span>
+                                            <span className="font-medium text-slate-900">{project.completionRate}%</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-orange-500" />
+                                            <span className="text-slate-500">Tareas:</span>
+                                            <span className="font-medium text-slate-900">{project.completedTasks} / {project.totalTasks}</span>
+                                        </div>
+                                    </div>
+                                }
                             />
                         ))
                     ) : (
