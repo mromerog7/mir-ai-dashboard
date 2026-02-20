@@ -9,7 +9,8 @@ export default function DashboardLayout({
 }) {
     return (
         <div className="h-full relative">
-            <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-[#65B017] rounded-tr-[3rem] rounded-br-[3rem] shadow-xl overflow-hidden">
+            {/* Sidebar - visible only on lg (1024px+) */}
+            <div className="hidden h-full lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 z-[80] bg-[#65B017] rounded-tr-[3rem] rounded-br-[3rem] shadow-xl overflow-hidden">
                 <div className="bg-[#65B017] p-6 flex items-center justify-center h-[73px]">
                     <div className="relative h-12 w-40 filter brightness-0 invert">
                         <Image
@@ -23,9 +24,9 @@ export default function DashboardLayout({
                 </div>
                 <Sidebar />
             </div>
-            <main className="md:pl-72 h-full bg-slate-50">
+            <main className="lg:pl-72 h-full bg-slate-50">
                 <Header />
-                <div className="p-8 h-full overflow-y-auto">
+                <div className="p-4 md:p-6 lg:p-8 h-full overflow-y-auto">
                     {children}
                 </div>
             </main>
