@@ -12,8 +12,8 @@ import {
 import { ActiveProjectsWidget } from "@/components/dashboard/active-projects-widget";
 import { MonthExpensesWidget } from "@/components/dashboard/month-expenses-widget";
 import { CriticalIncidentsWidget } from "@/components/dashboard/critical-incidents-widget";
-import { ActivityFeedWidget } from "@/components/dashboard/activity-feed-widget";
-import { PendingTasksWidget } from "@/components/dashboard/pending-tasks-widget";
+import { ProjectProgressChart } from "@/components/dashboard/project-progress-chart";
+import { ProjectBudgetHealthChart } from "@/components/dashboard/project-budget-chart";
 
 // Helper to map WMO weather codes
 function getWeatherIcon(code: number) {
@@ -66,78 +66,47 @@ export default async function DashboardPage() {
         console.log("Gastos table missing/empty");
     }
 
-    // FETCH LATEST ACTIVITIES FROM ALL MODULES
-    const limit = 5;
-    const [
-        { data: recentReports },
-        { data: recentSurveys },
-        { data: recentQuotes },
-        { data: recentExpenses },
-        { data: recentTasks },
-        { data: recentIncidents },
-        { data: pendingTasks },
-    ] = await Promise.all([
-        supabase.from("reportes").select("fecha_reporte, resumen_titulo").order("fecha_reporte", { ascending: false }).limit(limit),
-        supabase.from("levantamientos").select("fecha_visita, folio").order("fecha_visita", { ascending: false }).limit(limit),
-        supabase.from("cotizaciones").select("fecha_emision, created_at, folio").order("created_at", { ascending: false }).limit(limit),
-        supabase.from("gastos").select("fecha, concepto, monto").order("fecha", { ascending: false }).limit(limit),
-        supabase.from("tareas").select("id, created_at, titulo, estatus, descripcion").order("created_at", { ascending: false }).limit(limit), // Kept for Activity Feed
-        supabase.from("incidencias").select("fecha_inicio, titulo, severidad").order("fecha_inicio", { ascending: false }).limit(limit),
-        supabase.from("tareas")
-            .select("id, created_at, titulo, estatus, descripcion")
-            .neq("estatus", "Completada")
-            .order("created_at", { ascending: false })
-            .limit(10), // Limit increased slightly to ensure we have items after sorting
-    ]);
+    // 4. Fetch Comprehensive Project Data for Charts
+    const { data: projectsData } = await supabase
+        .from("proyectos")
+        .select(`
+            id, 
+            nombre, 
+            status,
+            tareas (estatus),
+            presupuestos (monto),
+            gastos (monto)
+        `)
+        .neq("status", "Completado");
 
-    // Build consolidated activity list
-    const activities = [
-        ...(recentReports || []).map(r => ({
-            type: 'reporte',
-            date: r.fecha_reporte,
-            description: `Reporte: ${r.resumen_titulo}`
-        })),
-        ...(recentSurveys || []).map(s => ({
-            type: 'levantamiento',
-            date: s.fecha_visita,
-            description: `Levantamiento: ${s.folio}`
-        })),
-        ...(recentQuotes || []).map(q => ({
-            type: 'cotizacion',
-            date: q.fecha_emision || q.created_at,
-            description: `Cotización: ${q.folio}`
-        })),
-        ...(recentExpenses || []).map(e => ({
-            type: 'gasto',
-            date: e.fecha,
-            description: `Gasto: ${e.concepto} - ${new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(e.monto)}`
-        })),
-        ...(recentTasks || []).map(t => ({
-            type: 'tarea',
-            date: t.created_at,
-            description: `Tarea: ${t.titulo} (${t.estatus})`
-        })),
-        ...(recentIncidents || []).map(i => ({
-            type: 'incidencia',
-            date: i.fecha_inicio,
-            description: `Incidencia: ${i.titulo} (${i.severidad})`
-        }))
-    ]
-        // Filter invalid dates and sort
-        .filter(a => a.date)
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 7); // Show top 7 activities
+    // Process Data for Progress Chart
+    const progressData = (projectsData || []).map(p => {
+        const totalTasks = p.tareas?.length || 0;
+        const completedTasks = p.tareas?.filter((t: any) =>
+            t.estatus === "Completada" || t.estatus === "Terminada"
+        ).length || 0;
+        const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-    // Sort Pending Tasks: Pendiente first, then En Proceso, then others
-    const sortedPendingTasks = (pendingTasks || []).sort((a, b: any) => {
-        const statusWeight: Record<string, number> = {
-            'Pendiente': 1,
-            'En Proceso': 2,
-            'Revisión': 3
+        return {
+            id: p.id,
+            nombre: p.nombre,
+            completionRate,
+            totalTasks,
+            completedTasks
         };
-        const weightA = statusWeight[a.estatus || ''] || 4;
-        const weightB = statusWeight[b.estatus || ''] || 4;
-        return weightA - weightB;
+    }).sort((a, b) => b.completionRate - a.completionRate); // Sort by highest progress
+
+    // Process Data for Budget Chart
+    const budgetData = (projectsData || []).map(p => {
+        const presupuestoTotal = p.presupuestos?.reduce((sum: number, item: any) => sum + (Number(item.monto) || 0), 0) || 0;
+        const gastosTotales = p.gastos?.reduce((sum: number, item: any) => sum + (Number(item.monto) || 0), 0) || 0;
+
+        return {
+            id: p.id,
+            nombre: p.nombre,
+            presupuestoTotal,
+            gastosTotales
+        };
     });
 
     // 6. Fetch Weather Data (Open-Meteo)
@@ -192,8 +161,8 @@ export default async function DashboardPage() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-                <ActivityFeedWidget initialActivities={activities} />
-                <PendingTasksWidget initialTasks={sortedPendingTasks} />
+                <ProjectProgressChart projects={progressData} />
+                <ProjectBudgetHealthChart projects={budgetData} />
             </div>
         </div>
     );
