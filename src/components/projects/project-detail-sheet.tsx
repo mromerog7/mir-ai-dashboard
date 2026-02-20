@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting } from "@/types"
 import { useEffect, useState } from "react"
 import { getProjectDetails } from "@/app/actions/get-project-details"
+import { createClient } from "@/lib/supabase/client"
 import { ProjectNotesList } from "./project-notes-list"
 import { BudgetView } from "@/components/budgets/budget-view"
 import { ExpensesView } from "@/app/(dashboard)/expenses/expenses-view"
@@ -80,6 +81,74 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
         if (project.id) {
             fetchData();
         }
+    }, [project.id]);
+
+    // Realtime subscription for Tasks
+    useEffect(() => {
+        if (!project.id) return;
+
+        const supabase = createClient();
+        const channel = supabase
+            .channel(`realtime-project-tasks-${project.id}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'tareas',
+                    filter: `proyecto_id=eq.${project.id}`
+                },
+                async (payload) => {
+                    console.log("Realtime task event:", payload);
+
+                    if (payload.eventType === 'INSERT') {
+                        const { data } = await supabase
+                            .from('tareas')
+                            .select('*, proyectos(nombre)')
+                            .eq('id', payload.new.id)
+                            .single();
+
+                        if (data) {
+                            setRelatedData(prev => {
+                                if (!prev) return null;
+                                return {
+                                    ...prev,
+                                    tasks: [data as unknown as Task, ...prev.tasks].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                                };
+                            });
+                        }
+                    } else if (payload.eventType === 'UPDATE') {
+                        const { data } = await supabase
+                            .from('tareas')
+                            .select('*, proyectos(nombre)')
+                            .eq('id', payload.new.id)
+                            .single();
+
+                        if (data) {
+                            setRelatedData(prev => {
+                                if (!prev) return null;
+                                return {
+                                    ...prev,
+                                    tasks: prev.tasks.map(t => t.id === payload.new.id ? (data as unknown as Task) : t)
+                                };
+                            });
+                        }
+                    } else if (payload.eventType === 'DELETE') {
+                        setRelatedData(prev => {
+                            if (!prev) return null;
+                            return {
+                                ...prev,
+                                tasks: prev.tasks.filter(t => t.id !== payload.old.id)
+                            };
+                        });
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [project.id]);
 
     return (
