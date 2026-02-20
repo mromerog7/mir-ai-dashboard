@@ -41,7 +41,7 @@ const formSchema = z.object({
     solicitante: z.string().optional(),
     ubicacion: z.string().optional(),
     fecha_inicio: z.date(),
-    status: z.enum(["Activo", "Completado"]).default("Activo"),
+    status: z.enum(["Activo", "Completado"]),
 })
 
 export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?: () => void, initialData?: any, projectId?: number | string }) {
