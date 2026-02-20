@@ -62,7 +62,7 @@ export function IngresoSheet({ projects, onSuccess, initialData, ingresoId, trig
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+            <SheetContent className="w-full sm:max-w-md overflow-y-auto px-6">
                 <SheetHeader className="mb-6">
                     <SheetTitle className="text-[#02457A]">{ingresoId ? "Editar Ingreso" : "Nuevo Ingreso"}</SheetTitle>
                 </SheetHeader>

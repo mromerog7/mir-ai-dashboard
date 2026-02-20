@@ -49,7 +49,7 @@ export function RetiroSheet({ onSuccess, initialData, retiroId, trigger }: Retir
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+            <SheetContent className="w-full sm:max-w-md overflow-y-auto px-6">
                 <SheetHeader className="mb-6">
                     <SheetTitle className="text-violet-700">{retiroId ? "Editar Retiro" : "Nuevo Retiro de Utilidades"}</SheetTitle>
                 </SheetHeader>

@@ -54,7 +54,7 @@ export function GastoOpSheet({ onSuccess, initialData, gastoId, trigger }: Gasto
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+            <SheetContent className="w-full sm:max-w-md overflow-y-auto px-6">
                 <SheetHeader className="mb-6">
                     <SheetTitle className="text-rose-700">{gastoId ? "Editar Gasto" : "Nuevo Gasto de Operación"}</SheetTitle>
                 </SheetHeader>
