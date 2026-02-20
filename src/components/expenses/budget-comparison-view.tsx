@@ -25,6 +25,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
     const [comparisonData, setComparisonData] = useState<CategoryComparison[]>([])
     const [totalBudget, setTotalBudget] = useState(0)
     const [totalSpent, setTotalSpent] = useState(0)
+    const [totalCliente, setTotalCliente] = useState(0)
     const [activeBudgetId, setActiveBudgetId] = useState<number | null>(null)
     const [budgetCategoryNames, setBudgetCategoryNames] = useState<string[]>([])
     const [refreshTrigger, setRefreshTrigger] = useState(0)
@@ -45,14 +46,18 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
             const supabase = createClient()
 
             try {
-                // 1. Fetch Active Budget (Concepts)
+                // 1. Fetch Active Budget (Concepts + Total Cliente)
                 const { data: budget } = await supabase
                     .from("presupuestos")
-                    .select("id")
+                    .select("id, total_final")
                     .eq("proyecto_id", projectId)
                     .order("version", { ascending: false })
                     .limit(1)
                     .single()
+
+                if (budget?.total_final) {
+                    setTotalCliente(budget.total_final)
+                }
 
                 let budgetItems: { categoria: string, costo_total: number }[] = []
 
@@ -176,7 +181,7 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
             </CardHeader>
             <CardContent>
                 {/* Summary Row */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
                     <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                         <span className="text-xs text-slate-500 uppercase font-semibold">Presupuestado</span>
                         <div className="text-xl font-bold text-slate-700">
@@ -196,6 +201,23 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                             {totalVariance >= 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
                         </div>
                     </div>
+                    {/* Margen de Utilidad Actual */}
+                    {totalCliente > 0 && (() => {
+                        const margen = totalCliente - totalSpent
+                        const pctUtilidad = ((margen / totalCliente) * 100)
+                        const isPositive = margen >= 0
+                        return (
+                            <div className={`p-3 rounded-lg border ${isPositive ? 'bg-violet-50 border-violet-100' : 'bg-red-50 border-red-100'}`}>
+                                <span className={`text-xs uppercase font-semibold ${isPositive ? 'text-violet-600' : 'text-red-600'}`}>Margen Utilidad Actual</span>
+                                <div className={`text-lg font-bold ${isPositive ? 'text-violet-700' : 'text-red-700'} flex items-center gap-1`}>
+                                    {new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(margen)}
+                                </div>
+                                <div className={`text-sm font-semibold mt-0.5 ${isPositive ? 'text-violet-500' : 'text-red-500'}`}>
+                                    {pctUtilidad.toFixed(1)}% utilidad
+                                </div>
+                            </div>
+                        )
+                    })()}
                     <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-center">
                         <div className="flex justify-between text-xs mb-1">
                             <span className="font-semibold text-slate-600">Ejecución</span>
