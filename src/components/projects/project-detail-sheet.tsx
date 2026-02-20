@@ -9,7 +9,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Eye, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users } from "lucide-react"
+import { Settings, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting } from "@/types"
 import { useEffect, useState } from "react"
@@ -164,7 +164,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
         <Sheet>
             <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 text-blue-600">
-                    <Eye className="h-4 w-4" />
+                    <Settings className="h-4 w-4" />
                     <span className="sr-only">Ver Detalles</span>
                 </Button>
             </SheetTrigger>
