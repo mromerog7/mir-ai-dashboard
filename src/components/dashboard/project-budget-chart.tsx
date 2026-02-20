@@ -59,29 +59,37 @@ export function ProjectBudgetHealthChart({ projects }: ProjectBudgetHealthChartP
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                                 data={projects}
-                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                             >
+                                <defs>
+                                    <linearGradient id="blue-bar-gradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.3} />
+                                    </linearGradient>
+                                    <linearGradient id="orange-bar-gradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#f97316" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#f97316" stopOpacity={0.3} />
+                                    </linearGradient>
+                                </defs>
                                 <XAxis
                                     dataKey="nombre"
                                     tick={{ fontSize: 11, fill: '#64748b' }}
                                     tickFormatter={(value) => value.length > 10 ? `${value.substring(0, 10)}...` : value}
-                                />
-                                <YAxis
-                                    tick={{ fontSize: 11, fill: '#64748b' }}
-                                    tickFormatter={(value) => `$${value / 1000}k`}
+                                    axisLine={false}
+                                    tickLine={false}
                                 />
                                 <Tooltip cursor={{ fill: 'transparent' }} content={<CustomTooltip />} />
                                 <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
                                 <Bar
                                     dataKey="presupuestoTotal"
                                     name="Presupuesto"
-                                    fill="#3b82f6"
+                                    fill="url(#blue-bar-gradient)"
                                     radius={[4, 4, 0, 0]}
                                 />
                                 <Bar
                                     dataKey="gastosTotales"
                                     name="Gastos"
-                                    fill="#f97316"
+                                    fill="url(#orange-bar-gradient)"
                                     radius={[4, 4, 0, 0]}
                                 />
                             </BarChart>

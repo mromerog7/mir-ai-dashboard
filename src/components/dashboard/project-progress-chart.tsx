@@ -14,12 +14,6 @@ interface ProjectProgressChartProps {
     projects: ProjectData[]
 }
 
-const GRADIENTS = [
-    "blue-gradient",
-    "purple-gradient",
-    "orange-gradient",
-    "green-gradient"
-];
 
 export function ProjectProgressChart({ projects }: ProjectProgressChartProps) {
     // Take top 5 projects for the best visual layout
@@ -44,7 +38,8 @@ export function ProjectProgressChart({ projects }: ProjectProgressChartProps) {
                                 sublabel={`${project.completedTasks}/${project.totalTasks} Tareas`}
                                 size={140}
                                 strokeWidth={10}
-                                gradientId={GRADIENTS[index % GRADIENTS.length]}
+                                gradientId="blue-gradient"
+                                showTip={project.completionRate === 100}
                                 tooltipContent={
                                     <div className="flex flex-col">
                                         <p className="font-semibold mb-2 text-slate-800 break-words">{project.nombre}</p>

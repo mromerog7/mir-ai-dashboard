@@ -13,6 +13,7 @@ interface CircularProgressProps {
     className?: string
     gradientId?: string
     tooltipContent?: React.ReactNode
+    showTip?: boolean
 }
 
 export function CircularProgress({
@@ -25,7 +26,8 @@ export function CircularProgress({
     color = "#3b82f6",
     className,
     gradientId = "blue-gradient",
-    tooltipContent
+    tooltipContent,
+    showTip = true
 }: CircularProgressProps & { course?: boolean }) {
     const radius = (size - strokeWidth) / 2
     const circumference = radius * 2 * Math.PI
@@ -118,7 +120,7 @@ export function CircularProgress({
                     />
 
                     {/* Glowing Tip */}
-                    {value > 0 && value < 100 && (
+                    {showTip && value > 0 && value < 100 && (
                         <circle
                             cx={tipX}
                             cy={tipY}
