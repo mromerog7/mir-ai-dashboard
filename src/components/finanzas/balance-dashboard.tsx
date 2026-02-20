@@ -1,7 +1,8 @@
 "use client"
 
-import { useMemo } from "react"
-import { TrendingUp, TrendingDown, DollarSign, ArrowDownLeft, ArrowUpRight, Wallet } from "lucide-react"
+import { useMemo, useEffect, useState } from "react"
+import { createClient } from "@/lib/supabase/client"
+import { TrendingUp, TrendingDown, DollarSign, ArrowDownLeft, ArrowUpRight, Wallet, Clock, Receipt } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts"
 import { format, subMonths, startOfMonth, endOfMonth } from "date-fns"
 import { es } from "date-fns/locale"
@@ -15,10 +16,41 @@ interface BalanceDashboardProps {
 const fmt = (v: number) => new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(v)
 
 export function BalanceDashboard({ ingresos, gastosOp, retiros }: BalanceDashboardProps) {
+    const [gastosProyectos, setGastosProyectos] = useState<any[]>([])
+    const [presupuestos, setPresupuestos] = useState<any[]>([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const supabase = createClient()
+            const [g, p] = await Promise.all([
+                supabase.from("gastos").select("id, proyecto_id, monto"),
+                supabase.from("presupuestos").select("id, proyecto_id, total_final"),
+            ])
+            setGastosProyectos(g.data || [])
+            setPresupuestos(p.data || [])
+        }
+        fetchData()
+    }, [])
+
     const totalIngresos = ingresos.reduce((s, r) => s + Number(r.monto), 0)
     const totalGastosOp = gastosOp.reduce((s, r) => s + Number(r.monto), 0)
     const totalRetiros = retiros.reduce((s, r) => s + Number(r.monto), 0)
-    const saldo = totalIngresos - totalGastosOp - totalRetiros
+    const totalGastosRealesProyectos = gastosProyectos.reduce((s, r) => s + Number(r.monto), 0)
+    const saldo = totalIngresos - totalGastosOp - totalRetiros - totalGastosRealesProyectos
+
+    // Pendiente por Ingresar = sum of (totalCliente - anticipos - abonos - liquidacion) per project
+    const pendientePorIngresar = useMemo(() => {
+        const projectIds = [...new Set(presupuestos.map(p => p.proyecto_id))]
+        return projectIds.reduce((total, pid) => {
+            const totalCliente = presupuestos.filter(p => p.proyecto_id === pid).reduce((s, p) => s + Number(p.total_final || 0), 0)
+            const projIngresos = ingresos.filter((i: any) => i.proyecto_id === pid)
+            const anticipos = projIngresos.filter((i: any) => i.tipo === "Anticipo").reduce((s: number, i: any) => s + Number(i.monto), 0)
+            const abonos = projIngresos.filter((i: any) => i.tipo === "Abono").reduce((s: number, i: any) => s + Number(i.monto), 0)
+            const liquidacion = projIngresos.filter((i: any) => i.tipo === "Liquidación").reduce((s: number, i: any) => s + Number(i.monto), 0)
+            const restante = totalCliente - anticipos - abonos - liquidacion
+            return total + (restante > 0 ? restante : 0)
+        }, 0)
+    }, [presupuestos, ingresos])
 
     // Last 6 months chart data
     const monthlyData = useMemo(() => {
@@ -39,14 +71,16 @@ export function BalanceDashboard({ ingresos, gastosOp, retiros }: BalanceDashboa
     const kpis = [
         { label: "Total Ingresos", value: totalIngresos, icon: ArrowUpRight, color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-100" },
         { label: "Gastos Operación", value: totalGastosOp, icon: ArrowDownLeft, color: "text-rose-600", bg: "bg-rose-50 border-rose-100" },
+        { label: "Gastos Reales Proy.", value: totalGastosRealesProyectos, icon: Receipt, color: "text-orange-600", bg: "bg-orange-50 border-orange-100" },
         { label: "Retiro Utilidades", value: totalRetiros, icon: Wallet, color: "text-violet-600", bg: "bg-violet-50 border-violet-100" },
+        { label: "Pendiente por Ingresar", value: pendientePorIngresar, icon: Clock, color: "text-amber-600", bg: "bg-amber-50 border-amber-100" },
         { label: "Saldo Disponible", value: saldo, icon: saldo >= 0 ? TrendingUp : TrendingDown, color: saldo >= 0 ? "text-blue-600" : "text-red-600", bg: saldo >= 0 ? "bg-blue-50 border-blue-100" : "bg-red-50 border-red-100" },
     ]
 
     return (
         <div className="space-y-6">
             {/* KPI Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                 {kpis.map(k => (
                     <div key={k.label} className={`p-4 rounded-xl border ${k.bg}`}>
                         <div className="flex items-center justify-between mb-2">
