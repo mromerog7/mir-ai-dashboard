@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { BalanceDashboard } from "@/components/finanzas/balance-dashboard"
+import { FinanzasProyectos } from "@/components/finanzas/finanzas-proyectos"
 import { IngresoSheet } from "@/components/finanzas/ingreso-sheet"
 import { GastoOpSheet } from "@/components/finanzas/gasto-op-sheet"
 import { RetiroSheet } from "@/components/finanzas/retiro-sheet"
@@ -94,8 +95,9 @@ export function FinanzasView({ initialIngresos, initialGastosOp, initialRetiros,
             </div>
 
             <Tabs defaultValue="balance" className="w-full">
-                <TabsList className="grid grid-cols-4 w-full max-w-xl bg-slate-100 p-1 rounded-lg">
+                <TabsList className="grid grid-cols-5 w-full max-w-2xl bg-slate-100 p-1 rounded-lg">
                     <TabsTrigger value="balance" className="data-[state=active]:bg-white data-[state=active]:text-[#02457A] data-[state=active]:shadow-sm rounded-md">Balance</TabsTrigger>
+                    <TabsTrigger value="proyectos" className="data-[state=active]:bg-white data-[state=active]:text-[#02457A] data-[state=active]:shadow-sm rounded-md">Fin. Proyectos</TabsTrigger>
                     <TabsTrigger value="ingresos" className="data-[state=active]:bg-white data-[state=active]:text-[#02457A] data-[state=active]:shadow-sm rounded-md">
                         Ingresos <span className="ml-1 text-xs opacity-70">({ingresos.length})</span>
                     </TabsTrigger>
@@ -110,6 +112,11 @@ export function FinanzasView({ initialIngresos, initialGastosOp, initialRetiros,
                 {/* BALANCE GENERAL */}
                 <TabsContent value="balance" className="mt-6">
                     <BalanceDashboard ingresos={ingresos} gastosOp={gastosOp} retiros={retiros} />
+                </TabsContent>
+
+                {/* FINANZAS PROYECTOS */}
+                <TabsContent value="proyectos" className="mt-6">
+                    <FinanzasProyectos projects={projects} ingresos={ingresos} />
                 </TabsContent>
 
                 {/* INGRESOS */}
