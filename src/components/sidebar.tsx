@@ -21,7 +21,8 @@ import {
     CloudSun,
     BookOpen,
     DollarSign,
-    Notebook
+    Notebook,
+    TrendingUp
 } from "lucide-react"
 import { useState } from "react"
 
@@ -56,6 +57,12 @@ export function Sidebar({ className }: SidebarProps) {
             icon: DollarSign,
             href: "/expenses",
             color: "text-orange-700",
+        },
+        {
+            label: "Finanzas",
+            icon: TrendingUp,
+            href: "/finanzas",
+            color: "text-emerald-600",
         },
         {
             label: "Incidencias",
