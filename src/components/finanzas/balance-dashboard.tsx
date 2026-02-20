@@ -23,7 +23,7 @@ export function BalanceDashboard({ ingresos, gastosOp, retiros }: BalanceDashboa
         const fetchData = async () => {
             const supabase = createClient()
             const [g, p] = await Promise.all([
-                supabase.from("gastos").select("id, proyecto_id, monto"),
+                supabase.from("gastos").select("id, proyecto_id, monto, fecha"),
                 supabase.from("presupuestos").select("id, proyecto_id, total_final"),
             ])
             setGastosProyectos(g.data || [])
@@ -63,10 +63,11 @@ export function BalanceDashboard({ ingresos, gastosOp, retiros }: BalanceDashboa
             const ing = ingresos.filter(r => r.fecha >= start && r.fecha <= end).reduce((s, r) => s + Number(r.monto), 0)
             const gas = gastosOp.filter(r => r.fecha >= start && r.fecha <= end).reduce((s, r) => s + Number(r.monto), 0)
             const ret = retiros.filter(r => r.fecha >= start && r.fecha <= end).reduce((s, r) => s + Number(r.monto), 0)
+            const gasProy = gastosProyectos.filter(r => r.fecha >= start && r.fecha <= end).reduce((s: number, r: any) => s + Number(r.monto), 0)
 
-            return { mes: label, Ingresos: ing, "Gastos Op.": gas, Retiros: ret }
+            return { mes: label, Ingresos: ing, "Gastos Op.": gas, "Gastos Proy.": gasProy, Retiros: ret }
         })
-    }, [ingresos, gastosOp, retiros])
+    }, [ingresos, gastosOp, retiros, gastosProyectos])
 
     const kpis = [
         { label: "Total Ingresos", value: totalIngresos, icon: ArrowUpRight, color: "text-emerald-600", bg: "bg-emerald-50 border-emerald-100" },
@@ -108,6 +109,7 @@ export function BalanceDashboard({ ingresos, gastosOp, retiros }: BalanceDashboa
                             <Legend wrapperStyle={{ fontSize: 11 }} />
                             <Bar dataKey="Ingresos" fill="#10b981" radius={[4, 4, 0, 0]} />
                             <Bar dataKey="Gastos Op." fill="#f43f5e" radius={[4, 4, 0, 0]} />
+                            <Bar dataKey="Gastos Proy." fill="#f97316" radius={[4, 4, 0, 0]} />
                             <Bar dataKey="Retiros" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
