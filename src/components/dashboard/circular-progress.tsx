@@ -43,7 +43,10 @@ export function CircularProgress({
     const tipY = cy + radius * Math.sin(angleRad)
 
     return (
-        <div className={cn("flex flex-col items-center justify-center p-4", className)}>
+        <div
+            className={cn("flex flex-col items-center justify-center p-4 animate-in fade-in zoom-in duration-500", className)}
+            title={label} // Browser native tooltip
+        >
             <div className="relative" style={{ width: size, height: size }}>
                 {/* SVG Ring */}
                 <svg width={size} height={size} className="transform -rotate-90">
@@ -76,12 +79,12 @@ export function CircularProgress({
                         </filter>
                     </defs>
 
-                    {/* Track */}
+                    {/* Track - Lighter for white background */}
                     <circle
                         cx={size / 2}
                         cy={size / 2}
                         r={radius}
-                        stroke="#1e293b" // Slate 800 - Dark track
+                        stroke="#e2e8f0" // Slate 200 - Light track for white bg
                         strokeWidth={strokeWidth}
                         fill="transparent"
                         strokeLinecap="round"
@@ -117,22 +120,21 @@ export function CircularProgress({
                 {/* Center Text */}
                 <div className="absolute inset-0 flex items-center justify-center">
                     <span
-                        className="text-2xl font-bold"
-                        style={{ color: 'white' }}
+                        className="text-2xl font-bold text-slate-900"
                     >
-                        {value}
+                        {value}%
                     </span>
                     {/* <span className="text-sm" style={{ color: color }}>%</span> */}
                 </div>
             </div>
 
             {/* Labels */}
-            <div className="text-center mt-4">
-                <h3 className="font-semibold text-white tracking-wider text-sm uppercase mb-1">
+            <div className="text-center mt-4 cursor-default">
+                <h3 className="font-semibold text-slate-900 tracking-wider text-sm uppercase mb-1 truncate max-w-[120px]">
                     {label}
                 </h3>
                 {sublabel && (
-                    <p className="text-xs text-slate-400 max-w-[150px] mx-auto leading-relaxed">
+                    <p className="text-xs text-slate-500 max-w-[150px] mx-auto leading-relaxed">
                         {sublabel}
                     </p>
                 )}

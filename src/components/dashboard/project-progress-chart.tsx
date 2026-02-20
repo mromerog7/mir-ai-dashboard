@@ -22,19 +22,19 @@ const GRADIENTS = [
 ];
 
 export function ProjectProgressChart({ projects }: ProjectProgressChartProps) {
-    // Take top 3 projects for the best visual layout, or all if fewer
-    const displayProjects = projects.slice(0, 3);
+    // Take top 5 projects for the best visual layout
+    const displayProjects = projects.slice(0, 5);
 
     return (
-        <Card className="col-span-1 shadow-lg border-slate-800 bg-slate-900 text-white">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-slate-800/50">
-                <CardTitle className="text-sm font-medium text-slate-100 flex items-center gap-2">
-                    <Info className="h-4 w-4 text-blue-400" />
+        <Card className="col-span-1 shadow-sm border-slate-200 bg-white">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-slate-100">
+                <CardTitle className="text-sm font-medium text-slate-800 flex items-center gap-2">
+                    <Info className="h-4 w-4 text-blue-500" />
                     Avance de Proyectos
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="h-[300px] w-full mt-4 flex items-center justify-around">
+                <div className="min-h-[300px] w-full mt-4 flex flex-wrap items-center justify-center gap-6">
                     {displayProjects.length > 0 ? (
                         displayProjects.map((project, index) => (
                             <CircularProgress
