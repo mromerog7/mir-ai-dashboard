@@ -68,6 +68,7 @@ export function FinanzasProyectos({ projects, ingresos }: FinanzasProyectosProps
                     <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
                             <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase sticky left-0 bg-slate-50">Proyecto</th>
+                            <th className="text-right px-3 py-3 text-xs font-semibold text-[#02457A] uppercase">Total Cliente</th>
                             <th className="text-right px-3 py-3 text-xs font-semibold text-sky-600 uppercase">Anticipos</th>
                             <th className="text-right px-3 py-3 text-xs font-semibold text-emerald-600 uppercase">Abonos</th>
                             <th className="text-right px-3 py-3 text-xs font-semibold text-blue-600 uppercase">Liquidación</th>
@@ -80,10 +81,11 @@ export function FinanzasProyectos({ projects, ingresos }: FinanzasProyectosProps
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {rows.length === 0 ? (
-                            <tr><td colSpan={9} className="text-center py-10 text-slate-400 italic">Sin proyectos</td></tr>
+                            <tr><td colSpan={10} className="text-center py-10 text-slate-400 italic">Sin proyectos</td></tr>
                         ) : rows.map(r => (
                             <tr key={r.id} className="hover:bg-slate-50 transition-colors">
                                 <td className="px-4 py-3 font-medium text-slate-800 sticky left-0 bg-white">{r.nombre}</td>
+                                <td className="px-3 py-3 text-right font-bold text-[#02457A]">{r.totalCliente > 0 ? fmt(r.totalCliente) : <span className="text-slate-300">—</span>}</td>
                                 <td className="px-3 py-3 text-right text-sky-600">{r.anticipos > 0 ? fmt(r.anticipos) : <span className="text-slate-300">—</span>}</td>
                                 <td className="px-3 py-3 text-right text-emerald-600">{r.abonos > 0 ? fmt(r.abonos) : <span className="text-slate-300">—</span>}</td>
                                 <td className="px-3 py-3 text-right text-blue-600">{r.liquidacion > 0 ? fmt(r.liquidacion) : <span className="text-slate-300">—</span>}</td>
@@ -103,6 +105,7 @@ export function FinanzasProyectos({ projects, ingresos }: FinanzasProyectosProps
                         <tfoot className="bg-slate-100 border-t-2 border-slate-300">
                             <tr className="font-bold text-sm">
                                 <td className="px-4 py-3 text-slate-700 sticky left-0 bg-slate-100">TOTALES</td>
+                                <td className="px-3 py-3 text-right text-[#02457A]">{fmt(rows.reduce((s, r) => s + r.totalCliente, 0))}</td>
                                 <td className="px-3 py-3 text-right text-sky-700">{fmt(rows.reduce((s, r) => s + r.anticipos, 0))}</td>
                                 <td className="px-3 py-3 text-right text-emerald-700">{fmt(rows.reduce((s, r) => s + r.abonos, 0))}</td>
                                 <td className="px-3 py-3 text-right text-blue-700">{fmt(rows.reduce((s, r) => s + r.liquidacion, 0))}</td>
