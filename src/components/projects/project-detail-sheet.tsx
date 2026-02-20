@@ -168,7 +168,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                     <span className="sr-only">Ver Detalles</span>
                 </Button>
             </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-[85vw] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
+            <SheetContent className="w-full sm:max-w-full lg:max-w-[calc(100vw-18rem)] bg-white border-slate-200 text-slate-900 overflow-y-auto pl-8 pr-8">
                 <SheetHeader className="mb-4">
                     <SheetTitle className="text-[#02457A] text-xl flex items-center gap-2">
                         {project.nombre}
