@@ -165,15 +165,7 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
                                     </span>
                                 </div>
                             </div>
-                            <div>
-                                <span className="text-xs text-slate-500 block">Responsable</span>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <User className="h-4 w-4 text-slate-500" />
-                                    <span className="text-sm text-slate-900">
-                                        {responsableProfile ? (responsableProfile.full_name || responsableProfile.email) : "No asignado"}
-                                    </span>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 
