@@ -74,7 +74,7 @@ export default async function DashboardPage() {
             nombre, 
             status,
             tareas (estatus),
-            presupuestos (monto),
+            presupuestos (total_final),
             gastos (monto)
         `)
         .neq("status", "Completado");
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
 
     // Process Data for Budget Chart
     const budgetData = (projectsData || []).map(p => {
-        const presupuestoTotal = p.presupuestos?.reduce((sum: number, item: any) => sum + (Number(item.monto) || 0), 0) || 0;
+        const presupuestoTotal = p.presupuestos?.reduce((sum: number, item: any) => sum + (Number(item.total_final) || 0), 0) || 0;
         const gastosTotales = p.gastos?.reduce((sum: number, item: any) => sum + (Number(item.monto) || 0), 0) || 0;
 
         return {
