@@ -14,10 +14,17 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, AlertTriangle } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
@@ -34,11 +41,13 @@ const formSchema = z.object({
     solicitante: z.string().optional(),
     ubicacion: z.string().optional(),
     fecha_inicio: z.date(),
+    status: z.enum(["Activo", "Completado"]).default("Activo"),
 })
 
 export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?: () => void, initialData?: any, projectId?: number | string }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [statusError, setStatusError] = useState<string | null>(null)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -48,12 +57,33 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
             solicitante: initialData?.solicitante || "",
             ubicacion: initialData?.ubicacion || "",
             fecha_inicio: initialData?.fecha_inicio ? new Date(initialData.fecha_inicio) : new Date(),
+            status: (initialData?.status as "Activo" | "Completado") || "Activo",
         },
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
+        setStatusError(null)
         const supabase = createClient()
+
+        // Validate: if marking as Completado, all tasks must be completed
+        if (values.status === "Completado" && projectId) {
+            const { data: incompleteTasks, error: taskErr } = await supabase
+                .from("tareas")
+                .select("id, titulo, estatus")
+                .eq("proyecto_id", projectId)
+                .neq("estatus", "Completada")
+
+            if (taskErr) {
+                console.error("Error checking tasks:", taskErr)
+            } else if (incompleteTasks && incompleteTasks.length > 0) {
+                setStatusError(
+                    `No se puede marcar como Completado: hay ${incompleteTasks.length} tarea(s) sin completar (${incompleteTasks.map(t => t.titulo).join(", ")}).`
+                )
+                setLoading(false)
+                return
+            }
+        }
 
         console.log("Submitting project:", values)
 
@@ -68,6 +98,7 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                 solicitante: values.solicitante || null,
                 ubicacion: values.ubicacion || null,
                 fecha_inicio: values.fecha_inicio.toISOString(),
+                status: values.status,
             }).eq('id', projectId).select()
 
             error = result.error
@@ -198,6 +229,39 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
                         </FormItem>
                     )}
                 />
+                {/* Status field — only shown when editing */}
+                {projectId && (
+                    <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Estatus del Proyecto</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger className="w-full bg-[#E5E5E5] border-slate-200 text-slate-900">
+                                            <SelectValue placeholder="Seleccionar estatus" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="Activo">Activo</SelectItem>
+                                        <SelectItem value="Completado">Completado</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                )}
+
+                {/* Validation error for status */}
+                {statusError && (
+                    <div className="flex items-start gap-2 bg-red-50 border border-red-200 text-red-700 text-sm rounded-md p-3">
+                        <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+                        <span>{statusError}</span>
+                    </div>
+                )}
+
                 <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
                     {loading ? "Guardando..." : (projectId ? "Actualizar Proyecto" : "Crear Proyecto")}
                 </Button>
