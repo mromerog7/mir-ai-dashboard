@@ -119,9 +119,10 @@ export function BudgetSummary({ budget, categories, onUpdate }: BudgetSummaryPro
                 <div className="space-y-1">
                     <Label className="text-[10px] font-semibold text-slate-900 uppercase tracking-wider">Indirectos / Gestión</Label>
                     <div className="flex gap-2 items-center">
-                        <div className="w-16 relative">
+                        <div className="w-24 relative">
                             <Input
                                 type="number"
+                                step="0.01"
                                 value={indirectosPerc}
                                 onChange={(e) => setIndirectosPerc(parseFloat(e.target.value) || 0)}
                                 className="h-7 bg-white pr-5 text-right text-xs"
