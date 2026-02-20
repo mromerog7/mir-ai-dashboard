@@ -31,6 +31,8 @@ import { TaskProgressSummary } from "@/components/tasks/task-progress-summary"
 import { CreateTaskButton } from "@/components/tasks/create-task-button"
 import { TaskGantt } from "@/components/tasks/task-gantt"
 import { TaskGanttReal } from "@/components/tasks/task-gantt-real"
+import { DataTable } from "@/app/(dashboard)/tasks/data-table"
+import { columns } from "@/app/(dashboard)/tasks/columns"
 import { LayoutList, Clock } from "lucide-react"
 
 interface ProjectDetailSheetProps {
@@ -40,6 +42,9 @@ interface ProjectDetailSheetProps {
 export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     const status = project.status;
     const variant = status === "Completado" ? "secondary" : "default";
+
+    // Filter out the "proyecto" column for this view
+    const projectColumns = columns.filter(col => col.id !== "proyecto");
 
     const [relatedData, setRelatedData] = useState<{
         tasks: Task[];
@@ -477,22 +482,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                             relatedData?.tasks && relatedData.tasks.length > 0 ? (
                                 <div className="min-h-[300px]">
                                     {viewMode === "list" && (
-                                        <div className="space-y-2">
-                                            {relatedData.tasks.map(task => (
-                                                <TaskDetailSheet
-                                                    key={task.id}
-                                                    task={task}
-                                                    trigger={
-                                                        <div className="bg-[#E5E5E5] p-3 rounded-md border border-slate-200 flex justify-between items-start cursor-pointer hover:bg-slate-100 hover:border-blue-300 transition-all">
-                                                            <div className="space-y-1">
-                                                                <div className="text-sm text-slate-900 font-semibold">{task.titulo || task.descripcion}</div>
-                                                                <div className="text-xs text-slate-500 line-clamp-2">{task.descripcion}</div>
-                                                            </div>
-                                                            <Badge variant="outline" className="text-xs border-slate-300 bg-white ml-2 shrink-0">{task.estatus || "Pendiente"}</Badge>
-                                                        </div>
-                                                    }
-                                                />
-                                            ))}
+                                        <div className="border border-slate-200 rounded-md overflow-hidden">
+                                            <DataTable columns={projectColumns} data={relatedData.tasks} />
                                         </div>
                                     )}
 
