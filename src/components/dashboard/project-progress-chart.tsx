@@ -79,7 +79,7 @@ export function ProjectProgressChart({ projects }: ProjectProgressChartProps) {
                                     <LabelList
                                         dataKey="completionRate"
                                         position="right"
-                                        formatter={(val: number) => `${val}%`}
+                                        formatter={(val: any) => `${val}%`}
                                         style={{ fontSize: '11px', fill: '#64748b', fontWeight: 500 }}
                                     />
                                 </Bar>
