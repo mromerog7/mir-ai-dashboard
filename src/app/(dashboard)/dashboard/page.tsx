@@ -67,17 +67,28 @@ export default async function DashboardPage() {
     }
 
     // 4. Fetch Comprehensive Project Data for Charts
-    const { data: projectsData } = await supabase
-        .from("proyectos")
-        .select(`
-            id, 
-            nombre, 
-            status,
-            tareas (estatus),
-            presupuestos (total_final),
-            gastos (monto)
-        `)
-        .neq("status", "Completado");
+    let projectsData: any[] | null = [];
+    try {
+        const { data, error } = await supabase
+            .from("proyectos")
+            .select(`
+                id, 
+                nombre, 
+                status,
+                tareas (estatus),
+                presupuestos (total_final),
+                gastos (monto)
+            `)
+            .neq("status", "Completado");
+
+        if (error) {
+            console.error("Error fetching dashboard project data:", error);
+        } else {
+            projectsData = data;
+        }
+    } catch (err) {
+        console.error("Unexpected error fetching dashboard data:", err);
+    }
 
     // Process Data for Progress Chart
     const progressData = (projectsData || []).map(p => {
