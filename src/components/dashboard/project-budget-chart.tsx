@@ -26,18 +26,34 @@ const formatCurrency = (value: number) => {
 
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+        const costoVenta = payload.find((p: any) => p.dataKey === 'presupuestoTotal')?.value ?? 0
+        const gastos = payload.find((p: any) => p.dataKey === 'gastosTotales')?.value ?? 0
+        const utilidad = costoVenta > 0 ? ((costoVenta - gastos) / costoVenta) * 100 : 0
+        const utilidadColor = utilidad >= 0 ? '#22c55e' : '#ef4444'
+
         return (
             <div className="bg-white border border-slate-200 p-2 rounded-md shadow-md text-xs">
                 <p className="font-semibold mb-2 text-slate-800">{label}</p>
-                {payload.map((entry: any, index: number) => (
-                    <div key={index} className="flex items-center gap-2 mb-1">
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-                        <span className="text-slate-500">{entry.name}:</span>
-                        <span className="font-medium text-slate-900">
-                            {formatCurrency(entry.value)}
-                        </span>
-                    </div>
-                ))}
+                {/* Costo Venta row */}
+                <div className="flex items-center gap-2 mb-1">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    <span className="text-slate-500">Costo Venta:</span>
+                    <span className="font-medium text-slate-900">{formatCurrency(costoVenta)}</span>
+                </div>
+                {/* Gastos row */}
+                <div className="flex items-center gap-2 mb-1">
+                    <div className="w-2 h-2 rounded-full bg-orange-500" />
+                    <span className="text-slate-500">Gastos:</span>
+                    <span className="font-medium text-slate-900">{formatCurrency(gastos)}</span>
+                </div>
+                {/* % Utilidad row */}
+                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-100">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: utilidadColor }} />
+                    <span className="text-slate-500">% Utilidad:</span>
+                    <span className="font-semibold" style={{ color: utilidadColor }}>
+                        {utilidad.toFixed(1)}%
+                    </span>
+                </div>
             </div>
         );
     }
@@ -82,7 +98,7 @@ export function ProjectBudgetHealthChart({ projects }: ProjectBudgetHealthChartP
                                 <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
                                 <Bar
                                     dataKey="presupuestoTotal"
-                                    name="Presupuesto"
+                                    name="Costo Venta"
                                     fill="url(#blue-bar-gradient)"
                                     radius={[4, 4, 0, 0]}
                                 />
