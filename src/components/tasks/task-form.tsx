@@ -25,7 +25,7 @@ import {
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-import { CalendarIcon, AlertTriangle, ChevronDown, DollarSign, Clock } from "lucide-react"
+import { CalendarIcon, AlertTriangle, ChevronDown, DollarSign, Clock, Link } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
@@ -43,6 +43,7 @@ const formSchema = z.object({
     prioridad: z.string().optional(),
     estatus: z.string().optional(),
     responsable: z.string().optional(),
+    depende_de: z.string().optional(),
     fecha_inicio: z.date().optional(),
     fecha_fin: z.date().optional(),
     fecha_inicio_real: z.date().optional(),
@@ -64,6 +65,7 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
     const [profiles, setProfiles] = useState<any[]>([])
     const [linkedIncidents, setLinkedIncidents] = useState<any[]>([])
     const [expandedIncId, setExpandedIncId] = useState<number | null>(null)
+    const [projectTasks, setProjectTasks] = useState<any[]>([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -105,6 +107,7 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
             prioridad: initialData?.prioridad || "Media",
             estatus: initialData?.estatus || "Pendiente",
             responsable: initialData?.responsable || "",
+            depende_de: initialData?.depende_de?.toString() || "",
             fecha_inicio: initialData?.fecha_inicio ? parseLocalDate(initialData.fecha_inicio) : undefined,
             fecha_fin: initialData?.fecha_fin ? parseLocalDate(initialData.fecha_fin) : undefined,
             fecha_inicio_real: initialData?.fecha_inicio_real ? parseLocalDate(initialData.fecha_inicio_real) : undefined,
@@ -119,9 +122,44 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
         }
     }, [defaultProjectId, form]);
 
+    // Fetch sibling tasks when project changes
+    const watchedProjectId = form.watch('proyecto_id')
+    useEffect(() => {
+        const pid = watchedProjectId || defaultProjectId
+        if (!pid) { setProjectTasks([]); return }
+        const fetchTasks = async () => {
+            const supabase = createClient()
+            const { data } = await supabase.from('tareas').select('id, titulo, fecha_fin').eq('proyecto_id', parseInt(pid))
+            setProjectTasks((data || []).filter(t => t.id !== taskId))
+        }
+        fetchTasks()
+    }, [watchedProjectId, defaultProjectId, taskId])
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true)
         const supabase = createClient()
+
+        const dependeDeId = values.depende_de && values.depende_de !== "none" ? parseInt(values.depende_de) : null
+
+        // Auto-adjust dates if dependency set
+        let adjustedInicio = values.fecha_inicio
+        let adjustedFin = values.fecha_fin
+        if (dependeDeId && adjustedInicio) {
+            const dep = projectTasks.find(t => t.id === dependeDeId)
+            if (dep?.fecha_fin) {
+                const depEnd = parseLocalDate(dep.fecha_fin)
+                const nextDay = new Date(depEnd)
+                nextDay.setDate(nextDay.getDate() + 1)
+                if (adjustedInicio < nextDay) {
+                    const duration = adjustedFin && adjustedInicio ? Math.round((adjustedFin.getTime() - adjustedInicio.getTime()) / (1000 * 60 * 60 * 24)) : 0
+                    adjustedInicio = nextDay
+                    if (duration > 0) {
+                        adjustedFin = new Date(nextDay)
+                        adjustedFin.setDate(adjustedFin.getDate() + duration)
+                    }
+                }
+            }
+        }
 
         const dbData = {
             titulo: values.titulo,
@@ -131,8 +169,9 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
             prioridad: values.prioridad || "Media",
             estatus: values.estatus || "Pendiente",
             responsable: values.responsable || null,
-            fecha_inicio: values.fecha_inicio ? values.fecha_inicio.toISOString() : null,
-            fecha_fin: values.fecha_fin ? values.fecha_fin.toISOString() : null,
+            depende_de: dependeDeId,
+            fecha_inicio: adjustedInicio ? adjustedInicio.toISOString() : null,
+            fecha_fin: adjustedFin ? adjustedFin.toISOString() : null,
             fecha_inicio_real: values.fecha_inicio_real ? values.fecha_inicio_real.toISOString() : null,
             fecha_fin_real: values.fecha_fin_real ? values.fecha_fin_real.toISOString() : null,
             fecha_vencimiento: values.fecha_vencimiento ? values.fecha_vencimiento.toISOString() : null,
@@ -156,6 +195,31 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
             alert(`Error al guardar tarea: ${error.message}`)
         } else {
             console.log("Task saved:", data)
+            // Cascade: adjust dependent tasks
+            const savedTask = data?.[0]
+            if (savedTask?.fecha_fin) {
+                const { data: dependents } = await supabase.from('tareas').select('id, fecha_inicio, fecha_fin, depende_de').eq('depende_de', savedTask.id)
+                if (dependents && dependents.length > 0) {
+                    const parentEnd = parseLocalDate(savedTask.fecha_fin)
+                    const nextDay = new Date(parentEnd)
+                    nextDay.setDate(nextDay.getDate() + 1)
+                    for (const dep of dependents) {
+                        if (dep.fecha_inicio) {
+                            const depStart = parseLocalDate(dep.fecha_inicio)
+                            if (depStart < nextDay) {
+                                const dur = dep.fecha_fin ? Math.round((parseLocalDate(dep.fecha_fin).getTime() - depStart.getTime()) / (1000 * 60 * 60 * 24)) : 0
+                                const newStart = new Date(nextDay)
+                                const newEnd = dur > 0 ? new Date(newStart) : null
+                                if (newEnd) newEnd.setDate(newEnd.getDate() + dur)
+                                await supabase.from('tareas').update({
+                                    fecha_inicio: newStart.toISOString(),
+                                    fecha_fin: newEnd ? newEnd.toISOString() : dep.fecha_fin,
+                                }).eq('id', dep.id)
+                            }
+                        }
+                    }
+                }
+            }
             form.reset()
             router.refresh()
             if (onSuccess) onSuccess()
@@ -309,6 +373,34 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
                         )}
                     />
                 </div>
+
+                {/* Dependency selector */}
+                <FormField
+                    control={form.control}
+                    name="depende_de"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="flex items-center gap-1.5"><Link className="h-3.5 w-3.5 text-blue-500" /> Depende de</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger className="bg-[#E5E5E5] border-slate-200 text-slate-900">
+                                        <SelectValue placeholder="Sin dependencia" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent className="bg-white border-slate-200 text-slate-900">
+                                    <SelectItem value="none" className="hover:bg-slate-100 text-slate-400">Sin dependencia</SelectItem>
+                                    {projectTasks.map((t) => (
+                                        <SelectItem key={t.id} value={t.id.toString()} className="hover:bg-slate-100">
+                                            {t.titulo}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
                 <div className="grid grid-cols-2 gap-4">
                     <FormField
                         control={form.control}

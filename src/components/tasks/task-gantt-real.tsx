@@ -291,6 +291,62 @@ export function TaskGanttReal({ tasks, onEditTask }: TaskGanttRealProps) {
 
                     {/* Task rows - each row has TWO bars */}
                     <div className="relative">
+                        {/* SVG Dependency Arrows Overlay */}
+                        {(() => {
+                            const ROW_H = 56
+                            const arrows: { fromX: number; fromY: number; toX: number; toY: number }[] = []
+                            const msPerDay = 86400000
+                            const rangeStartTime = rangeStart.getTime()
+
+                            datedTasks.forEach((task, idx) => {
+                                if (!task.depende_de) return
+                                const depIdx = datedTasks.findIndex(t => t.id === task.depende_de)
+                                if (depIdx === -1) return
+                                const depTask = datedTasks[depIdx]
+                                if (!depTask.fecha_fin || !task.fecha_inicio) return
+
+                                const depEndDay = Math.round((parseLocalDate(depTask.fecha_fin).getTime() - rangeStartTime) / msPerDay)
+                                const taskStartDay = Math.round((parseLocalDate(task.fecha_inicio!).getTime() - rangeStartTime) / msPerDay)
+
+                                const fromX = Math.min(totalDays, Math.max(0, depEndDay + 1)) * DAY_WIDTH
+                                const fromY = depIdx * ROW_H + 14
+                                const toX = Math.max(0, taskStartDay) * DAY_WIDTH
+                                const toY = idx * ROW_H + 14
+
+                                arrows.push({ fromX, fromY, toX, toY })
+                            })
+
+                            if (arrows.length === 0) return null
+                            const svgH = datedTasks.length * ROW_H
+
+                            return (
+                                <svg
+                                    className="absolute top-0 left-[220px] pointer-events-none z-[7]"
+                                    style={{ width: `${totalDays * DAY_WIDTH}px`, height: `${svgH}px` }}
+                                >
+                                    <defs>
+                                        <marker id="gantt-real-arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                                            <polygon points="0 0, 8 3, 0 6" fill="#f59e0b" />
+                                        </marker>
+                                    </defs>
+                                    {arrows.map((a, i) => {
+                                        const midX = a.fromX + (a.toX - a.fromX) / 2
+                                        return (
+                                            <path
+                                                key={i}
+                                                d={`M ${a.fromX} ${a.fromY} C ${midX} ${a.fromY}, ${midX} ${a.toY}, ${a.toX} ${a.toY}`}
+                                                fill="none"
+                                                stroke="#f59e0b"
+                                                strokeWidth="2"
+                                                strokeDasharray="4 2"
+                                                markerEnd="url(#gantt-real-arrow)"
+                                                opacity="0.7"
+                                            />
+                                        )
+                                    })}
+                                </svg>
+                            )
+                        })()}
                         {datedTasks.map((task) => {
                             const plannedBar = getBarStyleForDates(task.fecha_inicio!, task.fecha_fin!)
                             const hasReal = task.fecha_inicio_real && task.fecha_fin_real
