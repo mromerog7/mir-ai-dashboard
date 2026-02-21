@@ -18,6 +18,7 @@ import { createClient } from "@/lib/supabase/client"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { TaskNotesList } from "./task-notes-list"
+import { TaskChecklists } from "./task-checklists"
 
 function parseLocalDate(dateStr: string): Date {
     const parts = dateStr.split("T")[0].split("-")
@@ -179,6 +180,9 @@ export function TaskDetailSheet({ task, trigger }: TaskDetailSheetProps) {
 
                     {/* Notas asociadas */}
                     <TaskNotesList taskId={task.id} />
+
+                    {/* Checklists */}
+                    <TaskChecklists taskId={task.id} />
 
                     {/* Incidencias asociadas */}
                     <div className="space-y-2">

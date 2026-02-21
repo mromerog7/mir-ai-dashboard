@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CalendarIcon, AlertTriangle, ChevronDown, DollarSign, Clock, Link } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
@@ -32,7 +32,7 @@ import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { TaskNotesList } from "./task-notes-list"
-import { TaskChecklists } from "./task-checklists"
+import { TaskChecklists, TaskChecklistsHandle } from "./task-checklists"
 
 const formSchema = z.object({
     titulo: z.string().min(2, {
@@ -67,6 +67,7 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
     const [linkedIncidents, setLinkedIncidents] = useState<any[]>([])
     const [expandedIncId, setExpandedIncId] = useState<number | null>(null)
     const [projectTasks, setProjectTasks] = useState<any[]>([])
+    const checklistRef = useRef<TaskChecklistsHandle>(null)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -217,6 +218,22 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
                                     fecha_fin: newEnd ? newEnd.toISOString() : dep.fecha_fin,
                                 }).eq('id', dep.id)
                             }
+                        }
+                    }
+                }
+            }
+            // Save pending checklists for new tasks
+            if (!taskId && savedTask) {
+                const pending = checklistRef.current?.getPendingChecklists() || []
+                for (const cl of pending) {
+                    const { data: clData } = await supabase.from('tarea_checklists').insert({ tarea_id: savedTask.id, nombre: cl.nombre }).select()
+                    if (clData?.[0]) {
+                        for (let i = 0; i < cl.items.length; i++) {
+                            await supabase.from('tarea_checklist_items').insert({
+                                checklist_id: clData[0].id,
+                                texto: cl.items[i].texto,
+                                posicion: i,
+                            })
                         }
                     }
                 }
@@ -604,10 +621,8 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
                     <TaskNotesList taskId={taskId} />
                 )}
 
-                {/* Checklists (solo en modo edición) */}
-                {taskId && (
-                    <TaskChecklists taskId={taskId} />
-                )}
+                {/* Checklists (always visible) */}
+                <TaskChecklists ref={checklistRef} taskId={taskId || null} />
 
                 {/* Incidencias asociadas (solo en modo edición) */}
                 {taskId && (
