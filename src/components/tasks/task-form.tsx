@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { TaskNotesList } from "./task-notes-list"
+import { TaskChecklists } from "./task-checklists"
 
 const formSchema = z.object({
     titulo: z.string().min(2, {
@@ -601,6 +602,11 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
                 {/* Notas asociadas (solo en modo edición) */}
                 {taskId && (
                     <TaskNotesList taskId={taskId} />
+                )}
+
+                {/* Checklists (solo en modo edición) */}
+                {taskId && (
+                    <TaskChecklists taskId={taskId} />
                 )}
 
                 {/* Incidencias asociadas (solo en modo edición) */}
