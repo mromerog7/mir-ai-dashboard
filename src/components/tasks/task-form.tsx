@@ -196,7 +196,6 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
             console.error("Error saving task:", error)
             alert(`Error al guardar tarea: ${error.message}`)
         } else {
-            console.log("Task saved:", data)
             // Cascade: adjust dependent tasks
             const savedTask = data?.[0]
             if (savedTask?.fecha_fin) {

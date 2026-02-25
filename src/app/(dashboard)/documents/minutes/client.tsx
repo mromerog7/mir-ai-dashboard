@@ -38,7 +38,6 @@ export function MinutesClient({ initialMinutes, projects }: MinutesClientProps) 
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'minutas' },
                 async (payload) => {
-                    console.log("[MinutesClient] Change received:", payload)
                     router.refresh()
 
                     if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {

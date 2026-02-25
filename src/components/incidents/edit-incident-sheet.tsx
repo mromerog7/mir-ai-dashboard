@@ -228,20 +228,17 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
         })
 
         try {
-            console.log("Starting upload...")
             const response = await fetch('https://n8n.grupocilar.com/webhook/subir-imagen-incidencia', {
                 method: 'POST',
                 body: formData
             })
 
-            console.log("Upload response status:", response.status)
 
             if (!response.ok) {
                 throw new Error('Error uploading images')
             }
 
             const data = await response.json()
-            console.log("Upload response data:", data)
 
             const urls: string[] = []
 

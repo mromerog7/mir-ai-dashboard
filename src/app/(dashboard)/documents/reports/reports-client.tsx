@@ -49,7 +49,6 @@ export function ReportsClient({ initialReports }: ReportsClientProps) {
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'reportes' },
                 async (payload) => {
-                    console.log("[ReportsClient] Change received:", payload);
                     if (payload.eventType === 'INSERT') {
                         const { data } = await supabase
                             .from('reportes')

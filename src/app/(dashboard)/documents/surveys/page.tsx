@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Levantamientos | MiR-AI",
+    description: "Gestión de levantamientos técnicos",
+}
+
 import { createClient } from "@/lib/supabase/server";
 import { Survey } from "./columns";
 import { SurveysClient } from "./surveys-client";

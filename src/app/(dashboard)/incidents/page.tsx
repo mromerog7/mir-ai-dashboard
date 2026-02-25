@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Incidencias | MiR-AI",
+    description: "Registro y seguimiento de incidencias",
+}
+
 import { createClient } from "@/lib/supabase/server";
 import { IncidentsView } from "./incidents-view";
 import { Incident } from "@/types";

@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Reuniones con Clientes | MiR-AI",
+    description: "Seguimiento de reuniones con clientes",
+}
+
 import { createClient } from "@/lib/supabase/server"
 import { ClientMeetingsClient } from "./client"
 import { redirect } from "next/navigation"

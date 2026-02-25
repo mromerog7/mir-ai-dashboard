@@ -49,7 +49,6 @@ export function SurveysClient({ initialSurveys }: SurveysClientProps) {
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'levantamientos' },
                 async (payload) => {
-                    console.log("[SurveysClient] Change received:", payload);
                     if (payload.eventType === 'INSERT') {
                         const { data } = await supabase
                             .from('levantamientos')

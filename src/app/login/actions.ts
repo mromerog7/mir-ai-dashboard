@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 import { headers } from "next/headers";
 
 export async function signInWithOtpAction(email: string) {
-    console.log("Attempting server-side login for:", email);
 
     try {
         // Use the SSR client to ensure cookies (PKCE verifier) are set correctly

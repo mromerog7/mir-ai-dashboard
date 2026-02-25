@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    reactStrictMode: true,
+    poweredByHeader: false,
+    output: 'standalone',
     images: {
         remotePatterns: [
             {
@@ -9,7 +12,7 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'supabase.grupocilar.com', // Just in case images are served from here too
+                hostname: 'supabase.grupocilar.com',
                 pathname: '/**',
             },
             {

@@ -39,12 +39,9 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getSession()
 
     const duration = Date.now() - start;
-    console.log(`[Middleware] Path: ${request.nextUrl.pathname}, Session found: ${!!session}, Duration: ${duration}ms`);
     if (session) {
-        console.log(`[Middleware] User: ${session.user.email}`);
     } else {
         const cookies = request.cookies.getAll().map(c => c.name).join(', ');
-        console.log(`[Middleware] No session. Cookies present: ${cookies}`);
     }
 
     if (!session && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/auth')) {

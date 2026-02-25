@@ -49,7 +49,6 @@ export function QuotesClient({ initialQuotes }: QuotesClientProps) {
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'cotizaciones' },
                 async (payload) => {
-                    console.log("[QuotesClient] Change received:", payload);
                     if (payload.eventType === 'INSERT') {
                         const { data } = await supabase
                             .from('cotizaciones')

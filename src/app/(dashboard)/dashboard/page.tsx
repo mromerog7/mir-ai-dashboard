@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Dashboard | MiR-AI",
+    description: "Panel principal de seguimiento de proyectos",
+}
+
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -46,7 +53,6 @@ export default async function DashboardPage() {
             .eq("estatus", "Abierta");
         if (!error) highRiskIncidents = count || 0;
     } catch (e) {
-        console.log("Incidencias table missing/empty");
     }
 
     // 3. Fetch Expenses (Safe)
@@ -63,7 +69,6 @@ export default async function DashboardPage() {
 
         totalExpenses = data?.reduce((sum, expense) => sum + (Number(expense.monto) || 0), 0) || 0;
     } catch (e) {
-        console.log("Gastos table missing/empty");
     }
 
     // 4. Fetch Comprehensive Project Data for Charts
@@ -135,7 +140,6 @@ export default async function DashboardPage() {
             };
         }
     } catch (e) {
-        console.log("Weather fetch error", e);
     }
 
     const weatherInfo = getWeatherIcon(weatherData.code);

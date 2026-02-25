@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Clima | MiR-AI",
+    description: "Pronóstico del clima local",
+}
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CloudRain, CloudSun, Sun, Wind, Droplets, ThermometerSun, CalendarDays, Cloud, Snowflake, CloudLightning } from "lucide-react";
 
@@ -44,7 +51,6 @@ export default async function WeatherPage() {
             })).slice(0, 5); // Take 5 days
         }
     } catch (e) {
-        console.log("Weather page fetch error", e);
     }
 
     const currentInfo = getWeatherIcon(current.code);

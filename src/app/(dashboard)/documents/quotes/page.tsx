@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Cotizaciones | MiR-AI",
+    description: "Gestión de cotizaciones",
+}
+
 import { createClient } from "@/lib/supabase/server";
 import { Quote } from "./columns";
 import { QuotesClient } from "./quotes-client";

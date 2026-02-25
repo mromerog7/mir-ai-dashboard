@@ -152,7 +152,6 @@ export function BudgetComparisonView({ projectId }: BudgetComparisonViewProps) {
                     filter: `proyecto_id=eq.${projectId}`
                 },
                 (payload) => {
-                    console.log('Realtime update received:', payload)
                     setRefreshTrigger(prev => prev + 1)
                 }
             )

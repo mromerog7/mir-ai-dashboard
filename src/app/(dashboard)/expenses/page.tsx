@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Gastos de Proyectos | MiR-AI",
+    description: "Control de gastos por proyecto",
+}
+
 import { createClient } from "@/lib/supabase/server";
 import { ExpensesView } from "./expenses-view";
 import { Expense } from "@/types";

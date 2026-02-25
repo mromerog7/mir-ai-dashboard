@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Proyectos | MiR-AI",
+    description: "Gestión y seguimiento de proyectos",
+}
+
 import { createClient } from "@/lib/supabase/server";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";

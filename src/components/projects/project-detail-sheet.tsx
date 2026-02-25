@@ -108,7 +108,6 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                     filter: `proyecto_id=eq.${project.id}`
                 },
                 async (payload) => {
-                    console.log("Realtime task event:", payload);
 
                     if (payload.eventType === 'INSERT') {
                         const { data } = await supabase

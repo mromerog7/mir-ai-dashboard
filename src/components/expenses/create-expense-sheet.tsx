@@ -174,20 +174,17 @@ export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId,
         })
 
         try {
-            console.log("Starting upload...")
             const response = await fetch('https://n8n.grupocilar.com/webhook/subir-imagen-gasto', {
                 method: 'POST',
                 body: formData
             })
 
-            console.log("Upload response status:", response.status)
 
             if (!response.ok) {
                 throw new Error('Error uploading images')
             }
 
             const data = await response.json()
-            console.log("Upload response data:", data)
 
             // Normalize to array
             const dataArray = Array.isArray(data) ? data : [data].filter(Boolean)
@@ -210,7 +207,6 @@ export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId,
                 }
             })
 
-            console.log("Parsed URLs:", urls)
             return urls
 
         } catch (error) {
@@ -229,7 +225,6 @@ export function CreateExpenseSheet({ trigger, defaultProjectId, defaultBudgetId,
 
             if (newFiles.length > 0) {
                 uploadedUrls = await uploadImages()
-                console.log("Final Uploaded URLs:", uploadedUrls)
                 setUploading(false)
             }
 

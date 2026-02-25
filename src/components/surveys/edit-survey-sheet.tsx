@@ -744,7 +744,6 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
                 evidencia_fotos: finalPhotos.join(",") // Comma separated string
             }
 
-            console.log("Sending webhook payload:", webhookPayload)
 
             const response = await fetch('https://n8n.grupocilar.com/webhook/generar-levantamiento', {
                 method: 'POST',

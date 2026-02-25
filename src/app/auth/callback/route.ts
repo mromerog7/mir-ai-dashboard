@@ -10,11 +10,9 @@ export async function GET(request: Request) {
     if (code) {
         try {
             const supabase = await createClient();
-            console.log(`[Auth Callback] Exchanging code: ${code.substring(0, 5)}...`);
 
             const { error } = await supabase.auth.exchangeCodeForSession(code);
             if (!error) {
-                console.log(`[Auth Callback] Session exchanged successfully. Redirecting to ${origin}${next}`);
                 return NextResponse.redirect(`${origin}${next}`);
             } else {
                 console.error("[Auth Callback] Error exchanging code:", error);

@@ -181,13 +181,11 @@ export function EditExpenseSheet({ expense, open, onOpenChange }: EditExpenseShe
         })
 
         try {
-            console.log("Starting upload...")
             const response = await fetch('https://n8n.grupocilar.com/webhook/subir-imagen-gasto', {
                 method: 'POST',
                 body: formData
             })
 
-            console.log("Upload response status:", response.status)
 
             if (!response.ok) {
                 throw new Error('Error uploading images')

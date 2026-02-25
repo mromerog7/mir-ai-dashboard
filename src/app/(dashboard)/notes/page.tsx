@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Notas | MiR-AI",
+    description: "Notas y documentación interna",
+}
+
 import { NotesClient } from "@/components/notes/notes-client"
 import { Header } from "@/components/header"
 

@@ -38,7 +38,6 @@ export function ClientMeetingsClient({ initialMeetings, projects }: ClientMeetin
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'reuniones_clientes' },
                 async (payload) => {
-                    console.log("[ClientMeetingsClient] Change received:", payload)
                     router.refresh()
 
                     if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {

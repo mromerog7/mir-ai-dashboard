@@ -74,7 +74,6 @@ export function ExpensesView({ initialExpenses, projectId }: ExpensesViewProps) 
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'gastos' },
                 async (payload) => {
-                    console.log("Realtime event received:", payload);
                     if (projectId && payload.new && 'proyecto_id' in payload.new && payload.new.proyecto_id !== projectId) {
                         return; // Ignore if not for this project
                     }

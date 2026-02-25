@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Finanzas | MiR-AI",
+    description: "Balance financiero y control de retiros",
+}
+
 import { createClient } from "@/lib/supabase/server"
 import { FinanzasView } from "@/components/finanzas/finanzas-view"
 

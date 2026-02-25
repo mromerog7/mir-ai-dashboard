@@ -1,3 +1,10 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: "Reportes | MiR-AI",
+    description: "Reportes de trabajo y avance",
+}
+
 import { createClient } from "@/lib/supabase/server";
 import { ReportsClient } from "./reports-client";
 

@@ -85,7 +85,6 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
             }
         }
 
-        console.log("Submitting project:", values)
 
         let error;
         let data;
@@ -122,7 +121,6 @@ export function ProjectForm({ onSuccess, initialData, projectId }: { onSuccess?:
             console.error("Error saving project:", error)
             alert(`Error al guardar proyecto: ${error.message}`)
         } else {
-            console.log("Project saved:", data)
             form.reset()
             router.refresh()
             if (onSuccess) onSuccess()
