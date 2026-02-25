@@ -396,13 +396,11 @@ export function MinutaDetailSheet({ minuta, trigger, defaultProjectId, readonly 
                                 <FormItem>
                                     <FormLabel className="text-slate-900">Participantes</FormLabel>
                                     <FormControl>
-                                        <ListInput
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                            placeholder="Nombre del participante"
-                                            name="participantes"
-                                            aiEnabled={false}
-                                            readonly={readonly}
+                                        <Input
+                                            placeholder="Ej. Juan Pérez, María López, Carlos García"
+                                            {...field}
+                                            disabled={readonly}
+                                            className={`bg-[#E5E5E5] border-slate-200 text-black ${readonly ? "opacity-100 font-medium" : ""}`}
                                         />
                                     </FormControl>
                                     <FormMessage />
