@@ -53,7 +53,7 @@ export function Sidebar({ className }: SidebarProps) {
             color: "text-pink-700",
         },
         {
-            label: "Gastos",
+            label: "Gastos de Proyectos",
             icon: DollarSign,
             href: "/expenses",
             color: "text-orange-700",

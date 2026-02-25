@@ -122,7 +122,7 @@ export function ExpensesView({ initialExpenses, projectId }: ExpensesViewProps) 
     return (
         <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Control de Gastos</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-[#02457A]">Control de Gastos de Proyectos</h1>
                 <div className="flex items-center space-x-4">
                     {/* Total Amount Display */}
                     <div className="flex flex-col items-end">
