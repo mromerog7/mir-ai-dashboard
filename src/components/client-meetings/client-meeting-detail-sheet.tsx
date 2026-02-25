@@ -37,7 +37,7 @@ import { ClientMeeting } from "@/types"
 import { format } from "date-fns"
 
 // Helper Component for Dynamic List Input
-function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, isAiImproving, aiField, name, readonly }: any) {
+function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, isAiImproving, aiField, name, readonly, singleLine }: any) {
     const separator = "\n\n"
     const [items, setItems] = useState<string[]>(value ? value.split(separator) : (readonly ? [] : [""]))
 
@@ -79,13 +79,23 @@ function ListInput({ value = "", onChange, placeholder, aiEnabled, onAiImprove, 
                 <div key={index} className="flex gap-2 group items-start">
                     <span className="text-sm text-slate-500 w-6 text-right font-mono pt-3">{index + 1}.</span>
                     <div className="flex-1 relative">
-                        <Textarea
-                            value={item}
-                            onChange={(e) => handleChange(index, e.target.value)}
-                            placeholder={placeholder}
-                            disabled={readonly}
-                            className={`bg-[#E5E5E5] border-slate-200 text-black min-h-[80px] resize-y placeholder:text-slate-400 ${readonly ? "opacity-100 resize-none font-medium" : ""}`}
-                        />
+                        {singleLine ? (
+                            <Input
+                                value={item}
+                                onChange={(e) => handleChange(index, e.target.value)}
+                                placeholder={placeholder}
+                                disabled={readonly}
+                                className={`bg-[#E5E5E5] border-slate-200 text-black ${readonly ? "opacity-100 font-medium" : ""}`}
+                            />
+                        ) : (
+                            <Textarea
+                                value={item}
+                                onChange={(e) => handleChange(index, e.target.value)}
+                                placeholder={placeholder}
+                                disabled={readonly}
+                                className={`bg-[#E5E5E5] border-slate-200 text-black min-h-[80px] resize-y placeholder:text-slate-400 ${readonly ? "opacity-100 resize-none font-medium" : ""}`}
+                            />
+                        )}
                     </div>
                     {!readonly && (
                         <Button
@@ -395,11 +405,14 @@ export function ClientMeetingDetailSheet({ meeting, trigger, defaultProjectId, r
                                 <FormItem>
                                     <FormLabel className="text-slate-900">Participantes</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            placeholder="Ej. Juan Pérez, María López, Carlos García"
-                                            {...field}
-                                            disabled={readonly}
-                                            className={`bg-[#E5E5E5] border-slate-200 text-black ${readonly ? "opacity-100 font-medium" : ""}`}
+                                        <ListInput
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            placeholder="Nombre del participante"
+                                            name="participantes"
+                                            aiEnabled={false}
+                                            readonly={readonly}
+                                            singleLine={true}
                                         />
                                     </FormControl>
                                     <FormMessage />
