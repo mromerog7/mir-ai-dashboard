@@ -19,7 +19,8 @@ import {
     MapPin,
     FileBarChart,
     CloudSun,
-    ClipboardPen,
+    NotebookPen,
+    BookOpen,
     DollarSign,
     Notebook,
     TrendingUp
@@ -72,7 +73,7 @@ export function Sidebar({ className }: SidebarProps) {
         },
         {
             label: "Notas",
-            icon: ClipboardPen,
+            icon: NotebookPen,
             href: "/notes",
             color: "text-emerald-500",
         },
