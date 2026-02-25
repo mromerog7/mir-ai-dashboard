@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, forwardRef, useImperativeHandle } from "react"
 import { createClient } from "@/lib/supabase/client"
-import { CheckSquare, Plus, Trash2, X } from "lucide-react"
+import { CheckSquare, Plus, Trash2, X, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -52,6 +52,12 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
         const [newChecklistName, setNewChecklistName] = useState("")
         const [newItemTexts, setNewItemTexts] = useState<Record<number, string>>({})
         const [showNewChecklist, setShowNewChecklist] = useState(false)
+
+        // Inline editing state
+        const [editingChecklistId, setEditingChecklistId] = useState<number | null>(null)
+        const [editingChecklistName, setEditingChecklistName] = useState("")
+        const [editingItemId, setEditingItemId] = useState<number | null>(null)
+        const [editingItemText, setEditingItemText] = useState("")
 
         const isPending = !taskId
 
@@ -114,6 +120,38 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
                 await supabase.from("tarea_checklists").delete().eq("id", id)
                 fetchChecklists()
             }
+        }
+
+        // ---- RENAME CHECKLIST ----
+        const renameChecklist = async (id: number) => {
+            const name = editingChecklistName.trim()
+            if (!name) { setEditingChecklistId(null); return }
+            if (isPending) {
+                setPendingChecklists(prev => prev.map(c => c.tempId === id ? { ...c, nombre: name } : c))
+            } else {
+                const supabase = createClient()
+                await supabase.from("tarea_checklists").update({ nombre: name }).eq("id", id)
+                fetchChecklists()
+            }
+            setEditingChecklistId(null)
+        }
+
+        // ---- RENAME ITEM ----
+        const renameItem = async (itemId: number, checklistId: number) => {
+            const text = editingItemText.trim()
+            if (!text) { setEditingItemId(null); return }
+            if (isPending) {
+                setPendingChecklists(prev => prev.map(c =>
+                    c.tempId === checklistId
+                        ? { ...c, items: c.items.map(i => i.tempId === itemId ? { ...i, texto: text } : i) }
+                        : c
+                ))
+            } else {
+                const supabase = createClient()
+                await supabase.from("tarea_checklist_items").update({ texto: text }).eq("id", itemId)
+                fetchChecklists()
+            }
+            setEditingItemId(null)
         }
 
         // ---- ADD ITEM ----
@@ -247,18 +285,45 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
                         <div key={cl.key} className="bg-white rounded-md border border-slate-200 overflow-hidden">
                             {/* Header */}
                             <div className="flex items-center justify-between px-3 py-2 bg-slate-50/80 border-b border-slate-100">
-                                <span className="text-sm font-medium text-slate-800">{cl.nombre}</span>
+                                {editingChecklistId === cl.key ? (
+                                    <Input
+                                        value={editingChecklistName}
+                                        onChange={e => setEditingChecklistName(e.target.value)}
+                                        onKeyDown={e => { if (e.key === "Enter") renameChecklist(cl.key); if (e.key === "Escape") setEditingChecklistId(null) }}
+                                        onBlur={() => renameChecklist(cl.key)}
+                                        className="h-7 text-sm font-medium bg-white border-violet-300 flex-1 mr-2"
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <span
+                                        className={`text-sm font-medium text-slate-800 ${!readOnly ? "cursor-pointer hover:text-violet-600" : ""}`}
+                                        onDoubleClick={() => { if (!readOnly) { setEditingChecklistId(cl.key); setEditingChecklistName(cl.nombre) } }}
+                                        title={!readOnly ? "Doble clic para editar" : undefined}
+                                    >
+                                        {cl.nombre}
+                                    </span>
+                                )}
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] text-slate-500 font-medium">{cl.done}/{cl.total}</span>
                                     {!readOnly && (
-                                        <button
-                                            type="button"
-                                            onClick={() => deleteChecklist(cl.key)}
-                                            className="text-slate-400 hover:text-red-500 transition-colors"
-                                            title="Eliminar checklist"
-                                        >
-                                            <Trash2 className="h-3.5 w-3.5" />
-                                        </button>
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => { setEditingChecklistId(cl.key); setEditingChecklistName(cl.nombre) }}
+                                                className="text-slate-400 hover:text-violet-500 transition-colors"
+                                                title="Editar nombre"
+                                            >
+                                                <Pencil className="h-3 w-3" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => deleteChecklist(cl.key)}
+                                                className="text-slate-400 hover:text-red-500 transition-colors"
+                                                title="Eliminar checklist"
+                                            >
+                                                <Trash2 className="h-3.5 w-3.5" />
+                                            </button>
+                                        </>
                                     )}
                                 </div>
                             </div>
@@ -284,18 +349,43 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
                                             disabled={readOnly || isPending}
                                             className="h-4 w-4 rounded border-slate-300 text-violet-600 focus:ring-violet-500 cursor-pointer disabled:cursor-default"
                                         />
-                                        <span className={`text-sm flex-1 ${item.completado ? "line-through text-slate-400" : "text-slate-700"}`}>
-                                            {item.texto}
-                                        </span>
-                                        {!readOnly && (
-                                            <button
-                                                type="button"
-                                                onClick={() => deleteItem(item.key)}
-                                                className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 transition-all"
-                                                title="Eliminar"
+                                        {editingItemId === item.key ? (
+                                            <Input
+                                                value={editingItemText}
+                                                onChange={e => setEditingItemText(e.target.value)}
+                                                onKeyDown={e => { if (e.key === "Enter") renameItem(item.key, cl.key); if (e.key === "Escape") setEditingItemId(null) }}
+                                                onBlur={() => renameItem(item.key, cl.key)}
+                                                className="h-6 text-sm bg-white border-violet-300 flex-1"
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <span
+                                                className={`text-sm flex-1 ${item.completado ? "line-through text-slate-400" : "text-slate-700"} ${!readOnly ? "cursor-pointer hover:text-violet-600" : ""}`}
+                                                onDoubleClick={() => { if (!readOnly) { setEditingItemId(item.key); setEditingItemText(item.texto) } }}
+                                                title={!readOnly ? "Doble clic para editar" : undefined}
                                             >
-                                                <X className="h-3.5 w-3.5" />
-                                            </button>
+                                                {item.texto}
+                                            </span>
+                                        )}
+                                        {!readOnly && (
+                                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { setEditingItemId(item.key); setEditingItemText(item.texto) }}
+                                                    className="text-slate-400 hover:text-violet-500"
+                                                    title="Editar"
+                                                >
+                                                    <Pencil className="h-3 w-3" />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => deleteItem(item.key)}
+                                                    className="text-slate-400 hover:text-red-500"
+                                                    title="Eliminar"
+                                                >
+                                                    <X className="h-3.5 w-3.5" />
+                                                </button>
+                                            </div>
                                         )}
                                     </div>
                                 ))}
