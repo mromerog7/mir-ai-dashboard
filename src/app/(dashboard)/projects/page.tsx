@@ -22,6 +22,13 @@ export default async function ProjectsPage() {
         return <div className="text-white">Error al cargar proyectos.</div>;
     }
 
+    // Sort: Completado projects always at the end
+    const sortedProjects = (projects || []).sort((a, b) => {
+        if (a.status === "Completado" && b.status !== "Completado") return 1;
+        if (a.status !== "Completado" && b.status === "Completado") return -1;
+        return 0;
+    });
+
     return (
         <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between">
@@ -29,7 +36,7 @@ export default async function ProjectsPage() {
                 <CreateProjectButton />
             </div>
 
-            <DataTable columns={columns} data={projects || []} />
+            <DataTable columns={columns} data={sortedProjects} />
         </div>
     );
 }
