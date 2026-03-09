@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Settings, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users, Filter } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting } from "@/types"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { getProjectDetails } from "@/app/actions/get-project-details"
 import { createClient } from "@/lib/supabase/client"
 import { ProjectNotesList } from "./project-notes-list"
@@ -34,8 +34,10 @@ import { TaskGanttReal } from "@/components/tasks/task-gantt-real"
 import { TaskKanban } from "@/components/tasks/task-kanban"
 import { DataTable } from "@/app/(dashboard)/tasks/data-table"
 import { columns } from "@/app/(dashboard)/tasks/columns"
-import { LayoutList, LayoutGrid, Clock } from "lucide-react"
+import { LayoutList, LayoutGrid, Clock, Plus } from "lucide-react"
 import { TaskForm } from "@/components/tasks/task-form"
+import { NoteSheet } from "@/components/notes/note-sheet"
+import { EditIncidentSheet } from "@/components/incidents/edit-incident-sheet"
 
 
 interface ProjectDetailSheetProps {
@@ -63,6 +65,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     const [viewMode, setViewMode] = useState<"list" | "kanban" | "gantt" | "gantt_real">("list")
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [activeStatuses, setActiveStatuses] = useState<string[]>([]);
+    const [noteSheetOpen, setNoteSheetOpen] = useState(false);
 
     const toggleStatus = (status: string) => {
         setActiveStatuses(prev =>
@@ -79,34 +82,34 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
         : [];
 
 
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            try {
-                const pid = Number(project.id);
-                if (!isNaN(pid)) {
-                    const data = await getProjectDetails(pid);
-                    setRelatedData({
-                        tasks: data.tasks as unknown as Task[],
-                        incidents: data.incidents as unknown as Incident[],
-                        surveys: data.surveys as unknown as Survey[],
-                        quotes: data.quotes as unknown as Quote[],
-                        reports: data.reports as unknown as Report[],
-                        minutas: data.minutas as unknown as Minuta[],
-                        clientMeetings: data.clientMeetings as unknown as ClientMeeting[],
-                    });
-                }
-            } catch (error) {
-                console.error("Failed to load project details", error);
-            } finally {
-                setLoading(false);
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const pid = Number(project.id);
+            if (!isNaN(pid)) {
+                const data = await getProjectDetails(pid);
+                setRelatedData({
+                    tasks: data.tasks as unknown as Task[],
+                    incidents: data.incidents as unknown as Incident[],
+                    surveys: data.surveys as unknown as Survey[],
+                    quotes: data.quotes as unknown as Quote[],
+                    reports: data.reports as unknown as Report[],
+                    minutas: data.minutas as unknown as Minuta[],
+                    clientMeetings: data.clientMeetings as unknown as ClientMeeting[],
+                });
             }
+        } catch (error) {
+            console.error("Failed to load project details", error);
+        } finally {
+            setLoading(false);
         }
+    }, [project.id]);
 
+    useEffect(() => {
         if (project.id) {
             fetchData();
         }
-    }, [project.id]);
+    }, [project.id, fetchData]);
 
     // Realtime subscription for Tasks
     useEffect(() => {
@@ -244,13 +247,53 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                         </div>
 
                         {/* Project Notes */}
-                        <ProjectNotesList projectId={Number(project.id)} />
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex-1 flex items-center gap-2">
+                                    <FileText className="h-4 w-4 text-emerald-600" /> Notas del Proyecto
+                                </h4>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-7 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                                    onClick={() => setNoteSheetOpen(true)}
+                                >
+                                    <Plus className="h-3.5 w-3.5 mr-1" /> Nueva Nota
+                                </Button>
+                            </div>
+                            <ProjectNotesList projectId={Number(project.id)} />
+                        </div>
+
+                        <NoteSheet
+                            isOpen={noteSheetOpen}
+                            onClose={() => setNoteSheetOpen(false)}
+                            isEditing={false}
+                            defaultProjectId={Number(project.id)}
+                            onSaved={() => {
+                                setNoteSheetOpen(false);
+                                fetchData();
+                            }}
+                        />
 
                         {/* Incidents */}
                         <div className="space-y-3">
-                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                                <AlertTriangle className="h-4 w-4 text-red-600" /> Incidencias
-                            </h4>
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex-1 flex items-center gap-2">
+                                    <AlertTriangle className="h-4 w-4 text-red-600" /> Incidencias
+                                </h4>
+                                <EditIncidentSheet
+                                    defaultProjectId={Number(project.id)}
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        >
+                                            <Plus className="h-3.5 w-3.5 mr-1" /> Nueva Incidencia
+                                        </Button>
+                                    }
+                                />
+                            </div>
                             {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                                 relatedData?.incidents && relatedData.incidents.length > 0 ? (
                                     <div className="space-y-2">
@@ -386,9 +429,23 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                         {/* Minutas */}
                         <div className="space-y-3">
-                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                                <BookOpen className="h-4 w-4 text-indigo-600" /> Minutas
-                            </h4>
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex-1 flex items-center gap-2">
+                                    <BookOpen className="h-4 w-4 text-indigo-600" /> Minutas
+                                </h4>
+                                <MinutaDetailSheet
+                                    defaultProjectId={Number(project.id)}
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
+                                        >
+                                            <Plus className="h-3.5 w-3.5 mr-1" /> Nueva Minuta
+                                        </Button>
+                                    }
+                                />
+                            </div>
                             {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                                 relatedData?.minutas && relatedData.minutas.length > 0 ? (
                                     <div className="space-y-2">
@@ -417,9 +474,23 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                         {/* Client Meetings */}
                         <div className="space-y-3">
-                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                                <Users className="h-4 w-4 text-rose-600" /> Reuniones con Clientes
-                            </h4>
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex-1 flex items-center gap-2">
+                                    <Users className="h-4 w-4 text-rose-600" /> Reuniones con Clientes
+                                </h4>
+                                <ClientMeetingDetailSheet
+                                    defaultProjectId={Number(project.id)}
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                                        >
+                                            <Plus className="h-3.5 w-3.5 mr-1" /> Nueva Reunión
+                                        </Button>
+                                    }
+                                />
+                            </div>
                             {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                                 relatedData?.clientMeetings && relatedData.clientMeetings.length > 0 ? (
                                     <div className="space-y-2">

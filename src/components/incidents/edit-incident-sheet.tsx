@@ -52,9 +52,10 @@ type FormValues = z.infer<typeof formSchema>
 interface EditIncidentSheetProps {
     trigger?: React.ReactNode
     incident?: Incident
+    defaultProjectId?: number
 }
 
-export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps) {
+export function EditIncidentSheet({ trigger, incident, defaultProjectId }: EditIncidentSheetProps) {
     const isEditing = !!incident
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
@@ -141,7 +142,7 @@ export function EditIncidentSheet({ trigger, incident }: EditIncidentSheetProps)
             } else {
                 form.reset({
                     titulo: "",
-                    proyecto_id: 0,
+                    proyecto_id: defaultProjectId || 0,
                     fecha_inicio: format(new Date(), "yyyy-MM-dd"),
                     severidad: "Baja",
                     estatus: "Abierta",

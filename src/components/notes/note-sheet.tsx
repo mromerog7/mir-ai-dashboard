@@ -19,9 +19,10 @@ interface NoteSheetProps {
     nota?: Nota | null
     isEditing: boolean
     onSaved: () => void
+    defaultProjectId?: number
 }
 
-export function NoteSheet({ isOpen, onClose, nota, isEditing, onSaved }: NoteSheetProps) {
+export function NoteSheet({ isOpen, onClose, nota, isEditing, onSaved, defaultProjectId }: NoteSheetProps) {
     const supabase = createClient()
     const [isLoading, setIsLoading] = useState(false)
     const [title, setTitle] = useState("")
@@ -73,7 +74,7 @@ export function NoteSheet({ isOpen, onClose, nota, isEditing, onSaved }: NoteShe
                 setTitle("")
                 setContent("")
                 setDate(new Date().toISOString().split('T')[0])
-                setProjectId("0")
+                setProjectId(defaultProjectId ? defaultProjectId.toString() : "0")
                 setTaskId("0")
                 setImages([])
             }
