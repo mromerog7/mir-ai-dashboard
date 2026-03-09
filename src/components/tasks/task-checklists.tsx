@@ -264,7 +264,7 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
                             placeholder="Nombre del checklist..."
                             value={newChecklistName}
                             onChange={e => setNewChecklistName(e.target.value)}
-                            onKeyDown={e => e.key === "Enter" && addChecklist()}
+                            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addChecklist() } }}
                             className="h-8 text-sm bg-white border-slate-200"
                             autoFocus
                         />
@@ -289,7 +289,7 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
                                     <Input
                                         value={editingChecklistName}
                                         onChange={e => setEditingChecklistName(e.target.value)}
-                                        onKeyDown={e => { if (e.key === "Enter") renameChecklist(cl.key); if (e.key === "Escape") setEditingChecklistId(null) }}
+                                        onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); renameChecklist(cl.key) } if (e.key === "Escape") setEditingChecklistId(null) }}
                                         onBlur={() => renameChecklist(cl.key)}
                                         className="h-7 text-sm font-medium bg-white border-violet-300 flex-1 mr-2"
                                         autoFocus
@@ -353,7 +353,7 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
                                             <Input
                                                 value={editingItemText}
                                                 onChange={e => setEditingItemText(e.target.value)}
-                                                onKeyDown={e => { if (e.key === "Enter") renameItem(item.key, cl.key); if (e.key === "Escape") setEditingItemId(null) }}
+                                                onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); renameItem(item.key, cl.key) } if (e.key === "Escape") setEditingItemId(null) }}
                                                 onBlur={() => renameItem(item.key, cl.key)}
                                                 className="h-6 text-sm bg-white border-violet-300 flex-1"
                                                 autoFocus
@@ -399,7 +399,7 @@ export const TaskChecklists = forwardRef<TaskChecklistsHandle, TaskChecklistsPro
                                             placeholder="Agregar elemento..."
                                             value={newItemTexts[cl.key] || ""}
                                             onChange={e => setNewItemTexts(prev => ({ ...prev, [cl.key]: e.target.value }))}
-                                            onKeyDown={e => e.key === "Enter" && addItem(cl.key)}
+                                            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addItem(cl.key) } }}
                                             className="h-7 text-xs bg-white border-slate-200 flex-1"
                                         />
                                         <Button
