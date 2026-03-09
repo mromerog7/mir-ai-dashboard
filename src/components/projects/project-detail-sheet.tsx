@@ -9,7 +9,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Settings, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users } from "lucide-react"
+import { Settings, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users, Filter } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting } from "@/types"
 import { useEffect, useState } from "react"
@@ -19,6 +19,13 @@ import { ProjectNotesList } from "./project-notes-list"
 import { BudgetView } from "@/components/budgets/budget-view"
 import { ExpensesView } from "@/app/(dashboard)/expenses/expenses-view"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 import { IncidentDetailSheet } from "@/components/incidents/incident-detail-sheet"
@@ -61,6 +68,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     const [loading, setLoading] = useState(false);
     const [viewMode, setViewMode] = useState<"list" | "gantt" | "gantt_real">("list")
     const [editingTask, setEditingTask] = useState<Task | null>(null);
+    const [statusFilter, setStatusFilter] = useState<string>("all");
 
 
     useEffect(() => {
@@ -472,6 +480,41 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                     </Button>
                                 </div>
 
+                                {/* Status Filter */}
+                                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                                    <SelectTrigger className="w-[160px] h-8 text-xs bg-white border-slate-200 text-slate-700">
+                                        <Filter className="h-3.5 w-3.5 mr-1.5 text-slate-400" />
+                                        <SelectValue placeholder="Filtrar estatus" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-white border-slate-200">
+                                        <SelectItem value="all" className="text-xs">Todos</SelectItem>
+                                        <SelectItem value="Pendiente" className="text-xs">
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="h-2 w-2 rounded-full bg-yellow-500" />
+                                                Pendiente
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem value="En Proceso" className="text-xs">
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="h-2 w-2 rounded-full bg-blue-500" />
+                                                En Proceso
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem value="Revisión" className="text-xs">
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="h-2 w-2 rounded-full bg-orange-500" />
+                                                Revisión
+                                            </span>
+                                        </SelectItem>
+                                        <SelectItem value="Completada" className="text-xs">
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="h-2 w-2 rounded-full bg-green-500" />
+                                                Completada
+                                            </span>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+
                                 <CreateTaskButton defaultProjectId={Number(project.id)} />
                             </div>
                         </div>
@@ -486,7 +529,11 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                 <div className="min-h-[300px]">
                                     {viewMode === "list" && (
                                         <div className="border border-slate-200 rounded-md overflow-hidden">
-                                            <DataTable columns={projectColumns} data={relatedData.tasks} />
+                                            <DataTable
+                                                columns={projectColumns}
+                                                data={relatedData.tasks}
+                                                columnFilters={statusFilter !== "all" ? [{ id: "estatus", value: statusFilter }] : []}
+                                            />
                                         </div>
                                     )}
 

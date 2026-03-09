@@ -3,11 +3,13 @@
 import * as React from "react"
 import {
     ColumnDef,
+    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
     useReactTable,
     getPaginationRowModel,
     getSortedRowModel,
+    getFilteredRowModel,
     SortingState,
 } from "@tanstack/react-table"
 
@@ -24,13 +26,20 @@ import { Button } from "@/components/ui/button"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    columnFilters?: ColumnFiltersState
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    columnFilters: externalFilters,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(externalFilters ?? [])
+
+    React.useEffect(() => {
+        setColumnFilters(externalFilters ?? [])
+    }, [externalFilters])
 
     const table = useReactTable({
         data,
@@ -39,8 +48,11 @@ export function DataTable<TData, TValue>({
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        onColumnFiltersChange: setColumnFilters,
         state: {
             sorting,
+            columnFilters,
         },
         initialState: {
             pagination: {
