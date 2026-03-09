@@ -22,9 +22,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 import { IncidentDetailSheet } from "@/components/incidents/incident-detail-sheet"
-import { SurveyDetailSheet } from "@/components/surveys/survey-detail-sheet"
-import { QuoteDetailSheet } from "@/components/quotes/quote-detail-sheet"
-import { ReportDetailSheet } from "@/components/reports/report-detail-sheet"
 import { MinutaDetailSheet } from "@/components/minutes/minuta-detail-sheet"
 import { ClientMeetingDetailSheet } from "@/components/client-meetings/client-meeting-detail-sheet"
 import { TaskProgressSummary } from "@/components/tasks/task-progress-summary"
@@ -39,6 +36,10 @@ import { TaskForm } from "@/components/tasks/task-form"
 import { NoteSheet } from "@/components/notes/note-sheet"
 import { EditIncidentSheet } from "@/components/incidents/edit-incident-sheet"
 import { CloseIncidentSheet } from "@/components/incidents/close-incident-sheet"
+import { EditReportSheet } from "@/components/reports/edit-report-sheet"
+import { EditSurveySheet } from "@/components/surveys/edit-survey-sheet"
+import { EditQuoteSheet } from "@/components/quotes/edit-quote-sheet"
+import { Copy } from "lucide-react"
 
 
 interface ProjectDetailSheetProps {
@@ -185,7 +186,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
         if (!project.id) return;
 
         const supabase = createClient();
-        const tables = ['notas', 'incidencias', 'minutas', 'reuniones_clientes'] as const;
+        const tables = ['notas', 'incidencias', 'minutas', 'reuniones_clientes', 'reportes', 'levantamientos', 'cotizaciones'] as const;
 
         const channels = tables.map(table =>
             supabase
@@ -380,37 +381,66 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                         {/* Surveys */}
                         <div className="space-y-3">
-                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                                <ClipboardList className="h-4 w-4 text-blue-600" /> Levantamientos
-                            </h4>
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex-1 flex items-center gap-2">
+                                    <ClipboardList className="h-4 w-4 text-blue-600" /> Levantamientos
+                                </h4>
+                                <EditSurveySheet
+                                    defaultProjectId={Number(project.id)}
+                                    defaultProjectData={{ cliente: project.cliente, ubicacion: project.ubicacion }}
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                        >
+                                            <Plus className="h-3.5 w-3.5 mr-1" /> Nuevo Levantamiento
+                                        </Button>
+                                    }
+                                />
+                            </div>
                             {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                                 relatedData?.surveys && relatedData.surveys.length > 0 ? (
                                     <div className="space-y-2">
                                         {relatedData.surveys.map(item => (
-                                            <div key={item.id} className="relative group">
-                                                <SurveyDetailSheet
+                                            <div key={item.id} className="space-y-1">
+                                                <EditSurveySheet
                                                     survey={item as any}
-                                                    project={project}
+                                                    defaultProjectId={Number(project.id)}
+                                                    defaultProjectData={{ cliente: project.cliente, ubicacion: project.ubicacion }}
                                                     trigger={
                                                         <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                             <div>
                                                                 <div className="text-sm text-slate-900 font-medium">Folio: {item.folio}</div>
                                                                 <div className="text-xs text-slate-500">{item.fecha_visita ? new Date(item.fecha_visita.split('T')[0] + 'T00:00:00').toLocaleDateString() : 'Sin fecha'}</div>
                                                             </div>
-                                                            {item.pdf_final_url && (
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="sm"
-                                                                    className="h-6 text-xs absolute right-2 z-10"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        window.open(item.pdf_final_url!, '_blank')
-                                                                    }}
-                                                                >
-                                                                    PDF
-                                                                </Button>
-                                                            )}
+                                                            <div className="flex items-center gap-1">
+                                                                {item.pdf_final_url && (
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="sm"
+                                                                        className="h-6 text-xs z-10"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            window.open(item.pdf_final_url!, '_blank')
+                                                                        }}
+                                                                    >
+                                                                        PDF
+                                                                    </Button>
+                                                                )}
+                                                            </div>
                                                         </div>
+                                                    }
+                                                />
+                                                <EditSurveySheet
+                                                    survey={item as any}
+                                                    isDuplicate={true}
+                                                    defaultProjectId={Number(project.id)}
+                                                    defaultProjectData={{ cliente: project.cliente, ubicacion: project.ubicacion }}
+                                                    trigger={
+                                                        <Button variant="ghost" size="sm" className="h-6 text-[10px] text-slate-500 hover:text-slate-700">
+                                                            <Copy className="h-3 w-3 mr-1" /> Duplicar
+                                                        </Button>
                                                     }
                                                 />
                                             </div>
@@ -422,27 +452,49 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                         {/* Quotes */}
                         <div className="space-y-3">
-                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                                <FileSpreadsheet className="h-4 w-4 text-orange-600" /> Cotizaciones
-                            </h4>
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex-1 flex items-center gap-2">
+                                    <FileSpreadsheet className="h-4 w-4 text-orange-600" /> Cotizaciones
+                                </h4>
+                                <EditQuoteSheet
+                                    defaultValues={{ proyecto_id: Number(project.id), cliente: project.cliente, solicitante: project.solicitante || '', ubicacion: project.ubicacion } as any}
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs text-orange-600 hover:text-orange-700 hover:bg-orange-50"
+                                        >
+                                            <Plus className="h-3.5 w-3.5 mr-1" /> Nueva Cotización
+                                        </Button>
+                                    }
+                                />
+                            </div>
                             {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                                 relatedData?.quotes && relatedData.quotes.length > 0 ? (
                                     <div className="space-y-2">
                                         {relatedData.quotes.map(quote => (
-                                            <QuoteDetailSheet
-                                                key={quote.id}
-                                                quote={quote as any}
-                                                project={project}
-                                                trigger={
-                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                        <div>
-                                                            <div className="text-sm text-slate-900 font-medium">{quote.folio}</div>
-                                                            <div className="text-xs text-blue-600 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
+                                            <div key={quote.id} className="space-y-1">
+                                                <EditQuoteSheet
+                                                    quote={quote as any}
+                                                    trigger={
+                                                        <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                            <div>
+                                                                <div className="text-sm text-slate-900 font-medium">{quote.folio}</div>
+                                                                <div className="text-xs text-blue-600 font-bold">{new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(quote.total)}</div>
+                                                            </div>
+                                                            <Badge variant="outline" className="border-slate-300">{quote.estatus}</Badge>
                                                         </div>
-                                                        <Badge variant="outline" className="border-slate-300">{quote.estatus}</Badge>
-                                                    </div>
-                                                }
-                                            />
+                                                    }
+                                                />
+                                                <EditQuoteSheet
+                                                    defaultValues={quote as any}
+                                                    trigger={
+                                                        <Button variant="ghost" size="sm" className="h-6 text-[10px] text-slate-500 hover:text-slate-700">
+                                                            <Copy className="h-3 w-3 mr-1" /> Duplicar
+                                                        </Button>
+                                                    }
+                                                />
+                                            </div>
                                         ))}
                                     </div>
                                 ) : <p className="text-xs text-slate-500 italic">No hay cotizaciones.</p>
@@ -451,17 +503,33 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
 
                         {/* Reports */}
                         <div className="space-y-3">
-                            <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex items-center gap-2">
-                                <FileText className="h-4 w-4 text-purple-600" /> Reportes
-                            </h4>
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium text-slate-900 border-b border-slate-200 pb-2 flex-1 flex items-center gap-2">
+                                    <FileText className="h-4 w-4 text-purple-600" /> Reportes
+                                </h4>
+                                <EditReportSheet
+                                    defaultProjectId={Number(project.id)}
+                                    defaultProjectData={{ solicitante: project.solicitante || '', ubicacion: project.ubicacion }}
+                                    trigger={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                                        >
+                                            <Plus className="h-3.5 w-3.5 mr-1" /> Nuevo Reporte
+                                        </Button>
+                                    }
+                                />
+                            </div>
                             {loading ? <p className="text-xs text-slate-500">Cargando...</p> : (
                                 relatedData?.reports && relatedData.reports.length > 0 ? (
                                     <div className="space-y-2">
                                         {relatedData.reports.map(rep => (
-                                            <div key={rep.id} className="relative group">
-                                                <ReportDetailSheet
+                                            <div key={rep.id} className="space-y-1">
+                                                <EditReportSheet
                                                     report={rep as any}
-                                                    project={project}
+                                                    defaultProjectId={Number(project.id)}
+                                                    defaultProjectData={{ solicitante: project.solicitante || '', ubicacion: project.ubicacion }}
                                                     trigger={
                                                         <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                             <div className="text-sm text-slate-900 font-medium">{rep.resumen_titulo}</div>
@@ -469,7 +537,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                                 <Button
                                                                     variant="ghost"
                                                                     size="sm"
-                                                                    className="h-6 text-xs absolute right-2 z-10"
+                                                                    className="h-6 text-xs z-10"
                                                                     onClick={(e) => {
                                                                         e.stopPropagation();
                                                                         window.open(rep.pdf_final_url!, '_blank')
@@ -479,6 +547,17 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                                 </Button>
                                                             )}
                                                         </div>
+                                                    }
+                                                />
+                                                <EditReportSheet
+                                                    report={rep as any}
+                                                    isDuplicate={true}
+                                                    defaultProjectId={Number(project.id)}
+                                                    defaultProjectData={{ solicitante: project.solicitante || '', ubicacion: project.ubicacion }}
+                                                    trigger={
+                                                        <Button variant="ghost" size="sm" className="h-6 text-[10px] text-slate-500 hover:text-slate-700">
+                                                            <Copy className="h-3 w-3 mr-1" /> Duplicar
+                                                        </Button>
                                                     }
                                                 />
                                             </div>

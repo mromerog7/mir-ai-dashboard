@@ -54,9 +54,11 @@ interface EditSurveySheetProps {
     survey?: Survey
     trigger?: React.ReactNode
     isDuplicate?: boolean
+    defaultProjectId?: number
+    defaultProjectData?: { cliente?: string; ubicacion?: string }
 }
 
-export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSurveySheetProps) {
+export function EditSurveySheet({ survey, trigger, isDuplicate = false, defaultProjectId, defaultProjectData }: EditSurveySheetProps) {
     const isEditing = !!survey && !isDuplicate
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
@@ -134,11 +136,11 @@ export function EditSurveySheet({ survey, trigger, isDuplicate = false }: EditSu
         resolver: zodResolver(formSchema) as any,
         defaultValues: {
             folio: survey?.folio || "",
-            proyecto_id: survey?.proyecto_id || 0, // Default to 0 (General) if null
+            proyecto_id: survey?.proyecto_id || defaultProjectId || 0,
             fecha_visita: survey?.fecha_visita ? survey.fecha_visita.split('T')[0] : format(new Date(), "yyyy-MM-dd"),
             tipo_servicio: survey?.tipo_servicio || "",
-            cliente_prospecto: survey?.cliente_prospecto || "",
-            ubicacion: survey?.ubicacion || "",
+            cliente_prospecto: survey?.cliente_prospecto || defaultProjectData?.cliente || "",
+            ubicacion: survey?.ubicacion || defaultProjectData?.ubicacion || "",
             estatus: survey?.estatus || "Pendiente Cotizar",
             detalles_tecnicos: survey?.detalles_tecnicos || "",
             requerimientos: survey?.requerimientos || "",

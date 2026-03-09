@@ -54,9 +54,11 @@ interface EditReportSheetProps {
     report?: Report
     trigger?: React.ReactNode
     isDuplicate?: boolean
+    defaultProjectId?: number
+    defaultProjectData?: { solicitante?: string; ubicacion?: string }
 }
 
-export function EditReportSheet({ report, trigger, isDuplicate = false }: EditReportSheetProps) {
+export function EditReportSheet({ report, trigger, isDuplicate = false, defaultProjectId, defaultProjectData }: EditReportSheetProps) {
     const isEditing = !!report && !isDuplicate
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
@@ -136,14 +138,14 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
         resolver: zodResolver(formSchema) as any,
         defaultValues: {
             folio: report?.folio || "",
-            proyecto_id: report?.proyecto_id || undefined,
+            proyecto_id: report?.proyecto_id || defaultProjectId || undefined,
             fecha_reporte: report?.fecha_reporte ? report.fecha_reporte.split('T')[0] : format(new Date(), "yyyy-MM-dd"),
-            solicitante: report?.solicitante || "",
+            solicitante: report?.solicitante || defaultProjectData?.solicitante || "",
             duracion: report?.duracion || "",
             actividades: report?.actividades || "",
             materiales: report?.materiales || "",
             observaciones: report?.observaciones || "",
-            ubicacion: report?.ubicacion || "",
+            ubicacion: report?.ubicacion || defaultProjectData?.ubicacion || "",
             resumen_titulo: report?.resumen_titulo || "",
         },
     })
@@ -215,6 +217,20 @@ export function EditReportSheet({ report, trigger, isDuplicate = false }: EditRe
 
         } else if (open && !report) {
             // New report mode
+            if (defaultProjectId) {
+                form.reset({
+                    folio: "",
+                    proyecto_id: defaultProjectId,
+                    fecha_reporte: format(new Date(), "yyyy-MM-dd"),
+                    solicitante: defaultProjectData?.solicitante || "",
+                    duracion: "",
+                    actividades: "",
+                    materiales: "",
+                    observaciones: "",
+                    ubicacion: defaultProjectData?.ubicacion || "",
+                    resumen_titulo: "",
+                })
+            }
             setExistingPhotos([])
             setNewFiles([])
             setPdfUrl(null)
