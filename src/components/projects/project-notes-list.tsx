@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Nota } from "@/types"
 import { format } from "date-fns"
@@ -20,26 +20,51 @@ export function ProjectNotesList({ projectId, onEditNote }: ProjectNotesListProp
     const [isLoading, setIsLoading] = useState(true)
     const [expandedNoteId, setExpandedNoteId] = useState<string | null>(null)
 
-    useEffect(() => {
-        const fetchNotes = async () => {
-            setIsLoading(true)
-            const supabase = createClient()
-            const { data } = await supabase
-                .from("notas")
-                .select("*")
-                .eq("proyecto_id", projectId)
-                .order("fecha", { ascending: false })
+    const fetchNotes = useCallback(async () => {
+        setIsLoading(true)
+        const supabase = createClient()
+        const { data } = await supabase
+            .from("notas")
+            .select("*")
+            .eq("proyecto_id", projectId)
+            .order("fecha", { ascending: false })
 
-            if (data) {
-                setNotes(data as Nota[])
-            }
-            setIsLoading(false)
+        if (data) {
+            setNotes(data as Nota[])
         }
+        setIsLoading(false)
+    }, [projectId])
 
+    useEffect(() => {
         if (projectId) {
             fetchNotes()
         }
-    }, [projectId])
+    }, [projectId, fetchNotes])
+
+    // Realtime subscription
+    useEffect(() => {
+        if (!projectId) return
+        const supabase = createClient()
+        const channel = supabase
+            .channel(`realtime-project-notes-${projectId}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'notas',
+                    filter: `proyecto_id=eq.${projectId}`
+                },
+                () => {
+                    fetchNotes()
+                }
+            )
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
+    }, [projectId, fetchNotes])
 
     if (isLoading) {
         return <div className="text-sm text-slate-500">Cargando notas...</div>

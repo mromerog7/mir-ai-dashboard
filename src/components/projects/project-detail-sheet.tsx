@@ -38,6 +38,7 @@ import { LayoutList, LayoutGrid, Clock, Plus } from "lucide-react"
 import { TaskForm } from "@/components/tasks/task-form"
 import { NoteSheet } from "@/components/notes/note-sheet"
 import { EditIncidentSheet } from "@/components/incidents/edit-incident-sheet"
+import { CloseIncidentSheet } from "@/components/incidents/close-incident-sheet"
 
 
 interface ProjectDetailSheetProps {
@@ -342,20 +343,35 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                 relatedData?.incidents && relatedData.incidents.length > 0 ? (
                                     <div className="space-y-2">
                                         {relatedData.incidents.map(inc => (
-                                            <EditIncidentSheet
-                                                key={inc.id}
-                                                incident={inc}
-                                                defaultProjectId={Number(project.id)}
-                                                trigger={
-                                                    <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
-                                                        <div className="flex justify-between">
-                                                            <span className="text-sm text-slate-900 font-medium">{inc.titulo}</span>
-                                                            <Badge className={inc.severidad === 'Crítica' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-slate-200 text-slate-600 border-slate-300'}>{inc.severidad}</Badge>
+                                            <div key={inc.id} className="space-y-1">
+                                                <EditIncidentSheet
+                                                    incident={inc}
+                                                    defaultProjectId={Number(project.id)}
+                                                    trigger={
+                                                        <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
+                                                            <div className="flex justify-between">
+                                                                <span className="text-sm text-slate-900 font-medium">{inc.titulo}</span>
+                                                                <Badge className={inc.severidad === 'Crítica' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-slate-200 text-slate-600 border-slate-300'}>{inc.severidad}</Badge>
+                                                            </div>
+                                                            <div className="text-xs text-slate-500 mt-1">{inc.estatus}</div>
                                                         </div>
-                                                        <div className="text-xs text-slate-500 mt-1">{inc.estatus}</div>
-                                                    </div>
-                                                }
-                                            />
+                                                    }
+                                                />
+                                                {inc.estatus !== 'Resuelta' && (
+                                                    <CloseIncidentSheet
+                                                        incident={inc}
+                                                        trigger={
+                                                            <Button
+                                                                variant="outline"
+                                                                size="sm"
+                                                                className="w-full h-7 text-xs border-green-200 text-green-600 hover:bg-green-50 hover:text-green-700"
+                                                            >
+                                                                <CheckCircle className="h-3 w-3 mr-1" /> Finalizar Incidencia
+                                                            </Button>
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
                                         ))}
                                     </div>
                                 ) : <p className="text-xs text-slate-500 italic">No hay incidencias registradas.</p>
