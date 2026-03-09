@@ -19,13 +19,6 @@ import { ProjectNotesList } from "./project-notes-list"
 import { BudgetView } from "@/components/budgets/budget-view"
 import { ExpensesView } from "@/app/(dashboard)/expenses/expenses-view"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 
 import { TaskDetailSheet } from "@/components/tasks/task-detail-sheet"
 import { IncidentDetailSheet } from "@/components/incidents/incident-detail-sheet"
@@ -68,7 +61,21 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     const [loading, setLoading] = useState(false);
     const [viewMode, setViewMode] = useState<"list" | "gantt" | "gantt_real">("list")
     const [editingTask, setEditingTask] = useState<Task | null>(null);
-    const [statusFilter, setStatusFilter] = useState<string>("all");
+    const [activeStatuses, setActiveStatuses] = useState<string[]>([]);
+
+    const toggleStatus = (status: string) => {
+        setActiveStatuses(prev =>
+            prev.includes(status)
+                ? prev.filter(s => s !== status)
+                : [...prev, status]
+        );
+    };
+
+    const filteredTasks = relatedData?.tasks
+        ? activeStatuses.length === 0
+            ? relatedData.tasks
+            : relatedData.tasks.filter(t => activeStatuses.includes(t.estatus || "Pendiente"))
+        : [];
 
 
     useEffect(() => {
@@ -480,43 +487,39 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                     </Button>
                                 </div>
 
-                                {/* Status Filter */}
-                                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                    <SelectTrigger className="w-[160px] h-8 text-xs bg-white border-slate-200 text-slate-700">
-                                        <Filter className="h-3.5 w-3.5 mr-1.5 text-slate-400" />
-                                        <SelectValue placeholder="Filtrar estatus" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-white border-slate-200">
-                                        <SelectItem value="all" className="text-xs">Todos</SelectItem>
-                                        <SelectItem value="Pendiente" className="text-xs">
-                                            <span className="flex items-center gap-1.5">
-                                                <span className="h-2 w-2 rounded-full bg-yellow-500" />
-                                                Pendiente
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem value="En Proceso" className="text-xs">
-                                            <span className="flex items-center gap-1.5">
-                                                <span className="h-2 w-2 rounded-full bg-blue-500" />
-                                                En Proceso
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem value="Revisión" className="text-xs">
-                                            <span className="flex items-center gap-1.5">
-                                                <span className="h-2 w-2 rounded-full bg-orange-500" />
-                                                Revisión
-                                            </span>
-                                        </SelectItem>
-                                        <SelectItem value="Completada" className="text-xs">
-                                            <span className="flex items-center gap-1.5">
-                                                <span className="h-2 w-2 rounded-full bg-green-500" />
-                                                Completada
-                                            </span>
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-
                                 <CreateTaskButton defaultProjectId={Number(project.id)} />
                             </div>
+                        </div>
+
+                        {/* Status Filter Toggles */}
+                        <div className="flex flex-wrap items-center gap-1.5">
+                            <Filter className="h-3.5 w-3.5 text-slate-400 mr-0.5" />
+                            {[
+                                { id: "Pendiente", label: "Pendiente", color: "bg-yellow-500", activeClass: "bg-yellow-100 text-yellow-700 border-yellow-300" },
+                                { id: "En Proceso", label: "En Proceso", color: "bg-blue-500", activeClass: "bg-blue-100 text-blue-700 border-blue-300" },
+                                { id: "Revisión", label: "Revisión", color: "bg-orange-500", activeClass: "bg-orange-100 text-orange-700 border-orange-300" },
+                                { id: "Completada", label: "Completada", color: "bg-green-500", activeClass: "bg-green-100 text-green-700 border-green-300" },
+                            ].map((s) => (
+                                <button
+                                    key={s.id}
+                                    onClick={() => toggleStatus(s.id)}
+                                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all cursor-pointer ${activeStatuses.includes(s.id)
+                                            ? s.activeClass
+                                            : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                                        }`}
+                                >
+                                    <span className={`h-2 w-2 rounded-full ${s.color}`} />
+                                    {s.label}
+                                </button>
+                            ))}
+                            {activeStatuses.length > 0 && (
+                                <button
+                                    onClick={() => setActiveStatuses([])}
+                                    className="text-xs text-slate-400 hover:text-slate-600 ml-1 underline underline-offset-2 cursor-pointer transition-colors"
+                                >
+                                    Limpiar
+                                </button>
+                            )}
                         </div>
 
                         {/* Task Progress Summary - Always visible */}
@@ -531,21 +534,20 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                         <div className="border border-slate-200 rounded-md overflow-hidden">
                                             <DataTable
                                                 columns={projectColumns}
-                                                data={relatedData.tasks}
-                                                columnFilters={statusFilter !== "all" ? [{ id: "estatus", value: statusFilter }] : []}
+                                                data={filteredTasks}
                                             />
                                         </div>
                                     )}
 
                                     {viewMode === "gantt" && (
                                         <div className="overflow-x-auto border border-slate-200 rounded-md bg-white p-4">
-                                            <TaskGantt tasks={relatedData.tasks} onEditTask={setEditingTask} />
+                                            <TaskGantt tasks={filteredTasks} onEditTask={setEditingTask} />
                                         </div>
                                     )}
 
                                     {viewMode === "gantt_real" && (
                                         <div className="overflow-x-auto border border-slate-200 rounded-md bg-white p-4">
-                                            <TaskGanttReal tasks={relatedData.tasks} onEditTask={setEditingTask} />
+                                            <TaskGanttReal tasks={filteredTasks} onEditTask={setEditingTask} />
                                         </div>
                                     )}
                                 </div>
