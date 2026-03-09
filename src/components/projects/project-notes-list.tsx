@@ -5,16 +5,17 @@ import { createClient } from "@/lib/supabase/client"
 import { Nota } from "@/types"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
-import { ChevronDown, Eye, ImageIcon, BookOpen } from "lucide-react"
+import { ChevronDown, Eye, ImageIcon, BookOpen, Pencil } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 interface ProjectNotesListProps {
     projectId: number
+    onEditNote?: (note: Nota) => void
 }
 
-export function ProjectNotesList({ projectId }: ProjectNotesListProps) {
+export function ProjectNotesList({ projectId, onEditNote }: ProjectNotesListProps) {
     const [notes, setNotes] = useState<Nota[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [expandedNoteId, setExpandedNoteId] = useState<string | null>(null)
@@ -94,6 +95,22 @@ export function ProjectNotesList({ projectId }: ProjectNotesListProps) {
 
                             {isExpanded && (
                                 <div className="px-3 pb-3 pt-1 border-t border-slate-200 bg-slate-50/50 animate-in slide-in-from-top-1 duration-200">
+                                    {onEditNote && (
+                                        <div className="flex justify-end mb-2">
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-7 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    onEditNote(note)
+                                                }}
+                                            >
+                                                <Pencil className="h-3 w-3 mr-1" /> Editar
+                                            </Button>
+                                        </div>
+                                    )}
                                     {note.contenido && (
                                         <div className="prose prose-sm max-w-none text-slate-700 text-xs mb-3 whitespace-pre-wrap">
                                             {note.contenido}

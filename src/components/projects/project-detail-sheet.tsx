@@ -9,7 +9,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { Settings, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users, Filter } from "lucide-react"
+import { Settings, MapPin, User, Calendar, Briefcase, CheckCircle, AlertTriangle, FileText, FileSpreadsheet, ClipboardList, BookOpen, Users, Filter, Pencil } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Project, Task, Incident, Survey, Quote, Report, Minuta, ClientMeeting } from "@/types"
 import { useEffect, useState, useCallback } from "react"
@@ -66,6 +66,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [activeStatuses, setActiveStatuses] = useState<string[]>([]);
     const [noteSheetOpen, setNoteSheetOpen] = useState(false);
+    const [editingNote, setEditingNote] = useState<any>(null);
 
     const toggleStatus = (status: string) => {
         setActiveStatuses(prev =>
@@ -178,6 +179,36 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
         };
     }, [project.id]);
 
+    // Realtime subscriptions for notes, incidents, minutas, client meetings
+    useEffect(() => {
+        if (!project.id) return;
+
+        const supabase = createClient();
+        const tables = ['notas', 'incidencias', 'minutas', 'reuniones_clientes'] as const;
+
+        const channels = tables.map(table =>
+            supabase
+                .channel(`realtime-project-${table}-${project.id}`)
+                .on(
+                    'postgres_changes',
+                    {
+                        event: '*',
+                        schema: 'public',
+                        table,
+                        filter: `proyecto_id=eq.${project.id}`
+                    },
+                    () => {
+                        fetchData();
+                    }
+                )
+                .subscribe()
+        );
+
+        return () => {
+            channels.forEach(ch => supabase.removeChannel(ch));
+        };
+    }, [project.id, fetchData]);
+
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -261,7 +292,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                     <Plus className="h-3.5 w-3.5 mr-1" /> Nueva Nota
                                 </Button>
                             </div>
-                            <ProjectNotesList projectId={Number(project.id)} />
+                            <ProjectNotesList projectId={Number(project.id)} onEditNote={setEditingNote} />
                         </div>
 
                         <NoteSheet
@@ -271,6 +302,19 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                             defaultProjectId={Number(project.id)}
                             onSaved={() => {
                                 setNoteSheetOpen(false);
+                                fetchData();
+                            }}
+                        />
+
+                        {/* NoteSheet for editing */}
+                        <NoteSheet
+                            isOpen={!!editingNote}
+                            onClose={() => setEditingNote(null)}
+                            nota={editingNote}
+                            isEditing={true}
+                            defaultProjectId={Number(project.id)}
+                            onSaved={() => {
+                                setEditingNote(null);
                                 fetchData();
                             }}
                         />
@@ -298,9 +342,10 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                 relatedData?.incidents && relatedData.incidents.length > 0 ? (
                                     <div className="space-y-2">
                                         {relatedData.incidents.map(inc => (
-                                            <IncidentDetailSheet
+                                            <EditIncidentSheet
                                                 key={inc.id}
                                                 incident={inc}
+                                                defaultProjectId={Number(project.id)}
                                                 trigger={
                                                     <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                         <div className="flex justify-between">
@@ -454,7 +499,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 <MinutaDetailSheet
                                                     minuta={minuta}
                                                     defaultProjectId={Number(project.id)}
-                                                    readonly={true}
+                                                    readonly={false}
                                                     trigger={
                                                         <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                             <div>
@@ -499,7 +544,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 <ClientMeetingDetailSheet
                                                     meeting={meeting}
                                                     defaultProjectId={Number(project.id)}
-                                                    readonly={true}
+                                                    readonly={false}
                                                     trigger={
                                                         <div className="bg-[#E5E5E5] p-2 rounded border border-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 hover:border-slate-300 transition-all">
                                                             <div>
