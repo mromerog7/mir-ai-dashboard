@@ -31,9 +31,10 @@ import { TaskProgressSummary } from "@/components/tasks/task-progress-summary"
 import { CreateTaskButton } from "@/components/tasks/create-task-button"
 import { TaskGantt } from "@/components/tasks/task-gantt"
 import { TaskGanttReal } from "@/components/tasks/task-gantt-real"
+import { TaskKanban } from "@/components/tasks/task-kanban"
 import { DataTable } from "@/app/(dashboard)/tasks/data-table"
 import { columns } from "@/app/(dashboard)/tasks/columns"
-import { LayoutList, Clock } from "lucide-react"
+import { LayoutList, LayoutGrid, Clock } from "lucide-react"
 import { TaskForm } from "@/components/tasks/task-form"
 
 
@@ -59,7 +60,7 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
     } | null>(null);
 
     const [loading, setLoading] = useState(false);
-    const [viewMode, setViewMode] = useState<"list" | "gantt" | "gantt_real">("list")
+    const [viewMode, setViewMode] = useState<"list" | "kanban" | "gantt" | "gantt_real">("list")
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [activeStatuses, setActiveStatuses] = useState<string[]>([]);
 
@@ -470,6 +471,15 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                     <Button
                                         variant="ghost"
                                         size="sm"
+                                        className={`h-7 px-2 text-xs ${viewMode === "kanban" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}
+                                        onClick={() => setViewMode("kanban")}
+                                        title="Kanban"
+                                    >
+                                        <LayoutGrid className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
                                         className={`h-7 px-2 text-xs ${viewMode === "gantt" ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-900"}`}
                                         onClick={() => setViewMode("gantt")}
                                         title="Gantt Programado"
@@ -504,8 +514,8 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                     key={s.id}
                                     onClick={() => toggleStatus(s.id)}
                                     className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all cursor-pointer ${activeStatuses.includes(s.id)
-                                            ? s.activeClass
-                                            : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                                        ? s.activeClass
+                                        : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
                                         }`}
                                 >
                                     <span className={`h-2 w-2 rounded-full ${s.color}`} />
@@ -536,6 +546,12 @@ export function ProjectDetailSheet({ project }: ProjectDetailSheetProps) {
                                                 columns={projectColumns}
                                                 data={filteredTasks}
                                             />
+                                        </div>
+                                    )}
+
+                                    {viewMode === "kanban" && (
+                                        <div className="overflow-x-auto min-h-[400px]">
+                                            <TaskKanban tasks={filteredTasks} />
                                         </div>
                                     )}
 

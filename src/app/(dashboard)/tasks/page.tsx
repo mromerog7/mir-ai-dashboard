@@ -8,7 +8,7 @@ import { CreateTaskButton } from "@/components/tasks/create-task-button";
 import { useEffect, useState, lazy, Suspense, useCallback, useMemo } from "react";
 import { TaskKanban } from "@/components/tasks/task-kanban";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutGrid, List, BarChart2, FolderOpen, GitCompareArrows } from "lucide-react";
+import { LayoutGrid, List, BarChart2, FolderOpen, GitCompareArrows, Filter } from "lucide-react";
 import {
     Sheet,
     SheetContent,
@@ -33,6 +33,15 @@ export default function TasksPage() {
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [selectedProjectId, setSelectedProjectId] = useState<string>("all");
+    const [activeStatuses, setActiveStatuses] = useState<string[]>([]);
+
+    const toggleStatus = (status: string) => {
+        setActiveStatuses(prev =>
+            prev.includes(status)
+                ? prev.filter(s => s !== status)
+                : [...prev, status]
+        );
+    };
 
     const handleEditTask = useCallback((task: Task) => {
         setEditingTask(task);
@@ -97,11 +106,17 @@ export default function TasksPage() {
         };
     }, []);
 
-    // Filter tasks by selected project
+    // Filter tasks by selected project and status
     const filteredTasks = useMemo(() => {
-        if (selectedProjectId === "all") return tasks;
-        return tasks.filter(t => t.proyecto_id?.toString() === selectedProjectId);
-    }, [tasks, selectedProjectId]);
+        let result = tasks;
+        if (selectedProjectId !== "all") {
+            result = result.filter(t => t.proyecto_id?.toString() === selectedProjectId);
+        }
+        if (activeStatuses.length > 0) {
+            result = result.filter(t => activeStatuses.includes(t.estatus || "Pendiente"));
+        }
+        return result;
+    }, [tasks, selectedProjectId, activeStatuses]);
 
     return (
         <div className="space-y-4 h-full flex flex-col">
@@ -150,6 +165,37 @@ export default function TasksPage() {
                     </Tabs>
                     <CreateTaskButton />
                 </div>
+            </div>
+
+            {/* Status Filter Toggles */}
+            <div className="flex flex-wrap items-center gap-1.5">
+                <Filter className="h-3.5 w-3.5 text-slate-400 mr-0.5" />
+                {[
+                    { id: "Pendiente", label: "Pendiente", color: "bg-yellow-500", activeClass: "bg-yellow-100 text-yellow-700 border-yellow-300" },
+                    { id: "En Proceso", label: "En Proceso", color: "bg-blue-500", activeClass: "bg-blue-100 text-blue-700 border-blue-300" },
+                    { id: "Revisión", label: "Revisión", color: "bg-orange-500", activeClass: "bg-orange-100 text-orange-700 border-orange-300" },
+                    { id: "Completada", label: "Completada", color: "bg-green-500", activeClass: "bg-green-100 text-green-700 border-green-300" },
+                ].map((s) => (
+                    <button
+                        key={s.id}
+                        onClick={() => toggleStatus(s.id)}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all cursor-pointer ${activeStatuses.includes(s.id)
+                                ? s.activeClass
+                                : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                            }`}
+                    >
+                        <span className={`h-2 w-2 rounded-full ${s.color}`} />
+                        {s.label}
+                    </button>
+                ))}
+                {activeStatuses.length > 0 && (
+                    <button
+                        onClick={() => setActiveStatuses([])}
+                        className="text-xs text-slate-400 hover:text-slate-600 ml-1 underline underline-offset-2 cursor-pointer transition-colors"
+                    >
+                        Limpiar
+                    </button>
+                )}
             </div>
 
             {loading ? (
