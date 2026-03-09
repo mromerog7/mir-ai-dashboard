@@ -69,7 +69,7 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
     const [open, setOpen] = useState(false)
     const [saving, setSaving] = useState(false)
     const [generatingPdf, setGeneratingPdf] = useState(false)
-    const [generatedPdfUrl, setGeneratedPdfUrl] = useState<string | null>(null)
+    const [generatedPdfUrl, setGeneratedPdfUrl] = useState<string | null>(quote?.pdf_url || null)
     const [pdfSuccess, setPdfSuccess] = useState(false)
     const [projects, setProjects] = useState<{ id: number; nombre: string }[]>([])
     const router = useRouter()
@@ -223,9 +223,9 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
         }
     }, [open, isEditing, defaultValues, form, initialItems])
 
-    // Reset form when opening in Edit Mode to ensure latest quote data is used
     useEffect(() => {
         if (open && isEditing && quote) {
+            setGeneratedPdfUrl(quote.pdf_url || null)
             form.reset({
                 folio: quote.folio || "",
                 cliente: quote.cliente || "",
@@ -597,8 +597,8 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                         </div>
 
                         <div className="flex gap-2 items-center">
-                            {/* PDF Success State */}
-                            {(isEditing || generatedPdfUrl) && generatedPdfUrl && (
+                            {/* PDF View Button */}
+                            {generatedPdfUrl && (
                                 <Button
                                     type="button"
                                     variant="ghost"
@@ -649,6 +649,6 @@ export function EditQuoteSheet({ quote, defaultValues, trigger }: EditQuoteSheet
                     </form>
                 </Form>
             </SheetContent>
-        </Sheet>
+        </Sheet >
     )
 }
