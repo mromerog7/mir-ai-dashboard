@@ -99,7 +99,7 @@ export function CloseIncidentSheet({ incident, trigger }: CloseIncidentSheetProp
                     </Button>
                 )}
             </SheetTrigger>
-            <SheetContent className="overflow-y-auto sm:max-w-[500px] w-full bg-white border-l-slate-200 text-slate-900">
+            <SheetContent className="overflow-y-auto sm:max-w-[500px] w-full bg-white border-l-slate-200 text-slate-900 pl-8 pr-8">
                 <SheetHeader>
                     <SheetTitle className="text-[#02457A]">Cerrar Incidencia</SheetTitle>
                     <SheetDescription className="text-slate-500">
