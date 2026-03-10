@@ -114,7 +114,7 @@ export function TaskForm({ onSuccess, initialData, taskId, defaultProjectId }: {
             fecha_fin: initialData?.fecha_fin ? parseLocalDate(initialData.fecha_fin) : undefined,
             fecha_inicio_real: initialData?.fecha_inicio_real ? parseLocalDate(initialData.fecha_inicio_real) : undefined,
             fecha_fin_real: initialData?.fecha_fin_real ? parseLocalDate(initialData.fecha_fin_real) : undefined,
-            fecha_vencimiento: initialData?.fecha_vencimiento ? parseLocalDate(initialData.fecha_vencimiento) : undefined,
+            fecha_vencimiento: initialData?.fecha_vencimiento ? new Date(initialData.fecha_vencimiento) : undefined,
         },
     })
 
